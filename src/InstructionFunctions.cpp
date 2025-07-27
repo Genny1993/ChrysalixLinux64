@@ -1298,29 +1298,15 @@ void sort(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
-		if (type != L"ASC"
-			&& type != L"DESC"
-			&& type != L"asc"
-			&& type != L"desc") {
-			throw std::wstring{ type + LangLib::getTrans(L": Способ сортировки неизвестен\n")};
-		}
 
-		std::vector<Var> temp;
+		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
+		Var temp;
 		if ((*i).parameters.size() == 2) {
-			temp = getValue(&(*i).parameters[1], &(*m).heap).toARR().getArr();
+			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().sortarr(type);
 		}
 		else {
-			temp = getValue(&(*i).parameters[2], &(*m).heap).toARR().getArr();
+			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().sortarr(type);
 		}
-
-		if (type == L"ASC" || type == L"asc") {
-			sort(temp.begin(), temp.end());
-		}
-		else if (type == L"DESC" || type == L"desc") {
-			sort(temp.begin(), temp.end(), std::greater<Var>());
-		}
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = Var(temp);
 		++(*m).instruct_number;
 	}
 }

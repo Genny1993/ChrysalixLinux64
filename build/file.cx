@@ -1,12 +1,15 @@
-	vtoarr: $a1, 1, 2, 1;
+	vtoarr: $sortarr, 5, 3, 4, 1, 2, 9, 6, 12, 'apple', 'apricot';
+	sort: 'asc', $sortarr;
+	print: $sortarr, '\n';
+	##vtoarr: $a1, 1, 2, 1;
 	vtoarr: $a2, 3, 2, 1, $a1;
 	vtoarr: $a3, $a2, 1, 4, 2;
 	var: $path, nil;
 	var: $type, 'strict';
 	rinall: $type, $path, $a3, 2;
-	#print: $a3, '\n';
-	#print: 'Путь до значения 2: ', $path, '\n';
-##
+	print: $a3, '\n';
+	print: 'Путь до значения 2: ', $path, '\n';
+
 	#Циклический расчет факториала:
 	var: $n, 20;		#Факториал чего считаем
 	var: $i, 1;			#С какого числа ведем итерацию
@@ -15,8 +18,8 @@
 	var: $max, 1;		#Максимальне количество итераций главного цикла.
 	newtemp: 1;
 label: &main_loop;
-	#print: 'Введите число, по которому будет расчет факториала: ';
-	#input:$n;
+	print: 'Введите число, по которому будет расчет факториала: ';
+	input:$n;
 
 	newtemp: 1;
 	label: &cycle_start;
@@ -26,7 +29,7 @@ label: &main_loop;
 	jif: $1, &cycle_start;
 	forget: 1;
 
-	#print: 'Факториал ', $n, ' равен ', $result, '\n';
+	print: 'Факториал ', $n, ' равен ', $result, '\n';
 	
 	#Сбрасывем значения переменных перед следующей итерацией
 	change: $i, 1;

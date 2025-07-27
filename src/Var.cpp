@@ -3,8 +3,9 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include "LangLib.h"
+#include <algorithm>
 
+#include "LangLib.h"
 #include "Var.h"
 
 const std::wstring MESSAGE1 = L"Не удалось привести строку к типу ";
@@ -1104,6 +1105,23 @@ Var Var::slice(Var x, Var y) {
         error += L"STR, ARR\n";
         throw std::wstring{ error };
     }
+}
+
+Var Var::sortarr(const std::wstring &type) const{
+    if (type != L"ASC"
+			&& type != L"DESC"
+			&& type != L"asc"
+			&& type != L"desc") {
+			throw std::wstring{ type + LangLib::getTrans(L": Способ сортировки неизвестен\n")};
+		}
+    std::vector<Var> clear_arr = this->getArr();
+    if (type == L"ASC" || type == L"asc") {
+			sort(clear_arr.begin(), clear_arr.end());
+		}
+		else if (type == L"DESC" || type == L"desc") {
+			sort(clear_arr.begin(), clear_arr.end(), std::greater<Var>());
+		}
+    return Var(clear_arr);
 }
 
 Var Var::in(Var sent) const {

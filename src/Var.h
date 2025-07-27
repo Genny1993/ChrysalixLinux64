@@ -102,6 +102,7 @@ public:
    
     Var slice(int x, int y);
     Var slice(Var x, Var y);
+    Var sortarr(const std::wstring &type) const;
 
     Var ltrim() const;
     Var rtrim() const;
