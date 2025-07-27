@@ -14,7 +14,17 @@ It is minimalist, explicit, strict, and bare — every instruction performs one 
 - 🌍 Multi-language interpreter output (Russian, English)
 
 ---
+## 📦 Install
 
+```
+git clone https://github.com/Genny1993/ChrysalixLinux64.git
+cd ChrysalixLinux64/build
+cmake ..
+make
+./chrysalix
+```
+
+---
 ## 🚀 Example code
 
 ```plaintext

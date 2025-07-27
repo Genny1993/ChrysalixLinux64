@@ -3,34 +3,34 @@
 	vtoarr: $a3, $a2, 1, 4, 2;
 	var: $path, nil;
 	var: $type, 'strict';
-	#rinall: $type, $path, $a3, 4;
+	rinall: $type, $path, $a3, 2;
 	#print: $a3, '\n';
 	#print: 'Путь до значения 2: ', $path, '\n';
-
+##
 	#Циклический расчет факториала:
-	var: $n, ntg20;		#Факториал чего считаем
-	var: $i, ntg 1;		#С какого числа ведем итерацию
-	var: $result, ntg1;	#Переменная результата
-	var: $j, ntg1;		#Итератор главного цикла
-	var: $max, ntg100000;	#Максимальне количество итераций главного цикла.
-	newtemp: ntg 1;
+	var: $n, 20;		#Факториал чего считаем
+	var: $i, 1;			#С какого числа ведем итерацию
+	var: $result, 1;	#Переменная результата
+	var: $j, 1;			#Итератор главного цикла
+	var: $max, 1;		#Максимальне количество итераций главного цикла.
+	newtemp: 1;
 label: &main_loop;
 	#print: 'Введите число, по которому будет расчет факториала: ';
 	#input:$n;
 
-	newtemp: ntg 1;
+	newtemp: 1;
 	label: &cycle_start;
 		calc: '*', $result, $i;
 		calc: 'inc', $i;
 		comp: '<=', $1, $i, $n; 
 	jif: $1, &cycle_start;
-	forget: ntg 1;
+	forget: 1;
 
 	#print: 'Факториал ', $n, ' равен ', $result, '\n';
 	
 	#Сбрасывем значения переменных перед следующей итерацией
-	change: $i, ntg 1;
-	change: $result, ntg1;
+	change: $i, 1;
+	change: $result, 1;
 
 	calc: 'inc', $j;
 	comp: '<', $0, $j, $max;
@@ -39,4 +39,5 @@ jif: $0, &main_loop;
 	forget:;
 	free: $n, $i, $result, $j, $max;
 	#pause:;
-end: ntg 0;
+##
+end: 0;

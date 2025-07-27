@@ -417,3 +417,8 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+build/cmake_install.cmake
+build/CMakeCache.txt
+/build/CMakeFiles
+build/chrysalix
+build/Makefile
