@@ -1109,24 +1109,367 @@ Var Var::slice(Var x, Var y) {
 
 Var Var::sortarr(const std::wstring &type) const{
     if (type != L"ASC"
-			&& type != L"DESC"
-			&& type != L"asc"
-			&& type != L"desc") {
-			throw std::wstring{ type + LangLib::getTrans(L": Способ сортировки неизвестен\n")};
-		}
+		&& type != L"DESC"
+		&& type != L"asc"
+		&& type != L"desc") {
+		throw std::wstring{ type + LangLib::getTrans(L": Способ сортировки неизвестен\n")};
+	}
     std::vector<Var> clear_arr = this->getArr();
     if (type == L"ASC" || type == L"asc") {
-			sort(clear_arr.begin(), clear_arr.end());
-		}
-		else if (type == L"DESC" || type == L"desc") {
-			sort(clear_arr.begin(), clear_arr.end(), std::greater<Var>());
-		}
+		sort(clear_arr.begin(), clear_arr.end());
+	}
+	else if (type == L"DESC" || type == L"desc") {
+		sort(clear_arr.begin(), clear_arr.end(), std::greater<Var>());
+	}
     return Var(clear_arr);
+}
+
+Var Var::eq(const std::wstring &type, const Var &b) const {
+    if (type != L"STRICT"
+		&& type != L"DYNAMIC"
+		&& type != L"strict"
+		&& type != L"dynamic") {
+		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
+	}
+
+    return eq_recursive(type, *this, b);
+}
+
+Var Var::eq_recursive(const std::wstring &type, const Var &a, const Var &b) const {
+    if (this->type == ARR && b.type == ARR) {
+        std::vector<Var>arr_a = a.getArr();
+        std::vector<Var>arr_b = b.getArr();
+        int size_a = (int)arr_a.size();
+        int size_b = (int)arr_b.size();
+
+        if (size_a != size_b) { return Var(false); }
+
+        bool is_equal = true;
+        for (int i = 0; i < size_a; ++i) {
+            if (this->eq_recursive(type, arr_a[i], arr_b[i]) == false) {
+                is_equal = false;
+                break;
+            }
+        }
+        return Var(is_equal);
+    }
+    else if ((a.type == ARR && b.type != ARR) || (a.type != ARR && b.type == ARR)) {
+        return Var(false);
+    }
+    else {
+        if(type == L"STRICT" || type == L"strict") {
+            if (a.type == b.type && a == b) { return Var(true); }
+            else { return Var(false); }
+        } else {
+            if (a == b) { return Var(true); }
+            else { return Var(false); }
+        }
+    }
+    return Var(false);
+}
+
+Var Var::uniq(const std::wstring &type) const {
+    if (type != L"STRICT"
+		&& type != L"DYNAMIC"
+		&& type != L"strict"
+		&& type != L"dynamic") {
+		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
+	}
+    
+    std::vector<Var> result;
+    std::vector<Var> arr = this->arr;
+	
+    int size = (int)arr.size();
+	for (int i = 0; i < size; ++i) {
+		bool is_unique = true;
+		for (int j = i; j < size; ++j) {
+			if (j == i) { continue; }
+			if (arr[i] == arr[j]) {
+				if (type == L"STRICT" || type == L"strict") {
+					if (arr[i].type == arr[j].type) {
+						if (arr[i].type == ARR && arr[j].type == ARR) {
+							is_unique = !arr[i].eq(L"strict", arr[j]).getBool();
+						}
+						else {
+							is_unique = false;
+						}
+						break;
+					}
+				}
+				else if (type == L"DYNAMIC" || type == L"dynamic") {
+					is_unique = false;
+					break;
+				}
+			}
+		}
+		if (is_unique) {
+			result.push_back(arr[i]);
+		}
+	}
+    return Var(result);
+ }
+
+ Var Var::in(const std::wstring &type, const Var &b) const {
+    if (type != L"STRICT"
+		&& type != L"DYNAMIC"
+		&& type != L"strict"
+		&& type != L"dynamic") {
+		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
+	}
+    std::vector<Var> arr;
+    if (this->type == ARR) {
+        arr = this->getArr();
+    }
+    else {
+        arr = this->toARR().getArr();
+    }
+    int size = (int)arr.size();
+    int result = -1;
+    if (type == L"STRICT" || type == L"strict") {
+        for (int i = 0; i < size; ++i) {
+            if (arr[i].eq(L"strict", b).getBool()) {
+                result = i;
+                break;
+            }
+        }
+    }
+	else if (type == L"DYNAMIC" || type == L"dynamic") {
+        for (int i = 0; i < size; ++i) {
+            if (arr[i] == b) {
+                result = i;
+                break;
+            }
+        }
+    }
+    return Var(result);
+}
+
+Var Var::inall(const std::wstring &type, const Var &b) const {
+    if (type != L"STRICT"
+		&& type != L"DYNAMIC"
+		&& type != L"strict"
+		&& type != L"dynamic") {
+		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
+	}
+    std::vector<Var> arr;
+    if (this->type == ARR) {
+        arr = this->getArr();
+    }
+    else {
+        arr = this->toARR().getArr();
+    }
+    int size = (int)arr.size();
+    std::vector<Var> result;
+    if (type == L"STRICT" || type == L"strict") {
+        for (int i = 0; i < size; ++i) {
+            if (arr[i].eq(L"strict", b).getBool()) {
+                result.push_back(Var(i));
+            }
+        }
+	}
+	else if (type == L"DYNAMIC" || type == L"dynamic") {
+        for (int i = 0; i < size; ++i) {
+            if (arr[i] == b) {
+                result.push_back(Var(i));
+            }
+        }
+	}
+    return Var(result);
+}
+
+Var Var::rin(const std::wstring &type, const Var &b, std::vector<Var> result) const {
+    if (type != L"STRICT"
+        && type != L"DYNAMIC"
+        && type != L"strict"
+        && type != L"dynamic") {
+        throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
+        }
+    rin_recursive(type, *this, b, result);
+    if(result.size() > 0) {
+        result.pop_back();
+    }
+    return Var(result);
+}
+
+Var Var::rin_recursive(const std::wstring &type, const Var &a, const Var &b, std::vector<Var> &result) const {
+    std::vector<Var> arr;
+    if (a.type == ARR) {
+        arr = a.getArr();
+    }
+    else {
+        arr = a.toARR().getArr();
+    }
+    int size = (int)arr.size();
+
+    if (type == L"STRICT" || type == L"strict") {
+        for (int i = 0; i < size; ++i) {
+            if (arr[i].type == ARR) {
+                if (arr[i].eq(L"strict", b).getBool()) {
+                    result.push_back(Var(i));
+                    result.push_back(Var(true));
+                    break;
+                }
+                else {
+                    result.push_back(Var(i));
+                    result = this->rin_recursive(type, arr[i], b, result).arr;
+                    int size = (int)result.size();
+                    if (result[(long long int)size - 1].type == BLN && result[(long long int)size - 1].data.bln == true) {
+                        break;
+                    }
+                    else {
+                        result.pop_back();
+                    }
+                }
+            }
+            else {
+                if (arr[i].eq(L"strict", b).getBool()) {
+                    result.push_back(Var(i));
+                    result.push_back(Var(true));
+                    break;
+                }
+            }
+        }
+	}
+	else if (type == L"DYNAMIC" || type == L"dynamic") {
+        for (int i = 0; i < size; ++i) {
+            if (arr[i].type == ARR) {
+                if (arr[i].eq(L"dynamic", b).getBool()) {
+                    result.push_back(Var(i));
+                    result.push_back(Var(true));
+                    break;
+                }
+                else {
+                    result.push_back(Var(i));
+                    result = this->rin_recursive(type, arr[i], b, result).arr;
+                    int size = (int)result.size();
+                    if (result[(long long int)size - 1].type == BLN && result[(long long int)size - 1].data.bln == true) {
+                        break;
+                    }
+                    else {
+                        result.pop_back();
+                    }
+                }
+            }
+            else {
+                if (arr[i].eq(L"dynamic", b).getBool()) {
+                    result.push_back(Var(i));
+                    result.push_back(Var(true));
+                    break;
+                }
+            }
+        }
+	}
+    return Var(result);
+}
+
+Var Var::rinall(const std::wstring &type, const Var &b){
+    if (type != L"STRICT"
+		&& type != L"DYNAMIC"
+		&& type != L"strict"
+		&& type != L"dynamic") {
+		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
+	}
+
+    std::vector<Var> all_results;
+    this->rinall_recursive(type, *this, b, &all_results);
+
+    if (all_results.size() == 0) {
+        return Var(all_results);
+    }
+    else {
+        Var result = Var(std::vector<Var>());
+        int size = (int)all_results.size();
+        for (int i = 0; i < size; ++i) {
+            all_results[i].popb();
+            result.pushb(all_results[i]);
+        }
+        return result;
+    }
+}
+
+Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, std::vector<Var>* all_results, std::vector<Var> result) const {
+    std::vector<Var> arr;
+    if (a.type == ARR) {
+        arr = a.getArr();
+    }
+    else {
+        arr = a.toARR().getArr();
+    }
+    int size = (int)arr.size();
+
+    if (type == L"STRICT" || type == L"strict") {
+        for (int i = 0; i < size; ++i) {
+            if (arr[i].type == ARR) {
+                if (arr[i].eq(L"strict", b).getBool()) {
+                    result.push_back(Var(i));
+                    result.push_back(Var(true));
+                    (*all_results).push_back(Var(result));
+                    result.pop_back();
+                    result.pop_back();
+                }
+                else {
+                    result.push_back(Var(i));
+                    result = this->rinall_recursive(type, arr[i], b, all_results, result).arr;
+                    int size = (int)result.size();
+                    if (result[(long long int)size - 1].type == BLN && result[(long long int)size - 1].data.bln == true) {
+                        (*all_results).push_back(Var(result));
+                    }
+                    else {
+                        result.pop_back();
+                    }
+                }
+            }
+            else {
+                if (arr[i].eq(L"strict", b).getBool()) {
+                    result.push_back(Var(i));
+                    result.push_back(Var(true));
+                    (*all_results).push_back(Var(result));
+                    result.pop_back();
+                    result.pop_back();
+                }
+            }
+        }
+        return Var(result);
+    }
+    else if(type == L"DYNAMIC" || type == L"dynamic"){
+        for (int i = 0; i < size; ++i) {
+            if (arr[i].type == ARR) {
+                if (arr[i].eq(L"dynamic", b).getBool()) {
+                    result.push_back(Var(i));
+                    result.push_back(Var(true));
+                    (*all_results).push_back(Var(result));
+                    result.pop_back();
+                    result.pop_back();
+                }
+                else {
+                    result.push_back(Var(i));
+                    result = this->rinall_recursive(type, arr[i], b, all_results, result).arr;
+                    int size = (int)result.size();
+                    if (result[(long long int)size - 1].type == BLN && result[(long long int)size - 1].data.bln == true) {
+                        (*all_results).push_back(Var(result));
+                    }
+                    else {
+                        result.pop_back();
+                    }
+                }
+            }
+            else {
+                if (arr[i].eq(L"dynamic", b).getBool()) {
+                    result.push_back(Var(i));
+                    result.push_back(Var(true));
+                    (*all_results).push_back(Var(result));
+                    result.pop_back();
+                    result.pop_back();
+                }
+            }
+        }
+    }
+    return Var(result);
 }
 
 Var Var::in(Var sent) const {
     if(this->type == STR) {
-        bool exists = this->str.find(sent.str) != std::string::npos;
+        bool exists = this->str.find(sent.str) != std::wstring::npos;
         return Var(exists);
     } 
     else {
@@ -1137,7 +1480,7 @@ Var Var::in(Var sent) const {
 }
 Var Var::in(const wchar_t* sent) const {
     if (this->type == STR) {
-        bool exists = this->str.find(sent) != std::string::npos;
+        bool exists = this->str.find(sent) != std::wstring::npos;
         return Var(exists);
     }
     else {
@@ -1148,7 +1491,7 @@ Var Var::in(const wchar_t* sent) const {
 }
 Var Var::in(std::wstring sent) const {
     if (this->type == STR) {
-        bool exists = this->str.find(sent) != std::string::npos;
+        bool exists = this->str.find(sent) != std::wstring::npos;
         return Var(exists);
     }
     else {
@@ -3979,7 +4322,7 @@ bool operator==(const Var& a, const Var& b) {
     }
     else if (a.type == ARR) {
         if (b.type == ARR) {
-            return deq(a, b).getBool();
+            return a.eq(L"dynamic", b).getBool();
         }
         else if (b.type == NIL) {
             if ((int)a.arr.size() == 0) {
@@ -4775,330 +5118,4 @@ void swap(Var& a, Var& b) {
     Var tmp = a;
     a = b;
     b = tmp;
-}
-
-Var eq(Var a, Var b) {
-    if (a.type == ARR && b.type == ARR) {
-        std::vector<Var>arr_a = a.getArr();
-        std::vector<Var>arr_b = b.getArr();
-        int size_a = (int)arr_a.size();
-        int size_b = (int)arr_b.size();
-
-        if (size_a != size_b) { return Var(false); }
-
-        bool is_equal = true;
-        for (int i = 0; i < size_a; ++i) {
-            if (eq(arr_a[i], arr_b[i]) == false) {
-                is_equal = false;
-                break;
-            }
-        }
-        return Var(is_equal);
-    }
-    else if ((a.type == ARR && b.type != ARR) || (a.type != ARR && b.type == ARR)) {
-        return Var(false);
-    }
-    else {
-        if (a.type == b.type && a == b) { return Var(true); }
-        else { return Var(false); }
-    }
-    return Var(false);
-}
-
-Var deq(Var a, Var b) {
-    if (a.type == ARR && b.type == ARR) {
-        std::vector<Var>arr_a = a.getArr();
-        std::vector<Var>arr_b = b.getArr();
-        int size_a = (int)arr_a.size();
-        int size_b = (int)arr_b.size();
-
-        if (size_a != size_b) { return Var(false); }
-
-        bool is_equal = true;
-        for (int i = 0; i < size_a; ++i) {
-            if (deq(arr_a[i], arr_b[i]) == false) {
-                is_equal = false;
-                break;
-            }
-        }
-        return Var(is_equal);
-    }
-    else if ((a.type == ARR && b.type != ARR) || (a.type != ARR && b.type == ARR)) {
-        return Var(false);
-    }
-    else {
-        if (a == b) {  return Var(true); }
-        else { return Var(false); }
-    }
-    return Var(false);
-}
-
-Var in(Var a, Var b) {
-    std::vector<Var> arr;
-    if (a.type == ARR) {
-        arr = a.getArr();
-    }
-    else {
-        arr = a.toARR().getArr();
-    }
-    int size = (int)arr.size();
-    int result = -1;
-    for (int i = 0; i < size; ++i) {
-        if (eq(arr[i], b).getBool()) {
-            result = i;
-            break;
-        }
-    }
-    return Var(result);
-}
-
-Var din(Var a, Var b) {
-    std::vector<Var> arr;
-    if (a.type == ARR) {
-        arr = a.getArr();
-    }
-    else {
-        arr = a.toARR().getArr();
-    }
-    int size = (int)arr.size();
-    int result = -1;
-    for (int i = 0; i < size; ++i) {
-        if (arr[i] == b) {
-            result = i;
-            break;
-        }
-    }
-    return Var(result);
-}
-
-Var inall(Var a, Var b) {
-    std::vector<Var> arr;
-    if (a.type == ARR) {
-        arr = a.getArr();
-    }
-    else {
-        arr = a.toARR().getArr();
-    }
-    int size = (int)arr.size();
-    std::vector<Var> result;
-    for (int i = 0; i < size; ++i) {
-        if (eq(arr[i], b).getBool()) {
-            result.push_back(Var(i));
-        }
-    }
-    if ((int)result.size() > 0) {
-        return Var(result);
-    }
-    return Var(-1);
-}
-
-Var dinall(Var a, Var b) {
-    std::vector<Var> arr;
-    if (a.type == ARR) {
-        arr = a.getArr();
-    }
-    else {
-        arr = a.toARR().getArr();
-    }
-    int size = (int)arr.size();
-    std::vector<Var> result;
-    for (int i = 0; i < size; ++i) {
-        if (arr[i] == b) {
-            result.push_back(Var(i));
-        }
-    }
-    return Var(result);
-}
-
-Var rin(Var a, Var b, std::vector<Var> result) {
-    std::vector<Var> arr;
-    if (a.type == ARR) {
-        arr = a.getArr();
-    }
-    else {
-        arr = a.toARR().getArr();
-    }
-    int size = (int)arr.size();
-    for (int i = 0; i < size; ++i) {
-        if (arr[i].type == ARR) {
-            if (eq(arr[i], b).getBool()) {
-                result.push_back(Var(i));
-                result.push_back(Var(true));
-                break;
-            }
-            else {
-                result.push_back(Var(i));
-                result = rin(arr[i], b, result).arr;
-                int size = (int)result.size();
-                if (result[(long long int)size - 1].type == BLN && result[(long long int)size - 1].data.bln == true) {
-                    break;
-                }
-                else {
-                    result.pop_back();
-                }
-            }
-        }
-        else {
-            if (eq(arr[i], b).getBool()) {
-                result.push_back(Var(i));
-                result.push_back(Var(true));
-                break;
-            }
-        }
-    }
-    if ((int)result.size() == 0) {
-        return Var(-1);
-    }
-    return Var(result);
-}
-
-Var drin(Var a, Var b, std::vector<Var> result) {
-    std::vector<Var> arr;
-    if (a.type == ARR) {
-        arr = a.getArr();
-    }
-    else {
-        arr = a.toARR().getArr();
-    }
-    int size = (int)arr.size();
-    for (int i = 0; i < size; ++i) {
-        if (arr[i].type == ARR) {
-            if (deq(arr[i], b).getBool()) {
-                result.push_back(Var(i));
-                break;
-            }
-            else {
-                result.push_back(Var(i));
-                result = drin(arr[i], b, result).arr;
-                int size = (int)result.size();
-                if (result[(long long int)size - 1].type == BLN && result[(long long int)size - 1].data.bln == true) {
-                    break;
-                }
-                else {
-                    result.pop_back();
-                }
-            }
-        }
-        else {
-            if (deq(arr[i], b).getBool()) {
-                result.push_back(Var(i));
-                break;
-            }
-        }
-    }
-    return Var(result);
-}
-
-Var srinall(Var a, Var b, std::vector<Var>* all_results, std::vector<Var> result) {
-    std::vector<Var> arr;
-    if (a.type == ARR) {
-        arr = a.getArr();
-    }
-    else {
-        arr = a.toARR().getArr();
-    }
-    int size = (int)arr.size();
-    for (int i = 0; i < size; ++i) {
-        if (arr[i].type == ARR) {
-            if (eq(arr[i], b).getBool()) {
-                result.push_back(Var(i));
-                result.push_back(Var(true));
-                (*all_results).push_back(Var(result));
-                result.pop_back();
-                result.pop_back();
-            }
-            else {
-                result.push_back(Var(i));
-                result = srinall(arr[i], b, all_results, result).arr;
-                int size = (int)result.size();
-                if (result[(long long int)size - 1].type == BLN && result[(long long int)size - 1].data.bln == true) {
-                    (*all_results).push_back(Var(result));
-                }
-                else {
-                    result.pop_back();
-                }
-            }
-        }
-        else {
-            if (eq(arr[i], b).getBool()) {
-                result.push_back(Var(i));
-                result.push_back(Var(true));
-                (*all_results).push_back(Var(result));
-                result.pop_back();
-                result.pop_back();
-            }
-        }
-    }
-    if ((int)result.size() == 0) {
-        return Var(-1);
-    }
-    return Var(result);
-}
-
-Var drinall(Var a, Var b, std::vector<Var>* all_results, std::vector<Var> result) {
-    std::vector<Var> arr;
-    if (a.type == ARR) {
-        arr = a.getArr();
-    }
-    else {
-        arr = a.toARR().getArr();
-    }
-    int size = (int)arr.size();
-    for (int i = 0; i < size; ++i) {
-        if (arr[i].type == ARR) {
-            if (deq(arr[i], b).getBool()) {
-                result.push_back(Var(i));
-                result.push_back(Var(true));
-                (*all_results).push_back(Var(result));
-                result.pop_back();
-                result.pop_back();
-            }
-            else {
-                result.push_back(Var(i));
-                result = drinall(arr[i], b, all_results, result).arr;
-                int size = (int)result.size();
-                if (result[(long long int)size - 1].type == BLN && result[(long long int)size - 1].data.bln == true) {
-                    (*all_results).push_back(Var(result));
-                }
-                else {
-                    result.pop_back();
-                }
-            }
-        }
-        else {
-            if (deq(arr[i], b).getBool()) {
-                result.push_back(Var(i));
-                result.push_back(Var(true));
-                (*all_results).push_back(Var(result));
-                result.pop_back();
-                result.pop_back();
-            }
-        }
-    }
-    if ((int)result.size() == 0) {
-        return Var(-1);
-    }
-    return Var(result);
-}
-
-Var rinall(std::wstring type, Var a, Var b) {
-    std::vector<Var> all_results;
-    if (type == L"STRICT" || type == L"strict") {
-        srinall(a, b, &all_results);
-    }
-    else if(type == L"DYNAMIC" || type == L"dynamic"){
-        drinall(a, b, &all_results);
-    }
-    if (all_results.size() == 0) {
-        return Var(-1);
-    }
-    else {
-        Var result = Var(std::vector<Var>());
-        int size = (int)all_results.size();
-        for (int i = 0; i < size; ++i) {
-            all_results[i].popb();
-            result.pushb(all_results[i]);
-        }
-        return result;
-    }
 }

@@ -1336,50 +1336,13 @@ void unique(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
-		if (type != L"STRICT"
-			&& type != L"DYNAMIC"
-			&& type != L"strict"
-			&& type != L"dynamic") {
-			throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
-		}
 
-		std::vector<Var> arr;
 		if ((*i).parameters.size() == 2) {
-			arr = getValue(&(*i).parameters[1], &(*m).heap).toARR().getArr();
+			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().uniq(type);
 		}
 		else {
-			arr = getValue(&(*i).parameters[2], &(*m).heap).toARR().getArr();
+			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().uniq(type);
 		}
-
-		std::vector<Var> result;
-		int size = (int)arr.size();
-		for (int i = 0; i < size; ++i) {
-			bool is_unique = true;
-			for (int j = i; j < size; ++j) {
-				if (j == i) { continue; }
-				if (arr[i] == arr[j]) {
-					if (type == L"STRICT" || type == L"strict") {
-						if (arr[i].type == arr[j].type) {
-							if (arr[i].type == ARR && arr[j].type == ARR) {
-								is_unique = !eq(arr[i], arr[j]).getBool();
-							}
-							else {
-								is_unique = false;
-							}
-							break;
-						}
-					}
-					else if (type == L"DYNAMIC" || type == L"dynamic") {
-						is_unique = false;
-						break;
-					}
-				}
-			}
-			if (is_unique) {
-				result.push_back(arr[i]);
-			}
-		}
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = Var(result);
 		++(*m).instruct_number;
 	}
 }
@@ -1440,19 +1403,7 @@ void equal(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
-		if (type != L"STRICT"
-			&& type != L"DYNAMIC"
-			&& type != L"strict"
-			&& type != L"dynamic") {
-			throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
-		}
-
-		if (type == L"STRICT" || type == L"strict") {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = eq(getValue(&(*i).parameters[2], &(*m).heap), getValue(&(*i).parameters[3], &(*m).heap));
-		}
-		else if (type == L"DYNAMIC" || type == L"dynamic") {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = deq(getValue(&(*i).parameters[2], &(*m).heap), getValue(&(*i).parameters[3], &(*m).heap));
-		}
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).eq(type, getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1508,19 +1459,7 @@ void in(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
-		if (type != L"STRICT"
-			&& type != L"DYNAMIC"
-			&& type != L"strict"
-			&& type != L"dynamic") {
-			throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
-		}
-
-		if (type == L"STRICT" || type == L"strict") {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = in(getValue(&(*i).parameters[2], &(*m).heap), getValue(&(*i).parameters[3], &(*m).heap));
-		}
-		else if (type == L"DYNAMIC" || type == L"dynamic") {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = din(getValue(&(*i).parameters[2], &(*m).heap), getValue(&(*i).parameters[3], &(*m).heap));
-		}
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).in(type, getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1545,19 +1484,7 @@ void inall(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
-		if (type != L"STRICT"
-			&& type != L"DYNAMIC"
-			&& type != L"strict"
-			&& type != L"dynamic") {
-			throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
-		}
-
-		if (type == L"STRICT" || type == L"strict") {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = inall(getValue(&(*i).parameters[2], &(*m).heap), getValue(&(*i).parameters[3], &(*m).heap));
-		}
-		else if (type == L"DYNAMIC" || type == L"dynamic") {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = dinall(getValue(&(*i).parameters[2], &(*m).heap), getValue(&(*i).parameters[3], &(*m).heap));
-		}
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).inall(type, getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1582,27 +1509,7 @@ void rin(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
-		if (type != L"STRICT"
-			&& type != L"DYNAMIC"
-			&& type != L"strict"
-			&& type != L"dynamic") {
-			throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
-		}
-
-		if (type == L"STRICT" || type == L"strict") {
-			Var result = rin(getValue(&(*i).parameters[2], &(*m).heap), getValue(&(*i).parameters[3], &(*m).heap));
-			if (result.type == ARR) {
-				result.popb();
-			}
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = result;
-		}
-		else if (type == L"DYNAMIC" || type == L"dynamic") {
-			Var result = drin(getValue(&(*i).parameters[2], &(*m).heap), getValue(&(*i).parameters[3], &(*m).heap));
-			if (result.type == ARR) {
-				result.popb();
-			}
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = drin(getValue(&(*i).parameters[2], &(*m).heap), getValue(&(*i).parameters[3], &(*m).heap));
-		}
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).rin(type, getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1627,13 +1534,7 @@ void rinall(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
-		if (type != L"STRICT"
-			&& type != L"DYNAMIC"
-			&& type != L"strict"
-			&& type != L"dynamic") {
-			throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
-		}
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = rinall(type, getValue(&(*i).parameters[2], &(*m).heap), getValue(&(*i).parameters[3], &(*m).heap));
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).rinall(type, getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }

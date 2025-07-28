@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
 {
     setlocale(LC_ALL, "en_US.UTF-8");
     //Установка локализации интерпретатора
-    LangLib::setLang(LANGUAGES::RU);
+    LangLib::setLang(LANGUAGES::EN);
 
     std::wstring filename = L"";
     if (argc < 2) {
@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
         }
         catch (const std::wstring& error_message) {
             std::wstring temp = error_message;
-            std::wcout << L"0.2.5 alpha";
+            std::wcout << L"0.2.6 alpha";
             return 0;
         }
     }
@@ -59,7 +59,6 @@ int main(int argc, char* argv[])
     }
     catch (const std::wstring& error_message) {
         std::wcout << std::endl << error_message;
-        system("pause");
     }
     
     return 0;

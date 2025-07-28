@@ -29,6 +29,10 @@ enum Type {
 };
 
 class Var {
+private:
+    Var eq_recursive(const std::wstring &type, const Var &a, const Var &b) const;
+    Var rin_recursive(const std::wstring &type, const Var &a, const Var &b, std::vector<Var> &result) const;
+    Var rinall_recursive(const std::wstring &type, const Var &a, const Var &b, std::vector<Var>* all_results, std::vector<Var> result = std::vector<Var>()) const;
 public:
     Data data;
     std::vector<Var> arr;
@@ -103,6 +107,18 @@ public:
     Var slice(int x, int y);
     Var slice(Var x, Var y);
     Var sortarr(const std::wstring &type) const;
+    //Проверка на эквивалентность массивов
+    Var eq(const std::wstring &type, const Var &b) const;
+    //Функция, оставляющая уникальные значения
+    Var uniq(const std::wstring &type) const;
+    //Поиск значения по массиву 
+    Var in(const std::wstring &type, const Var &b) const;
+    //Поиск всех значений по массиву 
+    Var inall(const std::wstring &type, const Var &b) const;
+    //Рекурсивный поиск значения по массиву
+    Var rin(const std::wstring &type, const Var &b, std::vector<Var> result = std::vector<Var>()) const;
+    //Рекурсивный поиск всех значений по массиву.
+    Var rinall(const std::wstring &type, const Var &b);
 
     Var ltrim() const;
     Var rtrim() const;
@@ -194,25 +210,3 @@ public:
 };
 //Обмен значениями
 void swap(Var& a, Var& b);
-//Строгое рекурсивное сравнение
-Var eq(Var a, Var b);
-//Нестрогое рекурсивное сравнение
-Var deq(Var a, Var b);
-//Строгий поиск значения по массиву 
-Var in(Var a, Var b);
-//Нестрогий поиск значения по массиву 
-Var din(Var a, Var b);
-//Строгий поиск всех значений по массиву 
-Var inall(Var a, Var b);
-//Нестрогий поиск всех значений по массиву 
-Var dinall(Var a, Var b);
-//Строгий рекурсивный поиск значения по массиву 
-Var rin(Var a, Var b, std::vector<Var> result = std::vector<Var>());
-//Нестрогий рекурсивный поиск значения по массиву 
-Var drin(Var a, Var b, std::vector<Var> result = std::vector<Var>());
-//Строгий рекурсивный поиск всех значений по массиву 
-Var srinall(Var a, Var b, std::vector<Var>* all_results, std::vector<Var> result = std::vector<Var>());
-//Нестрогий рекурсивный поиск всех значений по массиву 
-Var drinall(Var a, Var b, std::vector<Var>* all_results, std::vector<Var> result = std::vector<Var>());
-//Строгий рекурсивный поиск всех значений по массиву, агрегатная функция 
-Var rinall(std::wstring type, Var a, Var b);
