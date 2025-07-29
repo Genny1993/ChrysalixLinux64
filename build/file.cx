@@ -1,6 +1,10 @@
+	var: $map, map;
+	print: $map, '\n';
 	vtoarr: $a1, 1, 2, 1;
-	vtoarr: $a2, 3, 2, 1, $a1;
+	vtoarr: $a2, 3, 2, 1, $a1, $map;
 	vtoarr: $a3, $a2, 1, 4, 2;
+	arrtomap: $map, $a3;
+	print: $map, '\n';
 	var: $path, nil;
 	var: $type, 'strict';
 	rinall: $type, $path, $a3, 2;

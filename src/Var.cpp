@@ -748,10 +748,16 @@ Var Var::toSTR() const {
         }
     }
     else if (this->type == MAP) {
-        //Сделать рекурсивный вывод как у ARR
-        std::wstring error = LangLib::getTrans(MESSAGE3);
-        error += L"STR\n";
-        throw std::wstring{ error };
+        std::wstring str = L"{";
+        for (const auto& [key, val] : this->mp) {
+            str += L"\"" + key + L"\": " + val.toSTR().getWStr() + L", ";
+        }
+        if(str != L"{") {
+            str.pop_back();
+            str.pop_back();
+        }
+        str+= L"}";
+        return str;
     }
     return Var();
 }
@@ -1953,9 +1959,21 @@ std::wostream& operator<< (std::wostream& wos, const Var& var)
         break;
     }
     case MAP:
-        return wos << L"MAP";
+    {
+        std::wstring str = L"{";
+        for (const auto& [key, val] : var.mp) {
+            str += L"\"" + key + L"\": " + val.toSTR().getWStr() + L", ";
+        }
+        if(str != L"{") {
+            str.pop_back();
+            str.pop_back();
+        }
+        str+= L"}";
+        return wos << str;
+        break;
+    }
     default:
-        return wos << L"UNKNOWN";
+        return wos << L"UNKNOWN" << var.type;
     }
 }
 

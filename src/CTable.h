@@ -53,6 +53,7 @@ enum OP_CODE {
     INALL,
     RINNER,
     RINALL,
+    ARRTOMAP,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,5 +108,6 @@ struct CTable {
         {L"INALL", OP_CODE::INALL}, {L"inall", OP_CODE::INALL},
         {L"RIN", OP_CODE::RINNER}, {L"rin", OP_CODE::RINNER},
         {L"RINALL", OP_CODE::RINALL}, {L"rinall", OP_CODE::RINALL},
+        {L"ARRTOMAP", OP_CODE::ARRTOMAP}, {L"arrtomap", OP_CODE::ARRTOMAP},
     };
 };

@@ -59,6 +59,7 @@ void in(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void inall(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void rin(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void rinall(Machine* m, Instruction* i, bool prevalidate, bool prego);
+void arrtomap(Machine* m, Instruction* i, bool prevalidate, bool prego);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,6 +111,7 @@ struct InstructionMap {
 		&in,
 		&inall,
 		&rin,
-		&rinall
+		&rinall,
+		&arrtomap,
 	};
 };

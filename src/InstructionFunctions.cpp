@@ -1535,3 +1535,33 @@ void rinall(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ARRTOMAP
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void arrtomap(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"ARRTOMAP";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 2);
+		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
+		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+		checkNotExistValue(&(*i).parameters[1], m);
+	}
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		std::vector<Var> arr = getValue(&(*i).parameters[1], &(*m).heap).toARR().getArr();
+		int size = (int)arr.size();
+		std::map<std::wstring, Var> map;
+		for(int i = 0; i < size; ++i) {
+			map.insert({std::to_wstring(i), arr[i]});
+		}
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var(map);
+		++(*m).instruct_number;
+	}
+}
