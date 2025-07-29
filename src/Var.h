@@ -104,8 +104,8 @@ public:
     Var in(const wchar_t* sent) const;
     Var in(std::wstring sent) const;
    
-    Var slice(int x, int y);
-    Var slice(Var x, Var y);
+    Var slice(const int &x, const int &y) const;
+    Var slice(const Var &x, const Var &y) const;
     Var sortarr(const std::wstring &type) const;
     //Проверка на эквивалентность массивов
     Var eq(const std::wstring &type, const Var &b) const;
@@ -129,18 +129,18 @@ public:
     Var upper() const;
     Var lower() const;
 
-    void pushb(Var v);
+    void pushb(const Var &v);
     Var popb();
-    void pushf(Var val);
+    void pushf(const Var &val);
     Var popf();
 
     void clear();
-    void erase(int x);
-    Var erase(Var x);
-    void erase(std::wstring x);
+    void erase(const int &x);
+    Var erase(const Var &x);
+    void erase(const std::wstring &x);
     void erase(const wchar_t* x);
 
-    void insert_vector(Var x, Var val);
+    void insert_vector(const Var &x, const Var &val);
     
     void insert(Var str, Var val);
     void insert(std::wstring str, Var val);
@@ -154,7 +154,7 @@ public:
     Var join(std::wstring delim);
     Var join(const wchar_t* delim);
     
-    Var merge(Var val) const;
+    Var merge(const Var &val) const;
     Var csize() const;
     //Вывод данных через поток
     friend std::wostream& operator<< (std::wostream& os, const Var& var);

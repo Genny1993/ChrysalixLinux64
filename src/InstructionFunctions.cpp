@@ -1200,7 +1200,7 @@ void setval(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void slice(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
-		std::wstring name = L"SPLIT";
+		std::wstring name = L"SLICE";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 4);
 		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
 		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
@@ -1223,13 +1223,10 @@ void slice(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		if (y < 0) {
 			throw std::wstring{ (*i).parameters[3].toSTR().getWStr() + LangLib::getTrans(L": Параметр меньше нуля\n") };
 		}
-		if (y < x) {
-			throw std::wstring{ (*i).parameters[2].toSTR().getWStr() + LangLib::getTrans(L": Параметр больше параметра ") + (*i).parameters[3].toSTR().getWStr() + L"\n" };
-		}
 		if (x > (*m).heap[(*i).parameters[1].toSTR().getWStr()].csize() - 1) {
 			throw std::wstring{ (*i).parameters[2].toSTR().getWStr() + L": " + LangLib::getTrans(L"Индекс находится вне диапазона\n") };
 		}
-		if (y > (*m).heap[(*i).parameters[1].toSTR().getWStr()].csize() - 1) {
+		if (x + y > (*m).heap[(*i).parameters[1].toSTR().getWStr()].csize()) {
 			throw std::wstring{ (*i).parameters[3].toSTR().getWStr() + L": " + LangLib::getTrans(L"Индекс находится вне диапазона\n") };
 		}
 

@@ -80,6 +80,7 @@ std::map<std::wstring, std::wstring> ru = {
 	{L": Способ сортировки неизвестен\n", L": Способ сортировки неизвестен\n"},
 	{L": Способ сравнения неизвестен\n", L": Способ сравнения неизвестен\n"},
 	{L"Инструкция IEXIST работает только с типом ARR\n", L"Инструкция IEXIST работает только с типом ARR\n"},
+	{L"Время загрузки файла с исходным кодом: ", L"Время загрузки файла с исходным кодом: "},
 };
 
 std::map<std::wstring, std::wstring> en = {
@@ -146,7 +147,7 @@ std::map<std::wstring, std::wstring> en = {
 	{L": Способ сортировки неизвестен\n", L": Sorting method unknown\n"},
 	{L": Способ сравнения неизвестен\n", L": Comparison method unknown\n"},
 	{L"Инструкция IEXIST работает только с типом ARR\n", L"The IEXIST instruction only works with the ARR type\n"},
-
+	{L"Время загрузки файла с исходным кодом: ", L"Source code file opening time: "},
 };
 
 LANGUAGES LangLib::current_lang = RU;

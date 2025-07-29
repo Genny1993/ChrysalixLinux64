@@ -1070,7 +1070,7 @@ Var Var::rev() const {
     }
 }
 
-Var Var::slice(int x, int y) {
+Var Var::slice(const int &x, const int &y) const {
     if (this->type == STR) {
         return Var(this->str.substr(x, y));
     }
@@ -1093,7 +1093,7 @@ Var Var::slice(int x, int y) {
         throw std::wstring{ error };
     }
 }
-Var Var::slice(Var x, Var y) {
+Var Var::slice(const Var &x, const Var &y) const {
     if (this->type == STR) {
         return this->slice((int)x.getInt(), (int)y.getInt());
     }
@@ -1682,7 +1682,7 @@ Var Var::lower() const {
     }
 }
 
-void Var::pushb(Var v) {
+void Var::pushb(const Var &v) {
     if (this->type == ARR) {
         this->arr.push_back(v);
     }
@@ -1707,7 +1707,7 @@ Var Var::popb() {
     }
 }
 
-void Var::pushf(Var val) {
+void Var::pushf(const Var &val) {
     if (this->type == ARR) {
         this->arr.insert(this->arr.begin(), val);
     }
@@ -1747,7 +1747,7 @@ void Var::clear() {
 
 }
 
-void Var::erase(int x) {
+void Var::erase(const int &x) {
     if (this->type == ARR) {
         std::vector<Var>::iterator it;
         it = this->arr.begin() + x;
@@ -1759,7 +1759,7 @@ void Var::erase(int x) {
         throw std::wstring{ error };
     }
 }
-Var Var::erase(Var x) {
+Var Var::erase(const Var &x) {
     if (this->type == ARR) {
         try {
             Var result = this->arr.at((int)x.toNTG().getInt());
@@ -1774,7 +1774,7 @@ Var Var::erase(Var x) {
     else if (this->type == MAP) {
         try {
             Var result = this->mp.at(x.toSTR().getWStr());
-            this->mp.erase(x.toSTR().getWStr());
+            this->erase(x.toSTR().getWStr());
             return result;
         }
         catch (std::out_of_range& ex) {
@@ -1788,7 +1788,7 @@ Var Var::erase(Var x) {
         throw std::wstring{ error };
     }
 }
-void Var::erase(std::wstring x) {
+void Var::erase(const std::wstring &x) {
     if (this->type == MAP) {
         this->mp.erase(x);
     }
@@ -1809,7 +1809,7 @@ void Var::erase(const wchar_t* x) {
     }
 }
 
-void Var::insert_vector(Var x, Var val) {
+void Var::insert_vector(const Var &x, const Var &val) {
     if (this->type == ARR) {
         if (x < 0 || x > arr.size()) {
             throw std::wstring{ x.toSTR().getWStr() + LangLib::getTrans(L": ") + LangLib::getTrans(MESSAGE4) };
@@ -1854,7 +1854,7 @@ void Var::insert(const wchar_t* str, Var val) {
     }
 }
 
-Var Var::merge(Var val) const {
+Var Var::merge(const Var &val) const {
     if (this->type == ARR && val.type == ARR) {
         std::vector<Var> result = this->arr;
         result.insert(result.end(), val.arr.begin(), val.arr.end());

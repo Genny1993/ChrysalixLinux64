@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
         }
         catch (const std::wstring& error_message) {
             std::wstring temp = error_message;
-            std::wcout << L"0.2.6 alpha";
+            std::wcout << L"😽0.2.6 alpha😽";
             return 0;
         }
     }
@@ -44,10 +44,15 @@ int main(int argc, char* argv[])
         auto begin = std::chrono::high_resolution_clock::now();
         Parser p = Parser();
         p.fileLoad(filename);
-        p.parse(mchn);
         auto end = std::chrono::high_resolution_clock::now();
         auto elapsed_ms = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::wcout << LangLib::getTrans(L"Время обработки исходного кода: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << L" sec\n";
+        std::wcout << LangLib::getTrans(L"Время загрузки файла с исходным кодом: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек\n");
+
+        begin = std::chrono::high_resolution_clock::now();
+        p.parse(mchn);
+        end = std::chrono::high_resolution_clock::now();
+        elapsed_ms = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+        std::wcout << LangLib::getTrans(L"Время обработки исходного кода: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек\n");
 
         //Выполняем код
         begin = std::chrono::high_resolution_clock::now();
@@ -55,7 +60,7 @@ int main(int argc, char* argv[])
         mchn.go();
         end = std::chrono::high_resolution_clock::now();
         elapsed_ms = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::wcout << LangLib::getTrans(L"Время выполнения кода: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << L" sec\n";
+        std::wcout << LangLib::getTrans(L"Время выполнения кода: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << L" sec 😽\n";
     }
     catch (const std::wstring& error_message) {
         std::wcout << std::endl << error_message;
