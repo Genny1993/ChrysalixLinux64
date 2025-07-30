@@ -118,7 +118,9 @@ public:
     //Рекурсивный поиск значения по массиву
     Var rin(const std::wstring &type, const Var &b, std::vector<Var> result = std::vector<Var>()) const;
     //Рекурсивный поиск всех значений по массиву.
-    Var rinall(const std::wstring &type, const Var &b);
+    Var rinall(const std::wstring &type, const Var &b) const;
+    //Возвращает пересечение значений массивов
+    Var intersect(const std::wstring &type, const Var &b) const;
 
     Var ltrim() const;
     Var rtrim() const;
