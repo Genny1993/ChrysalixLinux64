@@ -1498,6 +1498,47 @@ Var Var::intersect(const std::wstring &type, const Var &b) const {
     return result;
 }
 
+Var Var::notintersect(const std::wstring &type, const Var &b) const {
+    if (type != L"STRICT"
+		&& type != L"DYNAMIC"
+		&& type != L"strict"
+		&& type != L"dynamic") {
+		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
+	}
+    std::vector<Var> arr = this->toARR().uniq(type).arr;
+    std::vector<Var> arr_b = b.toARR().uniq(type).arr;
+    int size = (int)arr.size();
+    int size_b = (int)arr_b.size();
+    Var result = Var(std::vector<Var>());
+
+    for(int i = 0; i < size; ++i) {
+        bool is_unique = true;
+        for(int j = 0; j < size_b; ++j) {
+            if(arr[i].eq(type, arr_b[j]).getBool()) {
+                is_unique = false;
+                break;
+            }
+        }
+        if(is_unique) {
+            result.pushb(arr[i]);
+        }
+    }
+
+    for(int i = 0; i < size_b; ++i) {
+        bool is_unique = true;
+        for(int j = 0; j < size; ++j) {
+            if(arr_b[i].eq(type, arr[j]).getBool()) {
+                is_unique = false;
+                break;
+            }
+        }
+        if(is_unique) {
+            result.pushb(arr_b[i]);
+        }
+    }
+
+    return result;
+}
 
 Var Var::in(Var sent) const {
     if(this->type == STR) {

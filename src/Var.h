@@ -121,6 +121,8 @@ public:
     Var rinall(const std::wstring &type, const Var &b) const;
     //Возвращает пересечение значений массивов
     Var intersect(const std::wstring &type, const Var &b) const;
+    //Возвращает непересекающиеся значения массивов
+    Var notintersect(const std::wstring &type, const Var &b) const;
 
     Var ltrim() const;
     Var rtrim() const;

@@ -61,6 +61,7 @@ void rin(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void rinall(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void arrtomap(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void intersect(Machine* m, Instruction* i, bool prevalidate, bool prego);
+void notintersect(Machine* m, Instruction* i, bool prevalidate, bool prego);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,5 +116,6 @@ struct InstructionMap {
 		&rinall,
 		&arrtomap,
 		&intersect,
+		&notintersect,
 	};
 };

@@ -1592,3 +1592,30 @@ void intersect(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// NOTINTERSECT
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void notintersect(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"NOTINTERSECT";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 4);
+		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
+		requiredVar(&(*i).parameters[2], m, &name, LangLib::getTrans(PAR3));
+		requiredVar(&(*i).parameters[3], m, &name, LangLib::getTrans(PAR5));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[1], m);
+		checkNotExistValue(&(*i).parameters[2], m);
+		checkNotExistValue(&(*i).parameters[3], m);
+	}
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).notintersect(type, getValue(&(*i).parameters[3], &(*m).heap));
+		++(*m).instruct_number;
+	}
+}
