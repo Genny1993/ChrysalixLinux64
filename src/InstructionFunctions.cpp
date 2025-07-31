@@ -1619,3 +1619,27 @@ void notintersect(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ARRTOSTR
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void arrtostr(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"ARRTOSTR";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 3);
+		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
+		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+		checkNotExistValue(&(*i).parameters[1], m);
+	}
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().arrtostr(getValue(&(*i).parameters[2], &(*m).heap));
+		++(*m).instruct_number;
+	}
+}

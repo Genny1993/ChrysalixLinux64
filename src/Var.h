@@ -123,6 +123,7 @@ public:
     Var intersect(const std::wstring &type, const Var &b) const;
     //Возвращает непересекающиеся значения массивов
     Var notintersect(const std::wstring &type, const Var &b) const;
+    Var arrtostr(const Var &delim) const;
 
     Var ltrim() const;
     Var rtrim() const;

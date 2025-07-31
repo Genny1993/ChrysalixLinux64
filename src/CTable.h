@@ -56,6 +56,7 @@ enum OP_CODE {
     ARRTOMAP,
     INTERSECT,
     NOTINTERSECT,
+    ARRTOSTR,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -113,5 +114,6 @@ struct CTable {
         {L"ARRTOMAP", OP_CODE::ARRTOMAP}, {L"arrtomap", OP_CODE::ARRTOMAP},
         {L"INTERSECT", OP_CODE::INTERSECT}, {L"intersect", OP_CODE::INTERSECT},
         {L"NOTINTERSECT", OP_CODE::NOTINTERSECT}, {L"notintersect", OP_CODE::NOTINTERSECT},
+        {L"ARRTOSTR", OP_CODE::ARRTOSTR}, {L"arrtostr", OP_CODE::ARRTOSTR},
     };
 };

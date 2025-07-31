@@ -1540,6 +1540,23 @@ Var Var::notintersect(const std::wstring &type, const Var &b) const {
     return result;
 }
 
+Var Var::arrtostr(const Var &delim) const {
+    std::wstring str = L"";
+    std::wstring delimiter = delim.toSTR().getWStr();
+    std::vector<Var> arr = this->arr;
+
+    int size = (int)arr.size();
+    for(int i = 0; i < size; ++i) {
+        if(i < size - 1) {
+            str += arr[i].toSTR().getWStr() + delimiter;
+        }
+        else {
+            str += arr[i].toSTR().getWStr();
+        }
+    }
+    return Var(str);
+}
+
 Var Var::in(Var sent) const {
     if(this->type == STR) {
         bool exists = this->str.find(sent.str) != std::wstring::npos;
