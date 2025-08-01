@@ -43,7 +43,7 @@ void checkExistLabel(Var* val, Machine* m) {
 // checkParameterCount
 // Проверяет соответствие количества инструкций
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void checkParameterCount(unsigned char type, int count, Machine* m, std::wstring* name, int stricted, int min, int range[], int variant[], int size_variants) {
+void checkParameterCount(unsigned char type, int count, std::wstring* name, int stricted, int min, int range[], int variant[], int size_variants) {
 	switch (type) {
 	case STRICTED:
 		if (count != stricted) {
@@ -90,7 +90,7 @@ void checkParameterCount(unsigned char type, int count, Machine* m, std::wstring
 // requiredVar
 // Проверяет то, что требуется переменная
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void requiredVar(Var* val, Machine* m, std::wstring* type, std::wstring num) {
+void requiredVar(Var* val, std::wstring* type, std::wstring num) {
 	if ((*val).type != STR || (*val).getWStr()[0] != L'$') {
 		throw std::wstring{ (*type) + LangLib::getTrans(L": ") + num + LangLib::getTrans(L" параметр инструкции должен быть именем переменной\n") };
 	}
@@ -100,7 +100,7 @@ void requiredVar(Var* val, Machine* m, std::wstring* type, std::wstring num) {
 // requiredLabel
 // Проверяет то, что требуется метка
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void requiredLabel(Var* val, Machine* m, std::wstring* type, std::wstring num) {
+void requiredLabel(Var* val, std::wstring* type, std::wstring num) {
 	if ((*val).type != STR || (*val).getWStr()[0] != L'&') {
 		throw std::wstring{ (*type) + LangLib::getTrans(L": ") + num + LangLib::getTrans(L" параметр инструкции должен быть именем метки\n") };
 	}

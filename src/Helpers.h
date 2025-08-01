@@ -41,17 +41,17 @@ void checkExistLabel(Var* val, Machine* m);
 // checkParameterCount
 // Проверяет соответствие количества инструкций
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void checkParameterCount(unsigned char type, int count, Machine* m, std::wstring* name, int stricted = 0, int min = 0, int range[] = nullptr, int variant[] = nullptr, int size_variants = 0);
+void checkParameterCount(unsigned char type, int count, std::wstring* name, int stricted = 0, int min = 0, int range[] = nullptr, int variant[] = nullptr, int size_variants = 0);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // requiredVar
 // Проверяет то, что требуется переменная
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void requiredVar(Var* val, Machine* m, std::wstring* type, std::wstring num);
+void requiredVar(Var* val, std::wstring* type, std::wstring num);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // requiredLabel
 // Проверяет то, что требуется метка
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void requiredLabel(Var* val, Machine* m, std::wstring* type, std::wstring num);
+void requiredLabel(Var* val, std::wstring* type, std::wstring num);
 
 //Хелперы кодировки
 std::wstring loadFile(std::wstring filename);

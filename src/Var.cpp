@@ -2304,7 +2304,7 @@ Var& Var::operator= (const float& var) {
         this->str = L"";
     }
     this->type = DBL;
-    this->data.dbl = (const long double)var;
+    this->data.dbl = (long double)var;
     return *this;
 }
 
@@ -4080,7 +4080,7 @@ bool operator==(const Var& a, const Var& b) {
             return a.data.ntg == b.data.uchr;
         }
         else if (b.type == BLN) {
-            return a.data.ntg == (const long long int)b.data.bln;
+            return a.data.ntg == (long long int)b.data.bln;
         }
         else if (b.type == STR) {
             try {
@@ -4127,7 +4127,7 @@ bool operator==(const Var& a, const Var& b) {
             return a.data.untg == b.data.uchr;
         }
         else if (b.type == BLN) {
-            return a.data.untg == (const unsigned long long int)b.data.bln;
+            return a.data.untg == ( unsigned long long int)b.data.bln;
         }
         else if (b.type == STR) {
             try {
@@ -4174,7 +4174,7 @@ bool operator==(const Var& a, const Var& b) {
             return a.data.dbl == b.data.uchr;
         }
         else if (b.type == BLN) {
-            return a.data.dbl == (const long double)b.data.bln;
+            return a.data.dbl == (long double)b.data.bln;
         }
         else if (b.type == STR) {
             try {
@@ -4221,7 +4221,7 @@ bool operator==(const Var& a, const Var& b) {
             return a.data.chr == b.data.uchr;
         }
         else if (b.type == BLN) {
-            return a.data.chr == (const char)b.data.bln;
+            return a.data.chr == (char)b.data.bln;
         }
         else if (b.type == STR) {
             try {
@@ -4268,7 +4268,7 @@ bool operator==(const Var& a, const Var& b) {
             return a.data.uchr == b.data.uchr;
         }
         else if (b.type == BLN) {
-            return a.data.uchr == (const unsigned char)b.data.bln;
+            return a.data.uchr == (unsigned char)b.data.bln;
         }
         else if (b.type == STR) {
             try {
@@ -4300,19 +4300,19 @@ bool operator==(const Var& a, const Var& b) {
     }
     else if (a.type == BLN) {
         if (b.type == NTG) {
-            return  (const long long int)a.data.bln == b.data.ntg;
+            return  (long long int)a.data.bln == b.data.ntg;
         }
         else if (b.type == UNTG) {
-            return (const unsigned long long int)a.data.bln == b.data.untg;
+            return (unsigned long long int)a.data.bln == b.data.untg;
         }
         else if (b.type == DBL) {
-            return (const int)a.data.bln == (const int)b.data.dbl;
+            return (int)a.data.bln == (int)b.data.dbl;
         }
         else if (b.type == CHR) {
-            return (const char)a.data.bln == b.data.chr;
+            return (char)a.data.bln == b.data.chr;
         }
         else if (b.type == UCHR) {
-            return (const unsigned char)a.data.bln == b.data.uchr;
+            return (unsigned char)a.data.bln == b.data.uchr;
         }
         else if (b.type == BLN) {
             return a.data.bln == b.data.bln;
@@ -4821,7 +4821,7 @@ bool operator>(const Var& a, const Var& b) {
             return 0 > b.data.ntg;
         }
         else if (b.type == UNTG) {
-            return 0 > b.data.untg;
+            return false;
         }
         else if (b.type == DBL) {
             return 0 > b.data.dbl;
@@ -4830,7 +4830,7 @@ bool operator>(const Var& a, const Var& b) {
             return 0 > b.data.chr;
         }
         else if (b.type == UCHR) {
-            return 0 > b.data.uchr;
+            return false;
         }
         else if (b.type == BLN) {
             return 0 > (int)b.data.bln;
@@ -4945,7 +4945,7 @@ bool operator<(const Var& a, const Var& b) {
             }
         }
         else if (b.type == NIL) {
-            return a.data.untg < 0;
+            return false;
         }
         else if (b.type == ARR) {
             return true;
@@ -5068,7 +5068,7 @@ bool operator<(const Var& a, const Var& b) {
             }
         }
         else if (b.type == NIL) {
-            return a.data.uchr < 0;
+            return false;
         }
         else if (b.type == ARR) {
             return true;

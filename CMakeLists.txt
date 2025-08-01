@@ -15,4 +15,4 @@ file(GLOB_RECURSE SRC_FILES src/*.cpp)
 
 add_executable(chrysalix ${SRC_FILES})
 
-target_compile_options(chrysalix PRIVATE -Wall)
+target_compile_options(chrysalix PRIVATE -Wall -Wextra -Wpedantic)

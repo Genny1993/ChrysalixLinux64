@@ -40,6 +40,7 @@ public:
     std::wstring str = L"";
     Type type = NIL;
     //Конструкторы для обычны типов данных
+    Var(const Var&) = default;
     Var();
     Var(unsigned long long int untg);
     Var(long long int ntg);
