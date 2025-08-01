@@ -5,6 +5,9 @@
 #include <fcntl.h>
 #include <chrono>
 #include <cstring>
+#include <sys/resource.h>
+#include <sched.h>
+#include <unistd.h>
 
 #include "Machine.h"
 #include "Parser.h"
@@ -17,6 +20,18 @@ int main(int argc, char* argv[])
     //Установка локализации интерпретатора
     LangLib::setLang(LANGUAGES::EN);
 
+    struct sched_param sch_params;
+
+    // максимальный приоритет
+    sch_params.sched_priority = sched_get_priority_max(SCHED_FIFO);
+
+    if (sched_setscheduler(0, SCHED_FIFO, &sch_params) == -1) {
+        if (setpriority(PRIO_PROCESS, 0, 0) == -1) {
+            std::wcout << LangLib::getTrans(L"Приоритет не смог быть установленным\n");
+            return 1;
+        }
+    }
+
     std::wstring filename = L"";
     if (argc < 2) {
         //Если не передан параметр при запуске, смотрим файл настроек
@@ -25,7 +40,7 @@ int main(int argc, char* argv[])
         }
         catch (const std::wstring& error_message) {
             std::wstring temp = error_message;
-            std::wcout << L"😽0.2.6 alpha😽";
+            std::wcout << L"😽0.2.7 alpha😽";
             return 0;
         }
     }
@@ -61,6 +76,11 @@ int main(int argc, char* argv[])
         end = std::chrono::high_resolution_clock::now();
         elapsed_ms = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::wcout << LangLib::getTrans(L"Время выполнения кода: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << L" sec 😽\n";
+        
+        //Пик по используемой памяти
+        struct rusage usage;
+        getrusage(RUSAGE_SELF, &usage);
+        std::wcout << L"Пиковое использование памяти: " << usage.ru_maxrss << L" KB ❤️\n";
     }
     catch (const std::wstring& error_message) {
         std::wcout << std::endl << error_message;

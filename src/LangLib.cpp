@@ -81,6 +81,8 @@ std::unordered_map<std::wstring, std::wstring> ru = {
 	{L": Способ сравнения неизвестен\n", L": Способ сравнения неизвестен\n"},
 	{L"Инструкция IEXIST работает только с типом ARR\n", L"Инструкция IEXIST работает только с типом ARR\n"},
 	{L"Время загрузки файла с исходным кодом: ", L"Время загрузки файла с исходным кодом: "},
+	{L"Приоритет не смог быть установленным\n", L"Приоритет не смог быть установленным\n"},
+	{L"Пиковое использование памяти: ", L"Пиковое использование памяти: "},
 };
 
 std::unordered_map<std::wstring, std::wstring> en = {
@@ -148,6 +150,8 @@ std::unordered_map<std::wstring, std::wstring> en = {
 	{L": Способ сравнения неизвестен\n", L": Comparison method unknown\n"},
 	{L"Инструкция IEXIST работает только с типом ARR\n", L"The IEXIST instruction only works with the ARR type\n"},
 	{L"Время загрузки файла с исходным кодом: ", L"Source code file opening time: "},
+	{L"Приоритет не смог быть установленным\n", L"Priority could not be set\n"},
+	{L"Пиковое использование памяти: ", L"Peak memory usage: "},
 };
 
 LANGUAGES LangLib::current_lang = RU;
