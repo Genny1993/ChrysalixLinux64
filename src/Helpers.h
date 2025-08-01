@@ -3,7 +3,7 @@
 #include "Machine.h"
 
 const unsigned char STRICTED = 0;	//Только определенно количество параметров
-const unsigned char MIN = 1;		//Минимальное количество параметров
+const unsigned char MINIMAL = 1;	//Минимальное количество параметров
 const unsigned char RANGE = 3;		//Параметры от минимального до максимального
 const unsigned char VARIANTS = 4;	//Варианты количества параметров
 
@@ -13,12 +13,12 @@ const unsigned char VARIANTS = 4;	//Варианты количества пар
 // getValue 
 // Возвращает значение параметра по имени переменной или литералу
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Var getValue(Var* val,std::map<std::wstring, Var>* heap);
+Var getValue(Var* val,std::unordered_map<std::wstring, Var>* heap);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // getLabel
 // Возвращает значение параметра по имени переменной или литералу
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Var getLabel(Var* val,std::map<std::wstring, int>* pointers);
+Var getLabel(Var* val,std::unordered_map<std::wstring, int>* pointers);
 
 //Хелперы валидации инструкций
 
@@ -41,7 +41,7 @@ void checkExistLabel(Var* val, Machine* m);
 // checkParameterCount
 // Проверяет соответствие количества инструкций
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void checkParameterCount(unsigned char type, int count, Machine* m, std::wstring* name, int stricted = 0, int min = 0, int range[] = nullptr, int variant[] = nullptr);
+void checkParameterCount(unsigned char type, int count, Machine* m, std::wstring* name, int stricted = 0, int min = 0, int range[] = nullptr, int variant[] = nullptr, int size_variants = 0);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // requiredVar
 // Проверяет то, что требуется переменная

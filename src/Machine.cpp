@@ -2,7 +2,7 @@
 #include "InstructionFunctions.h"
 #include "LangLib.h"
 
-Machine::Machine(std::map<std::wstring, Var> in, bool dbg) {
+Machine::Machine(std::unordered_map<std::wstring, Var> in, bool dbg) {
 	this->in_data = in;
 	this->debug = dbg;
 	this->instruct_number = 0;
@@ -13,7 +13,7 @@ void Machine::prepare() {
 	InstructionMap inst;
 	this->instruct_count = (int)instructions.size();
 	this->instruct_number = 0;
-	for (unsigned int i = 0; i < this->instruct_count; ++i) {
+	for (int i = 0; i < this->instruct_count; ++i) {
 		try {
 			inst.functions[this->instructions[i].opCode](this, &instructions[i], true, true);
 		}

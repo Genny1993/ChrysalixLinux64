@@ -179,7 +179,7 @@ void Parser::parse(Machine& m) {
                     lexemes[i].parameters.push_back(Var(std::vector<Var>()));
                 }
                 else if (temp == L"MAP" || temp == L"map") {
-                    lexemes[i].parameters.push_back(Var(std::map<std::wstring, Var>()));
+                    lexemes[i].parameters.push_back(Var(std::unordered_map<std::wstring, Var>()));
                 }
                 else if (temp == L"TRUE" || temp == L"true") {
                     lexemes[i].parameters.push_back(Var(true));

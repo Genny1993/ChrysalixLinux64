@@ -7,7 +7,7 @@
 // getValue 
 // Возвращает значение параметра по имени переменной или литералу
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Var getValue(Var* val,std::map<std::wstring, Var>* heap) {
+Var getValue(Var* val,std::unordered_map<std::wstring, Var>* heap) {
 	if ((*val).type == STR && (*val).getWStr()[0] == L'$') {
 		try {
 			return (*heap).at((*val).getWStr());
@@ -26,7 +26,7 @@ Var getValue(Var* val,std::map<std::wstring, Var>* heap) {
 // getLabel
 // Возвращает значение параметра по имени переменной или литералу
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Var getLabel(Var* val,std::map<std::wstring, int>* pointers) {
+Var getLabel(Var* val,std::unordered_map<std::wstring, int>* pointers) {
 	if ((*val).type == STR && (*val).getWStr()[0] == L'&') {
 		try {
 			return (*pointers).at((*val).getWStr());

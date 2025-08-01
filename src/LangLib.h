@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include<string>
-#include<map>
+#include<unordered_map>
 #include<vector>
 
 enum LANGUAGES {
@@ -11,7 +11,7 @@ enum LANGUAGES {
 class LangLib {
 private:
 	static LANGUAGES current_lang;
-	static std::vector<std::map<std::wstring, std::wstring>> library;
+	static std::vector<std::unordered_map<std::wstring, std::wstring>> library;
 public:
 	static void setLang(LANGUAGES lang);
 	static std::wstring getTrans(std::wstring str);

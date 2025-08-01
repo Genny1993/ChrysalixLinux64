@@ -15,7 +15,7 @@ std::wstring LangLib::getTrans(std::wstring str) {
 	}
 }
 
-std::map<std::wstring, std::wstring> ru = {
+std::unordered_map<std::wstring, std::wstring> ru = {
 	{L"", L""},
 	{L"\n", L"\n"},
 	{L": ", L": " },
@@ -83,7 +83,7 @@ std::map<std::wstring, std::wstring> ru = {
 	{L"Время загрузки файла с исходным кодом: ", L"Время загрузки файла с исходным кодом: "},
 };
 
-std::map<std::wstring, std::wstring> en = {
+std::unordered_map<std::wstring, std::wstring> en = {
 	{L"", L""},
 	{L"\n", L"\n"},
 	{L": ", L": " },
@@ -151,4 +151,4 @@ std::map<std::wstring, std::wstring> en = {
 };
 
 LANGUAGES LangLib::current_lang = RU;
-std::vector<std::map<std::wstring, std::wstring>> LangLib::library = { ru, en };
+std::vector<std::unordered_map<std::wstring, std::wstring>> LangLib::library = { ru, en };

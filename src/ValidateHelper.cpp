@@ -43,14 +43,14 @@ void checkExistLabel(Var* val, Machine* m) {
 // checkParameterCount
 // Проверяет соответствие количества инструкций
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void checkParameterCount(unsigned char type, int count, Machine* m, std::wstring* name, int stricted, int min, int range[], int variant[]) {
+void checkParameterCount(unsigned char type, int count, Machine* m, std::wstring* name, int stricted, int min, int range[], int variant[], int size_variants) {
 	switch (type) {
 	case STRICTED:
 		if (count != stricted) {
 			throw std::wstring{ *name + LangLib::getTrans(L": Инструкция принимает ") + std::to_wstring(stricted) + LangLib::getTrans(L" параметр(а)(ов)\n")};
 		}
 		break;
-	case MIN:
+	case MINIMAL:
 		if (count < min) {
 			throw std::wstring{ *name + LangLib::getTrans(L": Инструкция принимает не менее ") + std::to_wstring(min) + LangLib::getTrans(L" параметр(а)(ов)\n") };
 		}
@@ -61,10 +61,8 @@ void checkParameterCount(unsigned char type, int count, Machine* m, std::wstring
 		}
 		break;
 	case VARIANTS: {
-		int sizeofvariants = static_cast<int>(sizeof(variant));
-		int size = sizeofvariants / static_cast<int>(sizeof(int));
 		bool is_variant = false;
-		for (int i = 0; i < size; ++i) {
+		for (int i = 0; i < size_variants; ++i) {
 			if (count == variant[i]) {
 				is_variant = true;
 				break;
@@ -72,9 +70,9 @@ void checkParameterCount(unsigned char type, int count, Machine* m, std::wstring
 		}
 		if (!is_variant) {
 			std::wstring params_str = L"";
-			for (int i = 0; i < size; ++i) {
+			for (int i = 0; i < size_variants; ++i) {
 				params_str += std::to_wstring(variant[i]);
-				if (i + 1 != size) {
+				if (i + 1 != size_variants) {
 					params_str += L", ";
 				}
 			}

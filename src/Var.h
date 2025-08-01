@@ -2,7 +2,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <algorithm>
 
 union Data {
@@ -36,7 +36,7 @@ private:
 public:
     Data data;
     std::vector<Var> arr;
-    std::map<std::wstring, Var> mp;
+    std::unordered_map<std::wstring, Var> mp;
     std::wstring str = L"";
     Type type = NIL;
     //Конструкторы для обычны типов данных
@@ -65,7 +65,7 @@ public:
     Var(std::wstring t, int i);
 
     Var(std::vector<Var> v);
-    Var(std::map<std::wstring, Var> m);
+    Var(std::unordered_map<std::wstring, Var> m);
 
     //Геттеры обычных типов данных
     long long int getInt() const;
@@ -76,7 +76,7 @@ public:
     bool getBool() const;
     std::wstring getWStr() const;
     std::vector<Var> getArr() const;
-    std::map<std::wstring, Var> getMap() const;
+    std::unordered_map<std::wstring, Var> getMap() const;
 
     //Приведение типов
     Var toNTG() const;
@@ -124,8 +124,12 @@ public:
     //Возвращает непересекающиеся значения массивов
     Var notintersect(const std::wstring &type, const Var &b) const;
     Var arrtostr(const Var &delim) const;
+    //Сумма всех элементов массива
     Var sum() const;
+    //Среднее арифметическое массива
     Var avg() const;
+    //Минимальное значение массива
+    Var min() const;
 
     Var ltrim() const;
     Var rtrim() const;
@@ -191,7 +195,7 @@ public:
     Var& operator= (const wchar_t* var);
 
     Var& operator= (std::vector<Var> v);
-    Var& operator= (std::map<std::wstring, Var> m);
+    Var& operator= (std::unordered_map<std::wstring, Var> m);
 
     //Математические операторы
     friend Var operator+(const Var& a, const Var& b);

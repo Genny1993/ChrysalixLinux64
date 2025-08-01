@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
 
     try {
 
-       std::map<std::wstring, Var> map;
+       std::unordered_map<std::wstring, Var> map;
         Machine mchn(map, false);
 
         //Загружаем и парсим исходный код

@@ -119,7 +119,7 @@ void var(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 void print(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"PRINT";
-		checkParameterCount(MIN, (int)(*i).parameters.size(), m, &name, 0, 1);
+		checkParameterCount(MINIMAL, (int)(*i).parameters.size(), m, &name, 0, 1);
 	}
 	else {
 		//Ничего
@@ -143,7 +143,7 @@ void print(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 void free(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"FREE";
-		checkParameterCount(MIN, (int)(*i).parameters.size(), m, &name, 0, 1);
+		checkParameterCount(MINIMAL, (int)(*i).parameters.size(), m, &name, 0, 1);
 		for (Var& i : (*i).parameters)
 		{
 			requiredVar(&i, m, &name, i.toSTR().getWStr());
@@ -264,7 +264,7 @@ void to(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"TO";
 		int v[2]{ 2, 3 };
-		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v);
+		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v, 2);
 		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
 	}
 	else {
@@ -526,7 +526,7 @@ void forget(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"FORGET";
 		int v[2]{ 0, 1 };
-		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v);
+		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v, 2);
 	}
 
 	if (prego) {
@@ -680,7 +680,7 @@ void logic(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"LOGIC";
 		int v[2]{ 3, 4 };
-		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v);
+		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v, 2);
 		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
 
 	}
@@ -751,7 +751,7 @@ void jif(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"JIF";
 		int v[2]{ 1, 2 };
-		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 1, 2, nullptr, v);
+		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 1, 2, nullptr, v, 2);
 	}
 
 	if (prego) {
@@ -775,7 +775,7 @@ void jifnot(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"JIFNOT";
 		int v[2]{ 1, 2 };
-		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 1, 2, nullptr, v);
+		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 1, 2, nullptr, v, 2);
 	}
 
 	if (prego) {
@@ -846,7 +846,7 @@ void swap(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 void arr(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"ARRAY";
-		checkParameterCount(MIN, (int)(*i).parameters.size(), m, &name, 0, 2);
+		checkParameterCount(MINIMAL, (int)(*i).parameters.size(), m, &name, 0, 2);
 		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
 	}
 	else {
@@ -881,7 +881,7 @@ void arr(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 void vtoarr(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"VTOARR";
-		checkParameterCount(MIN, (int)(*i).parameters.size(), m, &name, 0, 2);
+		checkParameterCount(MINIMAL, (int)(*i).parameters.size(), m, &name, 0, 2);
 		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
 	}
 	else {
@@ -935,7 +935,7 @@ void popb(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"POPB";
 		int v[2]{ 1, 2 };
-		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v);
+		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v, 2);
 		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
 		if ((*i).parameters.size() == 2) {
 			requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
@@ -992,7 +992,7 @@ void popf(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"POPF";
 		int v[2]{ 1, 2 };
-		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v);
+		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v, 2);
 		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
 		if ((*i).parameters.size() == 2) {
 			requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
@@ -1027,7 +1027,7 @@ void erase(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"ERASE";
 		int v[2]{ 2, 3 };
-		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v);
+		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v, 2);
 		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
 		if ((*i).parameters.size() == 3) {
 			requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
@@ -1129,7 +1129,7 @@ void sizearr(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 void getval(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"GETVAL";
-		checkParameterCount(MIN, (int)(*i).parameters.size(), m, &name, 0, 3);
+		checkParameterCount(MINIMAL, (int)(*i).parameters.size(), m, &name, 0, 3);
 		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
 		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
 	}
@@ -1166,7 +1166,7 @@ void getval(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 void setval(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"SETVAL";
-		checkParameterCount(MIN, (int)(*i).parameters.size(), m, &name, 0, 3);
+		checkParameterCount(MINIMAL, (int)(*i).parameters.size(), m, &name, 0, 3);
 		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
 	}
 	else {
@@ -1241,7 +1241,7 @@ void merge(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"MERGE";
 		int v[2]{ 2, 3 };
-		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v);
+		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v, 2);
 		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
 	}
 	else {
@@ -1269,7 +1269,7 @@ void sort(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"SORT";
 		int v[2]{ 2, 3 };
-		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v);
+		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v, 2);
 		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
 	}
 	else {
@@ -1300,7 +1300,7 @@ void unique(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"UNIQUE";
 		int v[2]{ 2, 3 };
-		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v);
+		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v, 2);
 		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
 	}
 	else {
@@ -1330,7 +1330,7 @@ void reverse(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"REVERSE";
 		int v[2]{ 1, 2 };
-		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v);
+		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v, 2);
 		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
 	}
 	else {
@@ -1516,7 +1516,7 @@ void arrtomap(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	else {
 		std::vector<Var> arr = getValue(&(*i).parameters[1], &(*m).heap).toARR().getArr();
 		int size = (int)arr.size();
-		std::map<std::wstring, Var> map;
+		std::unordered_map<std::wstring, Var> map;
 		for(int i = 0; i < size; ++i) {
 			map.insert({std::to_wstring(i), arr[i]});
 		}
@@ -1633,6 +1633,28 @@ void avg(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().avg();
+		++(*m).instruct_number;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIN
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void min(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"MIN";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 2);
+		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+	}
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().min();
 		++(*m).instruct_number;
 	}
 }

@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include <map>
+#include <unordered_map>
 #include <string>
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,13 +59,14 @@ enum OP_CODE {
     ARRTOSTR,
     SUM,
     AVG,
+    MIN,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Таблица соответствий
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct CTable {
-    std::map<std::wstring, OP_CODE> opCodeMap = {
+    std::unordered_map<std::wstring, OP_CODE> opCodeMap = {
         {L"NOP", OP_CODE::NOP}, {L"nop", OP_CODE::NOP},
         {L"END", OP_CODE::END}, {L"end", OP_CODE::END},
         {L"PAUSE", OP_CODE::PAUSE}, {L"pause", OP_CODE::PAUSE},
@@ -119,5 +120,6 @@ struct CTable {
         {L"ARRTOSTR", OP_CODE::ARRTOSTR}, {L"arrtostr", OP_CODE::ARRTOSTR},
         {L"SUM", OP_CODE::SUM}, {L"sum", OP_CODE::SUM},
         {L"AVG", OP_CODE::AVG}, {L"avg", OP_CODE::AVG},
+        {L"MIN", OP_CODE::MIN}, {L"min", OP_CODE::MIN},
     };
 };

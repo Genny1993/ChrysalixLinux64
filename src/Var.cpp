@@ -1,5 +1,5 @@
 ﻿#include <vector>
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -109,7 +109,7 @@ Var::Var(std::wstring t, int i) {
     } 
     else if (t == L"map" && i == 0) {
         this->type = MAP;
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     else {
         this->type = UNKNOWN;
@@ -121,7 +121,7 @@ Var::Var(std::vector<Var> v) {
     this->arr = v;
 }
 
-Var::Var(std::map<std::wstring, Var> m) {
+Var::Var(std::unordered_map<std::wstring, Var> m) {
     this->type = MAP;
     this->mp = m;
 }
@@ -198,7 +198,7 @@ std::vector<Var> Var::getArr() const {
     }
 }
 
-std::map<std::wstring, Var> Var::getMap() const {
+std::unordered_map<std::wstring, Var> Var::getMap() const {
     if (this->type == MAP) {
         return this->mp;
     }
@@ -861,7 +861,7 @@ void Var::print() {
         std::wcout << L"NIL";
         break;
     case ARR:
-        for (int i = 0; i < this->arr.size(); ++i)
+        for (int i = 0; i < (int)this->arr.size(); ++i)
             std::wcout << i << L":\t" << this->arr[i] << L"\n";
         break;
     case MAP:
@@ -1035,7 +1035,8 @@ Var& Var::operator[](Var v) {
         error += L"NTG, UNTG, STR\n";
         throw std::wstring{ error };
     }
-    return v;
+    Var* val = new Var(v);
+    return *val;
 }
 
 Var Var::len() const {
@@ -1574,8 +1575,24 @@ Var Var::avg() const {
     for(int i = 0; i < size; ++i) {
         result += arr[i].toDBL().getDouble();
     }
-        result /= (double)size;
-        return Var(result);
+    result /= (double)size;
+    return Var(result);
+}
+
+Var Var::min() const {
+    double result = 0.0;
+    std::vector<Var> arr = this->arr;
+    int size = (int)arr.size();
+    if(size > 0) {
+        result = arr[0].toDBL().getDouble();
+    }
+    for(int i = 0; i < size; ++i) {
+        double val = arr[i].toDBL().getDouble();
+        if(val < result) {
+            result = val;
+        }
+    }
+    return Var(result);
 }
 
 Var Var::in(Var sent) const {
@@ -1746,9 +1763,9 @@ Var Var::split(const wchar_t* delim) const {
 Var Var::join(Var delim) {
     if (this->type == ARR) {
         std::wstring str;
-        for (int i = 0; i < this->arr.size(); ++i) {
+        for (int i = 0; i < (int)this->arr.size(); ++i) {
             str += this->arr[i].toSTR().getWStr();
-            if (i != this->arr.size() - 1) {
+            if (i != (int)this->arr.size() - 1) {
                 str += delim.getWStr();
             }
         }
@@ -1972,7 +1989,7 @@ Var Var::merge(const Var &val) const {
         return Var(result);
     }
     else if (this->type == MAP && val.type == MAP) {
-        std::map<std::wstring, Var> result = this->mp;
+        std::unordered_map<std::wstring, Var> result = this->mp;
         result.insert(val.mp.begin(), val.mp.end());
         return Var(result);
     } 
@@ -2087,7 +2104,7 @@ Var& Var::operator= (const Var& var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP && var.type != MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     if (this->type == STR && var.type != STR) {
         this->str = L"";
@@ -2130,7 +2147,7 @@ Var& Var::operator= (const unsigned long long int& var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2145,7 +2162,7 @@ Var& Var::operator= (const unsigned long int& var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2161,7 +2178,7 @@ Var& Var::operator= (const unsigned int& var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2176,7 +2193,7 @@ Var& Var::operator= (const unsigned short int& var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2191,7 +2208,7 @@ Var& Var::operator= (const long long int& var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2206,7 +2223,7 @@ Var& Var::operator= (const long int& var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2221,7 +2238,7 @@ Var& Var::operator= (const int& var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2236,7 +2253,7 @@ Var& Var::operator= (const short int& var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2251,7 +2268,7 @@ Var& Var::operator= (const long double& var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2266,7 +2283,7 @@ Var& Var::operator= (const double& var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2281,7 +2298,7 @@ Var& Var::operator= (const float& var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2296,7 +2313,7 @@ Var& Var::operator= (const char& var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2311,7 +2328,7 @@ Var& Var::operator= (const unsigned char& var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2326,7 +2343,7 @@ Var& Var::operator= (const bool& var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2341,7 +2358,7 @@ Var& Var::operator= (const std::wstring& var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     this->type = STR;
     this->str = var;
@@ -2353,7 +2370,7 @@ Var& Var::operator= (const wchar_t* var) {
         this->arr = std::vector<Var>();
     }
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     this->type = STR;
     this->str = var;
@@ -2362,7 +2379,7 @@ Var& Var::operator= (const wchar_t* var) {
 
 Var& Var::operator= (std::vector<Var> v) {
     if (this->type == MAP) {
-        this->mp = std::map<std::wstring, Var>();
+        this->mp = std::unordered_map<std::wstring, Var>();
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2372,7 +2389,7 @@ Var& Var::operator= (std::vector<Var> v) {
     return *this;
 }
 
-Var& Var::operator= (std::map<std::wstring, Var> m) {
+Var& Var::operator= (std::unordered_map<std::wstring, Var> m) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
     }
@@ -4051,7 +4068,7 @@ bool operator==(const Var& a, const Var& b) {
             return a.data.ntg == b.data.ntg;
         }
         else if (b.type == UNTG) {
-            return a.data.ntg == b.data.untg;
+            return a.data.ntg == (long long int)b.data.untg;
         }
         else if (b.type == DBL) {
             return a.data.ntg == b.data.dbl;
@@ -4095,7 +4112,7 @@ bool operator==(const Var& a, const Var& b) {
     }
     else if (a.type == UNTG) {
         if (b.type == NTG) {
-            return a.data.untg == b.data.ntg;
+            return a.data.untg == (unsigned long long int)b.data.ntg;
         }
         else if (b.type == UNTG) {
             return a.data.untg == b.data.untg;
@@ -4104,7 +4121,7 @@ bool operator==(const Var& a, const Var& b) {
             return a.data.untg == b.data.dbl;
         }
         else if (b.type == CHR) {
-            return a.data.untg == b.data.chr;
+            return a.data.untg == (unsigned long long int)b.data.chr;
         }
         else if (b.type == UCHR) {
             return a.data.untg == b.data.uchr;
@@ -4192,7 +4209,7 @@ bool operator==(const Var& a, const Var& b) {
             return a.data.chr == b.data.ntg;
         }
         else if (b.type == UNTG) {
-            return a.data.chr == b.data.untg;
+            return (unsigned long long int)a.data.chr == b.data.untg;
         }
         else if (b.type == DBL) {
             return a.data.chr == b.data.dbl;
@@ -4534,7 +4551,7 @@ bool operator>(const Var& a, const Var& b) {
             return a.data.untg > b.data.dbl;
         }
         else if (b.type == CHR) {
-            return a.data.untg > b.data.chr;
+            return a.data.untg > (unsigned long long int)b.data.chr;
         }
         else if (b.type == UCHR) {
             return a.data.untg > b.data.uchr;
@@ -4610,7 +4627,7 @@ bool operator>(const Var& a, const Var& b) {
             return a.data.chr > b.data.ntg;
         }
         else if (b.type == UNTG) {
-            return a.data.chr > b.data.untg;
+            return (unsigned long long int)a.data.chr > b.data.untg;
         }
         else if (b.type == DBL) {
             return a.data.chr > b.data.dbl;
@@ -4910,7 +4927,7 @@ bool operator<(const Var& a, const Var& b) {
             return a.data.untg < b.data.dbl;
         }
         else if (b.type == CHR) {
-            return a.data.untg < b.data.chr;
+            return a.data.untg < (unsigned long long int)b.data.chr;
         }
         else if (b.type == UCHR) {
             return a.data.untg < b.data.uchr;
@@ -4986,7 +5003,7 @@ bool operator<(const Var& a, const Var& b) {
             return a.data.chr < b.data.ntg;
         }
         else if (b.type == UNTG) {
-            return a.data.chr < b.data.untg;
+            return (unsigned long long int)a.data.chr < b.data.untg;
         }
         else if (b.type == DBL) {
             return a.data.chr < b.data.dbl;
