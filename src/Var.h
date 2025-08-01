@@ -131,6 +131,10 @@ public:
     Var avg() const;
     //Минимальное значение массива
     Var min() const;
+    //Максимальное значение массива
+    Var max() const;
+    //Разница между максимальным и минимальным значением
+    Var range() const;
 
     Var ltrim() const;
     Var rtrim() const;

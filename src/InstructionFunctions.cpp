@@ -1663,3 +1663,47 @@ void min(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MAX
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void max(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"MAX";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+	}
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().max();
+		++(*m).instruct_number;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// RANGE
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void range(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"RANGE";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+	}
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().range();
+		++(*m).instruct_number;
+	}
+}

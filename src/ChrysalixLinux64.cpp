@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
         //Пик по используемой памяти
         struct rusage usage;
         getrusage(RUSAGE_SELF, &usage);
-        std::wcout << L"Пиковое использование памяти: " << usage.ru_maxrss << L" KB ❤️\n";
+        std::wcout << LangLib::getTrans(L"Пиковое использование памяти: ") << usage.ru_maxrss << L" KB ❤️\n";
     }
     catch (const std::wstring& error_message) {
         std::wcout << std::endl << error_message;

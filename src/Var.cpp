@@ -1670,6 +1670,32 @@ Var Var::min() const {
     return Var(result);
 }
 
+Var Var::max() const {
+    double result = 0.0;
+    std::vector<Var> arr = this->arr;
+    if(arr.capacity() < 1000) {
+        arr.reserve(1000);
+    }
+    int size = (int)arr.size();
+    if(size > 0) {
+        result = arr[0].toDBL().getDouble();
+    }
+    for(int i = 0; i < size; ++i) {
+        double val = arr[i].toDBL().getDouble();
+        if(val > result) {
+            result = val;
+        }
+    }
+    return Var(result);
+}
+
+Var Var::range() const {
+    Var result = 0.0;
+    Var maxval = this->max();
+    Var minval = this->min();
+    return maxval - minval;
+}
+
 Var Var::in(Var sent) const {
     if(this->type == STR) {
         bool exists = this->str.find(sent.str) != std::wstring::npos;

@@ -60,6 +60,8 @@ enum OP_CODE {
     SUM,
     AVG,
     MIN,
+    MAX,
+    RNGE,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -121,5 +123,7 @@ struct CTable {
         {L"SUM", OP_CODE::SUM}, {L"sum", OP_CODE::SUM},
         {L"AVG", OP_CODE::AVG}, {L"avg", OP_CODE::AVG},
         {L"MIN", OP_CODE::MIN}, {L"min", OP_CODE::MIN},
+        {L"MAX", OP_CODE::MAX}, {L"max", OP_CODE::MAX},
+        {L"RANGE", OP_CODE::RNGE}, {L"range", OP_CODE::RNGE},
     };
 };
