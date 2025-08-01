@@ -1207,7 +1207,6 @@ void slice(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[0], m);
-		checkNotExistValue(&(*i).parameters[1], m);
 	}
 
 	if (prego) {
@@ -1230,7 +1229,7 @@ void slice(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 			throw std::wstring{ (*i).parameters[3].toSTR().getWStr() + L": " + LangLib::getTrans(L"Индекс находится вне диапазона\n") };
 		}
 
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).slice(x, y);
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().slice(x, y);
 		++(*m).instruct_number;
 	}
 }
@@ -1244,17 +1243,9 @@ void merge(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		int v[2]{ 2, 3 };
 		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v);
 		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
-		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR1));
-		if ((*i).parameters.size() == 3) {
-			requiredVar(&(*i).parameters[2], m, &name, LangLib::getTrans(PAR3));
-		}
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[0], m);
-		checkNotExistValue(&(*i).parameters[1], m);
-		if ((*i).parameters.size() == 3) {
-			checkNotExistValue(&(*i).parameters[2], m);
-		}
 	}
 
 	if (prego) {
@@ -1262,10 +1253,10 @@ void merge(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		if ((*i).parameters.size() == 2) {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[0], &(*m).heap).merge(getValue(&(*i).parameters[1], &(*m).heap));
+			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[0], &(*m).heap).toARR().merge(getValue(&(*i).parameters[1], &(*m).heap).toARR());
 		}
 		else {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).merge(getValue(&(*i).parameters[2], &(*m).heap));
+			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().merge(getValue(&(*i).parameters[2], &(*m).heap).toARR());
 		}
 		++(*m).instruct_number;
 	}
@@ -1280,15 +1271,9 @@ void sort(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		int v[2]{ 2, 3 };
 		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v);
 		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
-		if ((*i).parameters.size() == 3) {
-			requiredVar(&(*i).parameters[2], m, &name, LangLib::getTrans(PAR3));
-		}
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[1], m);
-		if ((*i).parameters.size() == 3) {
-			checkNotExistValue(&(*i).parameters[2], m);
-		}
 	}
 
 	if (prego) {
@@ -1317,15 +1302,9 @@ void unique(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		int v[2]{ 2, 3 };
 		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v);
 		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
-		if ((*i).parameters.size() == 3) {
-			requiredVar(&(*i).parameters[2], m, &name, LangLib::getTrans(PAR3));
-		}
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[1], m);
-		if ((*i).parameters.size() == 3) {
-			checkNotExistValue(&(*i).parameters[2], m);
-		}
 	}
 
 	if (prego) {
@@ -1353,15 +1332,9 @@ void reverse(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		int v[2]{ 1, 2 };
 		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), m, &name, 0, 0, nullptr, v);
 		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
-		if ((*i).parameters.size() == 2) {
-			requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
-		}
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[0], m);
-		if ((*i).parameters.size() == 2) {
-			checkNotExistValue(&(*i).parameters[1], m);
-		}
 	}
 
 	if (prego) {
@@ -1369,10 +1342,10 @@ void reverse(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		if ((*i).parameters.size() == 1) {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[0], &(*m).heap).rev();
+			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[0], &(*m).heap).toARR().rev();
 		}
 		else {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).rev();
+			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().rev();
 		}
 		++(*m).instruct_number;
 	}
@@ -1386,13 +1359,9 @@ void equal(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		std::wstring name = L"EQUAL";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 4);
 		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
-		requiredVar(&(*i).parameters[2], m, &name, LangLib::getTrans(PAR3));
-		requiredVar(&(*i).parameters[3], m, &name, LangLib::getTrans(PAR5));
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[1], m);
-		checkNotExistValue(&(*i).parameters[2], m);
-		checkNotExistValue(&(*i).parameters[3], m);
 	}
 
 	if (prego) {
@@ -1400,7 +1369,7 @@ void equal(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).eq(type, getValue(&(*i).parameters[3], &(*m).heap));
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().eq(type, getValue(&(*i).parameters[3], &(*m).heap).toARR());
 		++(*m).instruct_number;
 	}
 }
@@ -1413,7 +1382,6 @@ void iexist(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		std::wstring name = L"IEXIST";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 3);
 		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
-		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[0], m);
@@ -1445,7 +1413,6 @@ void in(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		std::wstring name = L"IN";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 4);
 		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
-		requiredVar(&(*i).parameters[2], m, &name, LangLib::getTrans(PAR3));
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[1], m);
@@ -1456,7 +1423,7 @@ void in(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).in(type, getValue(&(*i).parameters[3], &(*m).heap));
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().in(type, getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1469,11 +1436,9 @@ void inall(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		std::wstring name = L"INALL";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 4);
 		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
-		requiredVar(&(*i).parameters[2], m, &name, LangLib::getTrans(PAR3));
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[1], m);
-		checkNotExistValue(&(*i).parameters[2], m);
 	}
 
 	if (prego) {
@@ -1481,7 +1446,7 @@ void inall(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).inall(type, getValue(&(*i).parameters[3], &(*m).heap));
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().inall(type, getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1494,11 +1459,9 @@ void rin(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		std::wstring name = L"RIN";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 4);
 		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
-		requiredVar(&(*i).parameters[2], m, &name, LangLib::getTrans(PAR3));
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[1], m);
-		checkNotExistValue(&(*i).parameters[2], m);
 	}
 
 	if (prego) {
@@ -1506,7 +1469,7 @@ void rin(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).rin(type, getValue(&(*i).parameters[3], &(*m).heap));
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().rin(type, getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1519,11 +1482,9 @@ void rinall(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		std::wstring name = L"RINALL";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 4);
 		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
-		requiredVar(&(*i).parameters[2], m, &name, LangLib::getTrans(PAR3));
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[1], m);
-		checkNotExistValue(&(*i).parameters[2], m);
 	}
 
 	if (prego) {
@@ -1531,7 +1492,7 @@ void rinall(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).rinall(type, getValue(&(*i).parameters[3], &(*m).heap));
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().rinall(type, getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1544,11 +1505,9 @@ void arrtomap(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		std::wstring name = L"ARRTOMAP";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 2);
 		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
-		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[0], m);
-		checkNotExistValue(&(*i).parameters[1], m);
 	}
 
 	if (prego) {
@@ -1574,13 +1533,9 @@ void intersect(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		std::wstring name = L"INTERSECT";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 4);
 		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
-		requiredVar(&(*i).parameters[2], m, &name, LangLib::getTrans(PAR3));
-		requiredVar(&(*i).parameters[3], m, &name, LangLib::getTrans(PAR5));
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[1], m);
-		checkNotExistValue(&(*i).parameters[2], m);
-		checkNotExistValue(&(*i).parameters[3], m);
 	}
 
 	if (prego) {
@@ -1588,7 +1543,7 @@ void intersect(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).intersect(type, getValue(&(*i).parameters[3], &(*m).heap));
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().intersect(type, getValue(&(*i).parameters[3], &(*m).heap).toARR());
 		++(*m).instruct_number;
 	}
 }
@@ -1601,13 +1556,9 @@ void notintersect(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		std::wstring name = L"NOTINTERSECT";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 4);
 		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
-		requiredVar(&(*i).parameters[2], m, &name, LangLib::getTrans(PAR3));
-		requiredVar(&(*i).parameters[3], m, &name, LangLib::getTrans(PAR5));
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[1], m);
-		checkNotExistValue(&(*i).parameters[2], m);
-		checkNotExistValue(&(*i).parameters[3], m);
 	}
 
 	if (prego) {
@@ -1615,7 +1566,7 @@ void notintersect(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).notintersect(type, getValue(&(*i).parameters[3], &(*m).heap));
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().notintersect(type, getValue(&(*i).parameters[3], &(*m).heap).toARR());
 		++(*m).instruct_number;
 	}
 }
@@ -1628,11 +1579,9 @@ void arrtostr(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		std::wstring name = L"ARRTOSTR";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 3);
 		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
-		requiredVar(&(*i).parameters[1], m, &name, LangLib::getTrans(PAR2));
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[0], m);
-		checkNotExistValue(&(*i).parameters[1], m);
 	}
 
 	if (prego) {
@@ -1640,6 +1589,50 @@ void arrtostr(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().arrtostr(getValue(&(*i).parameters[2], &(*m).heap));
+		++(*m).instruct_number;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SUM
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void sum(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"SUM";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 2);
+		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+	}
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().sum();
+		++(*m).instruct_number;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// AVG
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void avg(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"AVG";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), m, &name, 2);
+		requiredVar(&(*i).parameters[0], m, &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+	}
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().avg();
 		++(*m).instruct_number;
 	}
 }

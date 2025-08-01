@@ -57,6 +57,8 @@ enum OP_CODE {
     INTERSECT,
     NOTINTERSECT,
     ARRTOSTR,
+    SUM,
+    AVG,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,5 +117,7 @@ struct CTable {
         {L"INTERSECT", OP_CODE::INTERSECT}, {L"intersect", OP_CODE::INTERSECT},
         {L"NOTINTERSECT", OP_CODE::NOTINTERSECT}, {L"notintersect", OP_CODE::NOTINTERSECT},
         {L"ARRTOSTR", OP_CODE::ARRTOSTR}, {L"arrtostr", OP_CODE::ARRTOSTR},
+        {L"SUM", OP_CODE::SUM}, {L"sum", OP_CODE::SUM},
+        {L"AVG", OP_CODE::AVG}, {L"avg", OP_CODE::AVG},
     };
 };

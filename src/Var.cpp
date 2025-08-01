@@ -1557,6 +1557,27 @@ Var Var::arrtostr(const Var &delim) const {
     return Var(str);
 }
 
+Var Var::sum() const{
+    double result = 0.0;
+    std::vector<Var> arr = this->arr;
+    int size = (int)arr.size();
+    for(int i = 0; i < size; ++i) {
+        result += arr[i].toDBL().getDouble();
+    }
+    return Var(result);
+}
+
+Var Var::avg() const {
+    double result = 0.0;
+    std::vector<Var> arr = this->arr;
+    int size = (int)arr.size();
+    for(int i = 0; i < size; ++i) {
+        result += arr[i].toDBL().getDouble();
+    }
+        result /= (double)size;
+        return Var(result);
+}
+
 Var Var::in(Var sent) const {
     if(this->type == STR) {
         bool exists = this->str.find(sent.str) != std::wstring::npos;

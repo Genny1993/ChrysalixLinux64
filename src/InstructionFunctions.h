@@ -63,6 +63,8 @@ void arrtomap(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void intersect(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void notintersect(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void arrtostr(Machine* m, Instruction* i, bool prevalidate, bool prego);
+void sum(Machine* m, Instruction* i, bool prevalidate, bool prego);
+void avg(Machine* m, Instruction* i, bool prevalidate, bool prego);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,5 +121,7 @@ struct InstructionMap {
 		&intersect,
 		&notintersect,
 		&arrtostr,
+		&sum,
+		&avg,
 	};
 };

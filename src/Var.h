@@ -124,6 +124,8 @@ public:
     //Возвращает непересекающиеся значения массивов
     Var notintersect(const std::wstring &type, const Var &b) const;
     Var arrtostr(const Var &delim) const;
+    Var sum() const;
+    Var avg() const;
 
     Var ltrim() const;
     Var rtrim() const;
