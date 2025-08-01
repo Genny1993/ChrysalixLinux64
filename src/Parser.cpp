@@ -182,7 +182,9 @@ void Parser::parse(Machine& m) {
                     lexemes[i].parameters.emplace_back(Var(v));
                 }
                 else if (temp == L"MAP" || temp == L"map") {
-                    lexemes[i].parameters.emplace_back(Var(std::unordered_map<std::wstring, Var>()));
+                    std::unordered_map<std::wstring, Var> map;
+                    map.reserve(1000);
+                    lexemes[i].parameters.emplace_back(Var(map));
                 }
                 else if (temp == L"TRUE" || temp == L"true") {
                     lexemes[i].parameters.emplace_back(Var(true));

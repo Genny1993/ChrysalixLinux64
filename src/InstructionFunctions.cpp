@@ -1521,6 +1521,7 @@ void arrtomap(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		arr = getValue(&(*i).parameters[1], &(*m).heap).toARR().getArr();
 		int size = (int)arr.size();
 		std::unordered_map<std::wstring, Var> map;
+		map.reserve(1000);
 		for(int i = 0; i < size; ++i) {
 			map.insert({std::to_wstring(i), arr[i]});
 		}

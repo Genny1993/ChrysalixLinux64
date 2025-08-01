@@ -109,7 +109,9 @@ Var::Var(std::wstring t, int i) {
     } 
     else if (t == L"map" && i == 0) {
         this->type = MAP;
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     else {
         this->type = UNKNOWN;
@@ -126,6 +128,9 @@ Var::Var(std::vector<Var> v) {
 
 Var::Var(std::unordered_map<std::wstring, Var> m) {
     this->type = MAP;
+    if(m.bucket_count() < 1000) {
+        m.reserve(1000);
+    }
     this->mp = m;
 }
 
@@ -2064,6 +2069,9 @@ Var Var::merge(const Var &val) const {
     }
     else if (this->type == MAP && val.type == MAP) {
         std::unordered_map<std::wstring, Var> result = this->mp;
+        if(this->mp.bucket_count() < 1000) {
+            result.reserve(1000);
+        }
         result.insert(val.mp.begin(), val.mp.end());
         return Var(result);
     } 
@@ -2179,7 +2187,9 @@ Var& Var::operator= (const Var& var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP && var.type != MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     if (this->type == STR && var.type != STR) {
         this->str = L"";
@@ -2223,7 +2233,9 @@ Var& Var::operator= (const unsigned long long int& var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2239,7 +2251,9 @@ Var& Var::operator= (const unsigned long int& var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2256,7 +2270,9 @@ Var& Var::operator= (const unsigned int& var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2272,7 +2288,9 @@ Var& Var::operator= (const unsigned short int& var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2288,7 +2306,9 @@ Var& Var::operator= (const long long int& var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2304,7 +2324,9 @@ Var& Var::operator= (const long int& var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2320,7 +2342,9 @@ Var& Var::operator= (const int& var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2336,7 +2360,9 @@ Var& Var::operator= (const short int& var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2352,7 +2378,9 @@ Var& Var::operator= (const long double& var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2368,7 +2396,9 @@ Var& Var::operator= (const double& var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2384,7 +2414,9 @@ Var& Var::operator= (const float& var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2400,7 +2432,9 @@ Var& Var::operator= (const char& var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2416,7 +2450,9 @@ Var& Var::operator= (const unsigned char& var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2432,7 +2468,9 @@ Var& Var::operator= (const bool& var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2448,7 +2486,9 @@ Var& Var::operator= (const std::wstring& var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     this->type = STR;
     this->str = var;
@@ -2461,7 +2501,9 @@ Var& Var::operator= (const wchar_t* var) {
         this->arr.reserve(1000);
     }
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     this->type = STR;
     this->str = var;
@@ -2470,7 +2512,9 @@ Var& Var::operator= (const wchar_t* var) {
 
 Var& Var::operator= (std::vector<Var> v) {
     if (this->type == MAP) {
-        this->mp = std::unordered_map<std::wstring, Var>();
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        this->mp = map;
     }
     if (this->type == STR) {
         this->str = L"";
@@ -2493,6 +2537,9 @@ Var& Var::operator= (std::unordered_map<std::wstring, Var> m) {
     }
     this->type = MAP;
     this->mp = m;
+    if(m.bucket_count() < 1000) {
+        this->mp.reserve(1000);
+    }
     return *this;
 }
 

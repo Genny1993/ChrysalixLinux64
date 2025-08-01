@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_BUILD_TYPE Release)
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -funroll-loops -flto")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=x86-64 -funroll-loops -flto -fno-rtti -DNDEBUG")
 
 include_directories(src)
 file(GLOB_RECURSE SRC_FILES src/*.cpp)

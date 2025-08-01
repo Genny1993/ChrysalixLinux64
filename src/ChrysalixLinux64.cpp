@@ -52,7 +52,9 @@ int main(int argc, char* argv[])
 
     try {
 
-       std::unordered_map<std::wstring, Var> map;
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(100);
+        
         Machine mchn(map, false);
 
         //Загружаем и парсим исходный код

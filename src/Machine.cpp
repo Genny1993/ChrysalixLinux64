@@ -8,6 +8,10 @@ Machine::Machine(std::unordered_map<std::wstring, Var> in, bool dbg) {
 	this->instruct_number = 0;
 	this->tmp_count = 0;
 	this->instructions.reserve(10000);
+	this->heap.reserve(1000);
+	this->jmp_pointers.reserve(1000);
+	this->sub_machines.reserve(1000);
+	this->in_data.reserve(100);
 }
 
 void Machine::prepare() {
