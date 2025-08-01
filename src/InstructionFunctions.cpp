@@ -862,6 +862,7 @@ void arr(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		for (int iter = dimensions; iter > 0; --iter) {
 			int dimension = (int)getValue(&(*i).parameters[iter], &(*m).heap).toUNTG().getUInt();
 			std::vector<Var> v;
+			v.reserve(1000);
 			Var arr = Var(v);
 			for (int j = 0; j < dimension; ++j) {
 				arr.pushb(result);
@@ -894,6 +895,7 @@ void vtoarr(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	else {
 		int size = (int)(*i).parameters.size() - 1;
 		std::vector<Var> v;
+		v.reserve(1000);
 		Var arr = Var(v);
 		for (int iter = 1; iter <= size; ++iter) {
 			arr.pushb(getValue(&(*i).parameters[iter], &(*m).heap));
@@ -1514,7 +1516,9 @@ void arrtomap(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		std::vector<Var> arr = getValue(&(*i).parameters[1], &(*m).heap).toARR().getArr();
+		std::vector<Var> arr;
+		arr.reserve(1000);
+		arr = getValue(&(*i).parameters[1], &(*m).heap).toARR().getArr();
 		int size = (int)arr.size();
 		std::unordered_map<std::wstring, Var> map;
 		for(int i = 0; i < size; ++i) {

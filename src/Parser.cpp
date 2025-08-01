@@ -22,6 +22,7 @@ void Parser::parse(Machine& m) {
     bool escape = false;
     Lexeme instruction;
     std::vector<Lexeme> lexemes;
+    lexemes.reserve(10000);
 
     for (wchar_t& c : this->file_content) {
         //Вырезаем комментарии, если они есть, игнорируем сиволы после начала комментария до конца строки
@@ -122,17 +123,17 @@ void Parser::parse(Machine& m) {
                             //Парсим параметры инструкции. Если у нас запятая, параметр кончился.
                             if (c == ',') {
                                 if (str != L"") {
-                                    instruction.str_parameters.push_back(str);
+                                    instruction.str_parameters.emplace_back(str);
                                     str = L"";
                                 }
                             }
                             //если точка с запятой, инструкция вообще кончилась
                             else if (c == ';') {
                                 if (str != L"") {
-                                    instruction.str_parameters.push_back(str);
+                                    instruction.str_parameters.emplace_back(str);
                                     str = L"";
                                 }
-                                lexemes.push_back(instruction);
+                                lexemes.emplace_back(instruction);
                                 instruction.str_parameters.clear();
                                 instruction.type = L"";
                                 instruction_parameters = false;
@@ -158,37 +159,39 @@ void Parser::parse(Machine& m) {
                 temp.erase(0, temp.find_first_not_of(L" \n\r\t"));
                 temp.erase(temp.find_last_not_of(L" \n\r\t") + 1);
                 if (temp[0] == L'$' || temp[0] == L'&') {
-                    lexemes[i].parameters.push_back(Var(temp));
+                    lexemes[i].parameters.emplace_back(Var(temp));
                 }
                 else if (temp.substr(0, 3) == L"NTG" || temp.substr(0, 3) == L"ntg") {
-                    lexemes[i].parameters.push_back(Var(temp.erase(0, 3)).toNTG());
+                    lexemes[i].parameters.emplace_back(Var(temp.erase(0, 3)).toNTG());
                 }
                 else if (temp.substr(0, 4) == L"UNTG" || temp.substr(0, 4) == L"untg") {
-                    lexemes[i].parameters.push_back(Var(temp.erase(0, 4)).toUNTG());
+                    lexemes[i].parameters.emplace_back(Var(temp.erase(0, 4)).toUNTG());
                 }
                 else if (temp.substr(0, 3) == L"DBL" || temp.substr(0, 3) == L"dbl") {
-                    lexemes[i].parameters.push_back(Var(temp.erase(0, 3)).toDBL());
+                    lexemes[i].parameters.emplace_back(Var(temp.erase(0, 3)).toDBL());
                 }
                 else if (temp.substr(0, 3) == L"CHR" || temp.substr(0, 3) == L"chr") {
-                    lexemes[i].parameters.push_back(Var(temp.erase(0, 3)).toCHR());
+                    lexemes[i].parameters.emplace_back(Var(temp.erase(0, 3)).toCHR());
                 }
                 else if (temp.substr(0, 4) == L"UCHR" || temp.substr(0, 4) == L"uchr") {
-                    lexemes[i].parameters.push_back(Var(temp.erase(0, 4)).toUCHR());
+                    lexemes[i].parameters.emplace_back(Var(temp.erase(0, 4)).toUCHR());
                 }
                 else if (temp == L"ARR" || temp == L"arr") {
-                    lexemes[i].parameters.push_back(Var(std::vector<Var>()));
+                    std::vector<Var> v;
+                    v.reserve(1000);
+                    lexemes[i].parameters.emplace_back(Var(v));
                 }
                 else if (temp == L"MAP" || temp == L"map") {
-                    lexemes[i].parameters.push_back(Var(std::unordered_map<std::wstring, Var>()));
+                    lexemes[i].parameters.emplace_back(Var(std::unordered_map<std::wstring, Var>()));
                 }
                 else if (temp == L"TRUE" || temp == L"true") {
-                    lexemes[i].parameters.push_back(Var(true));
+                    lexemes[i].parameters.emplace_back(Var(true));
                 }
                 else if (temp == L"FALSE" || temp == L"false") {
-                    lexemes[i].parameters.push_back(Var(false));
+                    lexemes[i].parameters.emplace_back(Var(false));
                 }
                 else if (temp == L"NIL" || temp == L"nil") {
-                    lexemes[i].parameters.push_back(Var());
+                    lexemes[i].parameters.emplace_back(Var());
                 }
                 else if (temp[0] == L'\'') {
                     std::wstring s_temp = temp;
@@ -248,7 +251,7 @@ void Parser::parse(Machine& m) {
                             continue;
                         }
                     }
-                    lexemes[i].parameters.push_back(Var(new_str));
+                    lexemes[i].parameters.emplace_back(Var(new_str));
                 } //Пытаемся работать с числами, если не указан тип данных
                 else if (temp[0] == L'0'
                     || temp[0] == L'1'
@@ -265,10 +268,10 @@ void Parser::parse(Machine& m) {
                     Var numberdbl = Var(temp).toDBL();
                     Var numberntg = Var(temp).toNTG();
                     if (numberdbl == numberntg) {
-                        lexemes[i].parameters.push_back(numberntg);
+                        lexemes[i].parameters.emplace_back(numberntg);
                     }
                     else {
-                        lexemes[i].parameters.push_back(numberdbl);
+                        lexemes[i].parameters.emplace_back(numberdbl);
                     }
                 }
                 else {
@@ -307,7 +310,7 @@ void Parser::parse(Machine& m) {
             }
         }
         inst.as_string += L";";
-        m.instructions.push_back(inst);
+        m.instructions.emplace_back(inst);
         ++i;
     }
 }

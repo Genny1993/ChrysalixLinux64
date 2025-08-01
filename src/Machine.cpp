@@ -7,6 +7,7 @@ Machine::Machine(std::unordered_map<std::wstring, Var> in, bool dbg) {
 	this->debug = dbg;
 	this->instruct_number = 0;
 	this->tmp_count = 0;
+	this->instructions.reserve(10000);
 }
 
 void Machine::prepare() {

@@ -119,6 +119,9 @@ Var::Var(std::wstring t, int i) {
 Var::Var(std::vector<Var> v) {
     this->type = ARR;
     this->arr = v;
+    if(this->arr.capacity() < 1000) {
+        this->arr.reserve(1000);
+    }
 }
 
 Var::Var(std::unordered_map<std::wstring, Var> m) {
@@ -766,55 +769,55 @@ Var Var::toARR() const {
     if (this->type == NTG) {
         Var result;
         result.type = ARR;
-        result.arr.push_back(*this);
+        result.arr.emplace_back(*this);
         return result;
     }
     else if (this->type == UNTG) {
         Var result;
         result.type = ARR;
-        result.arr.push_back(*this);
+        result.arr.emplace_back(*this);
         return result;
     }
     else if (this->type == DBL) {
         Var result;
         result.type = ARR;
-        result.arr.push_back(*this);
+        result.arr.emplace_back(*this);
         return result;
     }
     else if (this->type == CHR) {
         Var result;
         result.type = ARR;
-        result.arr.push_back(*this);
+        result.arr.emplace_back(*this);
         return result;
     }
     else if (this->type == UCHR) {
         Var result;
         result.type = ARR;
-        result.arr.push_back(*this);
+        result.arr.emplace_back(*this);
         return result;
     }
     else if (this->type == BLN) {
         Var result;
         result.type = ARR;
-        result.arr.push_back(*this);
+        result.arr.emplace_back(*this);
         return result;
     }
     else if (this->type == STR) {
         Var result;
         result.type = ARR;
-        result.arr.push_back(*this);
+        result.arr.emplace_back(*this);
         return result;
     }
     else if (this->type == NIL) {
         Var result;
         result.type = ARR;
-        result.arr.push_back(*this);
+        result.arr.emplace_back(*this);
         return result;
     }
     else if (this->type == UNKNOWN) {
         Var result;
         result.type = ARR;
-        result.arr.push_back(*this);
+        result.arr.emplace_back(*this);
         return result;
     }
     else if (this->type == ARR) {
@@ -1063,7 +1066,11 @@ Var Var::rev() const {
         return Var(str);
     }
     else if (this->type == ARR) {
+        
         std::vector<Var> v = this->arr;
+        if(this->arr.size() < 1000) {
+            v.reserve(1000);
+        }
         reverse(v.begin(), v.end());
         Var result;
         result.type = ARR;
@@ -1085,7 +1092,9 @@ Var Var::slice(const int &x, const int &y) const {
         auto start = arr.begin() + x;
         auto end = arr.begin() + x + y;
         std::vector<Var> result(y);
-
+        if(result.capacity() < 1000) {
+            result.reserve(1000);
+        }
         copy(start, end, result.begin());
         
         Var res;
@@ -1122,6 +1131,11 @@ Var Var::sortarr(const std::wstring &type) const{
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сортировки неизвестен\n")};
 	}
     std::vector<Var> clear_arr = this->getArr();
+    
+    if(clear_arr.capacity() < 1000) {
+        clear_arr.reserve(1000);
+    }
+
     if (type == L"ASC" || type == L"asc") {
 		sort(clear_arr.begin(), clear_arr.end());
 	}
@@ -1146,6 +1160,12 @@ Var Var::eq_recursive(const std::wstring &type, const Var &a, const Var &b) cons
     if (this->type == ARR && b.type == ARR) {
         std::vector<Var>arr_a = a.getArr();
         std::vector<Var>arr_b = b.getArr();
+        if(arr_a.capacity() < 1000) {
+            arr_a.reserve(1000);
+        }
+        if(arr_b.capacity() < 1000) {
+            arr_b.reserve(1000);
+        }
         int size_a = (int)arr_a.size();
         int size_b = (int)arr_b.size();
 
@@ -1184,8 +1204,11 @@ Var Var::uniq(const std::wstring &type) const {
 	}
     
     std::vector<Var> result;
+    result.reserve(1000);
     std::vector<Var> arr = this->arr;
-	
+	if(arr.capacity() < 1000) {
+        arr.reserve(1000);
+    }
     int size = (int)arr.size();
 	for (int i = 0; i < size; ++i) {
 		bool is_unique = true;
@@ -1210,7 +1233,7 @@ Var Var::uniq(const std::wstring &type) const {
 			}
 		}
 		if (is_unique) {
-			result.push_back(arr[i]);
+			result.emplace_back(arr[i]);
 		}
 	}
     return Var(result);
@@ -1229,6 +1252,9 @@ Var Var::uniq(const std::wstring &type) const {
     }
     else {
         arr = this->toARR().getArr();
+    }
+    if(arr.capacity() < 1000) {
+        arr.reserve(1000);
     }
     int size = (int)arr.size();
     int result = -1;
@@ -1265,19 +1291,23 @@ Var Var::inall(const std::wstring &type, const Var &b) const {
     else {
         arr = this->toARR().getArr();
     }
+    if(arr.capacity() < 1000) {
+        arr.reserve(1000);
+    }
     int size = (int)arr.size();
     std::vector<Var> result;
+    result.reserve(1000);
     if (type == L"STRICT" || type == L"strict") {
         for (int i = 0; i < size; ++i) {
             if (arr[i].eq(L"strict", b).getBool()) {
-                result.push_back(Var(i));
+                result.emplace_back(Var(i));
             }
         }
 	}
 	else if (type == L"DYNAMIC" || type == L"dynamic") {
         for (int i = 0; i < size; ++i) {
             if (arr[i] == b) {
-                result.push_back(Var(i));
+                result.emplace_back(Var(i));
             }
         }
 	}
@@ -1285,6 +1315,9 @@ Var Var::inall(const std::wstring &type, const Var &b) const {
 }
 
 Var Var::rin(const std::wstring &type, const Var &b, std::vector<Var> result) const {
+    if(result.capacity() < 1000) {
+        result.reserve(1000);
+    }
     if (type != L"STRICT"
         && type != L"DYNAMIC"
         && type != L"strict"
@@ -1300,6 +1333,12 @@ Var Var::rin(const std::wstring &type, const Var &b, std::vector<Var> result) co
 
 Var Var::rin_recursive(const std::wstring &type, const Var &a, const Var &b, std::vector<Var> &result) const {
     std::vector<Var> arr;
+    if(arr.capacity() < 1000) {
+        arr.reserve(1000);
+    }
+    if(result.capacity() < 1000) {
+        result.reserve(1000);
+    }
     if (a.type == ARR) {
         arr = a.getArr();
     }
@@ -1312,12 +1351,12 @@ Var Var::rin_recursive(const std::wstring &type, const Var &a, const Var &b, std
         for (int i = 0; i < size; ++i) {
             if (arr[i].type == ARR) {
                 if (arr[i].eq(L"strict", b).getBool()) {
-                    result.push_back(Var(i));
-                    result.push_back(Var(true));
+                    result.emplace_back(Var(i));
+                    result.emplace_back(Var(true));
                     break;
                 }
                 else {
-                    result.push_back(Var(i));
+                    result.emplace_back(Var(i));
                     result = this->rin_recursive(type, arr[i], b, result).arr;
                     int size = (int)result.size();
                     if (result[(long long int)size - 1].type == BLN && result[(long long int)size - 1].data.bln == true) {
@@ -1330,8 +1369,8 @@ Var Var::rin_recursive(const std::wstring &type, const Var &a, const Var &b, std
             }
             else {
                 if (arr[i].eq(L"strict", b).getBool()) {
-                    result.push_back(Var(i));
-                    result.push_back(Var(true));
+                    result.emplace_back(Var(i));
+                    result.emplace_back(Var(true));
                     break;
                 }
             }
@@ -1341,12 +1380,12 @@ Var Var::rin_recursive(const std::wstring &type, const Var &a, const Var &b, std
         for (int i = 0; i < size; ++i) {
             if (arr[i].type == ARR) {
                 if (arr[i].eq(L"dynamic", b).getBool()) {
-                    result.push_back(Var(i));
-                    result.push_back(Var(true));
+                    result.emplace_back(Var(i));
+                    result.emplace_back(Var(true));
                     break;
                 }
                 else {
-                    result.push_back(Var(i));
+                    result.emplace_back(Var(i));
                     result = this->rin_recursive(type, arr[i], b, result).arr;
                     int size = (int)result.size();
                     if (result[(long long int)size - 1].type == BLN && result[(long long int)size - 1].data.bln == true) {
@@ -1359,8 +1398,8 @@ Var Var::rin_recursive(const std::wstring &type, const Var &a, const Var &b, std
             }
             else {
                 if (arr[i].eq(L"dynamic", b).getBool()) {
-                    result.push_back(Var(i));
-                    result.push_back(Var(true));
+                    result.emplace_back(Var(i));
+                    result.emplace_back(Var(true));
                     break;
                 }
             }
@@ -1378,6 +1417,7 @@ Var Var::rinall(const std::wstring &type, const Var &b) const{
 	}
 
     std::vector<Var> all_results;
+    all_results.reserve(1000);
     this->rinall_recursive(type, *this, b, &all_results);
 
     if (all_results.size() == 0) {
@@ -1385,6 +1425,7 @@ Var Var::rinall(const std::wstring &type, const Var &b) const{
     }
     else {
         Var result = Var(std::vector<Var>());
+        result.arr.reserve(1000);
         int size = (int)all_results.size();
         for (int i = 0; i < size; ++i) {
             all_results[i].popb();
@@ -1402,24 +1443,27 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
     else {
         arr = a.toARR().getArr();
     }
+    if(arr.capacity() < 1000) {
+        arr.reserve(1000);
+    }
     int size = (int)arr.size();
 
     if (type == L"STRICT" || type == L"strict") {
         for (int i = 0; i < size; ++i) {
             if (arr[i].type == ARR) {
                 if (arr[i].eq(L"strict", b).getBool()) {
-                    result.push_back(Var(i));
-                    result.push_back(Var(true));
-                    (*all_results).push_back(Var(result));
+                    result.emplace_back(Var(i));
+                    result.emplace_back(Var(true));
+                    (*all_results).emplace_back(Var(result));
                     result.pop_back();
                     result.pop_back();
                 }
                 else {
-                    result.push_back(Var(i));
+                    result.emplace_back(Var(i));
                     result = this->rinall_recursive(type, arr[i], b, all_results, result).arr;
                     int size = (int)result.size();
                     if (result[(long long int)size - 1].type == BLN && result[(long long int)size - 1].data.bln == true) {
-                        (*all_results).push_back(Var(result));
+                        (*all_results).emplace_back(Var(result));
                     }
                     else {
                         result.pop_back();
@@ -1428,9 +1472,9 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
             }
             else {
                 if (arr[i].eq(L"strict", b).getBool()) {
-                    result.push_back(Var(i));
-                    result.push_back(Var(true));
-                    (*all_results).push_back(Var(result));
+                    result.emplace_back(Var(i));
+                    result.emplace_back(Var(true));
+                    (*all_results).emplace_back(Var(result));
                     result.pop_back();
                     result.pop_back();
                 }
@@ -1442,18 +1486,18 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
         for (int i = 0; i < size; ++i) {
             if (arr[i].type == ARR) {
                 if (arr[i].eq(L"dynamic", b).getBool()) {
-                    result.push_back(Var(i));
-                    result.push_back(Var(true));
-                    (*all_results).push_back(Var(result));
+                    result.emplace_back(Var(i));
+                    result.emplace_back(Var(true));
+                    (*all_results).emplace_back(Var(result));
                     result.pop_back();
                     result.pop_back();
                 }
                 else {
-                    result.push_back(Var(i));
+                    result.emplace_back(Var(i));
                     result = this->rinall_recursive(type, arr[i], b, all_results, result).arr;
                     int size = (int)result.size();
                     if (result[(long long int)size - 1].type == BLN && result[(long long int)size - 1].data.bln == true) {
-                        (*all_results).push_back(Var(result));
+                        (*all_results).emplace_back(Var(result));
                     }
                     else {
                         result.pop_back();
@@ -1462,9 +1506,9 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
             }
             else {
                 if (arr[i].eq(L"dynamic", b).getBool()) {
-                    result.push_back(Var(i));
-                    result.push_back(Var(true));
-                    (*all_results).push_back(Var(result));
+                    result.emplace_back(Var(i));
+                    result.emplace_back(Var(true));
+                    (*all_results).emplace_back(Var(result));
                     result.pop_back();
                     result.pop_back();
                 }
@@ -1482,10 +1526,17 @@ Var Var::intersect(const std::wstring &type, const Var &b) const {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
     std::vector<Var> arr = this->toARR().uniq(type).arr;
+    if(arr.capacity() < 1000) {
+        arr.reserve(1000);
+    }
     std::vector<Var> arr_b = b.toARR().arr;
+    if(arr_b.capacity() < 1000) {
+        arr_b.reserve(1000);
+    }
     int size = (int)arr.size();
     int size_b = (int)arr_b.size();
     Var result = Var(std::vector<Var>());
+    result.arr.reserve(1000);
 
     for(int i = 0; i < size; ++i) {
         for(int j = 0; j < size_b; ++j) {
@@ -1507,11 +1558,19 @@ Var Var::notintersect(const std::wstring &type, const Var &b) const {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
     std::vector<Var> arr = this->toARR().uniq(type).arr;
+    if(arr.capacity() < 1000) {
+        arr.reserve(1000);
+    }
     std::vector<Var> arr_b = b.toARR().uniq(type).arr;
+    if(arr_b.capacity() < 1000) {
+        arr.reserve(1000);
+    }
     int size = (int)arr.size();
     int size_b = (int)arr_b.size();
     Var result = Var(std::vector<Var>());
-
+    if(result.arr.capacity() < 1000) {
+        result.arr.reserve(1000);
+    }
     for(int i = 0; i < size; ++i) {
         bool is_unique = true;
         for(int j = 0; j < size_b; ++j) {
@@ -1545,7 +1604,9 @@ Var Var::arrtostr(const Var &delim) const {
     std::wstring str = L"";
     std::wstring delimiter = delim.toSTR().getWStr();
     std::vector<Var> arr = this->arr;
-
+    if(arr.capacity() < 1000) {
+        arr.reserve(1000);
+    }
     int size = (int)arr.size();
     for(int i = 0; i < size; ++i) {
         if(i < size - 1) {
@@ -1561,6 +1622,9 @@ Var Var::arrtostr(const Var &delim) const {
 Var Var::sum() const{
     double result = 0.0;
     std::vector<Var> arr = this->arr;
+    if(arr.capacity() < 1000) {
+        arr.reserve(1000);
+    }
     int size = (int)arr.size();
     for(int i = 0; i < size; ++i) {
         result += arr[i].toDBL().getDouble();
@@ -1571,6 +1635,9 @@ Var Var::sum() const{
 Var Var::avg() const {
     double result = 0.0;
     std::vector<Var> arr = this->arr;
+    if(arr.capacity() < 1000) {
+        arr.reserve(1000);
+    }
     int size = (int)arr.size();
     for(int i = 0; i < size; ++i) {
         result += arr[i].toDBL().getDouble();
@@ -1582,6 +1649,9 @@ Var Var::avg() const {
 Var Var::min() const {
     double result = 0.0;
     std::vector<Var> arr = this->arr;
+    if(arr.capacity() < 1000) {
+        arr.reserve(1000);
+    }
     int size = (int)arr.size();
     if(size > 0) {
         result = arr[0].toDBL().getDouble();
@@ -1723,6 +1793,7 @@ Var Var::repl(std::wstring substr, const std::wstring newsubstr) const {
 Var Var::split(Var delim) const {
     if (this->type == STR) {
         std::vector<Var> tokens;
+        tokens.reserve(1000);
         size_t pos = 0;
         std::wstring str = this->str;
         while (pos < str.length())
@@ -1737,7 +1808,7 @@ Var Var::split(Var delim) const {
 
             if (!token.str.empty())
             {
-                tokens.push_back(token);
+                tokens.emplace_back(token);
             }
             pos = next + delim.len().getUInt();
         }
@@ -1812,7 +1883,7 @@ Var Var::lower() const {
 
 void Var::pushb(const Var &v) {
     if (this->type == ARR) {
-        this->arr.push_back(v);
+        this->arr.emplace_back(v);
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
@@ -1985,6 +2056,9 @@ void Var::insert(const wchar_t* str, Var val) {
 Var Var::merge(const Var &val) const {
     if (this->type == ARR && val.type == ARR) {
         std::vector<Var> result = this->arr;
+        if(result.capacity() < 1000) {
+            result.reserve(1000);
+        }
         result.insert(result.end(), val.arr.begin(), val.arr.end());
         return Var(result);
     }
@@ -2102,6 +2176,7 @@ std::wostream& operator<< (std::wostream& wos, const Var& var)
 Var& Var::operator= (const Var& var) {
     if (this->type == ARR && var.type != ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP && var.type != MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2145,6 +2220,7 @@ Var& Var::operator= (const Var& var) {
 Var& Var::operator= (const unsigned long long int& var) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2160,6 +2236,7 @@ Var& Var::operator= (const unsigned long long int& var) {
 Var& Var::operator= (const unsigned long int& var) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2176,6 +2253,7 @@ Var& Var::operator= (const unsigned long int& var) {
 Var& Var::operator= (const unsigned int& var) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2191,6 +2269,7 @@ Var& Var::operator= (const unsigned int& var) {
 Var& Var::operator= (const unsigned short int& var) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2206,6 +2285,7 @@ Var& Var::operator= (const unsigned short int& var) {
 Var& Var::operator= (const long long int& var) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2221,6 +2301,7 @@ Var& Var::operator= (const long long int& var) {
 Var& Var::operator= (const long int& var) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2236,6 +2317,7 @@ Var& Var::operator= (const long int& var) {
 Var& Var::operator= (const int& var) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2251,6 +2333,7 @@ Var& Var::operator= (const int& var) {
 Var& Var::operator= (const short int& var) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2266,6 +2349,7 @@ Var& Var::operator= (const short int& var) {
 Var& Var::operator= (const long double& var) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2281,6 +2365,7 @@ Var& Var::operator= (const long double& var) {
 Var& Var::operator= (const double& var) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2296,6 +2381,7 @@ Var& Var::operator= (const double& var) {
 Var& Var::operator= (const float& var) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2311,6 +2397,7 @@ Var& Var::operator= (const float& var) {
 Var& Var::operator= (const char& var) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2326,6 +2413,7 @@ Var& Var::operator= (const char& var) {
 Var& Var::operator= (const unsigned char& var) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2341,6 +2429,7 @@ Var& Var::operator= (const unsigned char& var) {
 Var& Var::operator= (const bool& var) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2356,6 +2445,7 @@ Var& Var::operator= (const bool& var) {
 Var& Var::operator= (const std::wstring& var) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2368,6 +2458,7 @@ Var& Var::operator= (const std::wstring& var) {
 Var& Var::operator= (const wchar_t* var) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == MAP) {
         this->mp = std::unordered_map<std::wstring, Var>();
@@ -2386,12 +2477,16 @@ Var& Var::operator= (std::vector<Var> v) {
     }
     this->type = ARR;
     this->arr = v;
+    if (this->arr.capacity() < 1000) {
+        this->arr.reserve(1000);
+    }
     return *this;
 }
 
 Var& Var::operator= (std::unordered_map<std::wstring, Var> m) {
     if (this->type == ARR) {
         this->arr = std::vector<Var>();
+        this->arr.reserve(1000);
     }
     if (this->type == STR) {
         this->str = L"";

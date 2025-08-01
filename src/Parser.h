@@ -8,6 +8,10 @@ public:
 	std::wstring type;
 	std::vector<std::wstring> str_parameters;
 	std::vector<Var> parameters;
+
+	Lexeme() {
+		parameters.reserve(100);
+	}
 };
 
 class Parser {
