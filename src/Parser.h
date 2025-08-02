@@ -1,7 +1,10 @@
 ﻿#pragma once
 
+#include <string_view>
+
 #include "Var.h"
 #include "Machine.h"
+
 
 class Lexeme {
 public:

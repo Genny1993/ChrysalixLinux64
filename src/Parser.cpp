@@ -161,38 +161,38 @@ void Parser::parse(Machine& m) {
                 if (temp[0] == L'$' || temp[0] == L'&') {
                     lexemes[i].parameters.emplace_back(Var(temp));
                 }
-                else if (temp.substr(0, 3) == L"NTG" || temp.substr(0, 3) == L"ntg") {
+                else if (temp.substr(0, 3) == std::wstring_view(L"NTG") || temp.substr(0, 3) == std::wstring_view(L"ntg")) {
                     lexemes[i].parameters.emplace_back(Var(temp.erase(0, 3)).toNTG());
                 }
-                else if (temp.substr(0, 4) == L"UNTG" || temp.substr(0, 4) == L"untg") {
+                else if (temp.substr(0, 4) == std::wstring_view(L"UNTG") || temp.substr(0, 4) == std::wstring_view(L"untg")) {
                     lexemes[i].parameters.emplace_back(Var(temp.erase(0, 4)).toUNTG());
                 }
-                else if (temp.substr(0, 3) == L"DBL" || temp.substr(0, 3) == L"dbl") {
+                else if (temp.substr(0, 3) == std::wstring_view(L"DBL") || temp.substr(0, 3) == std::wstring_view(L"dbl")) {
                     lexemes[i].parameters.emplace_back(Var(temp.erase(0, 3)).toDBL());
                 }
-                else if (temp.substr(0, 3) == L"CHR" || temp.substr(0, 3) == L"chr") {
+                else if (temp.substr(0, 3) == std::wstring_view(L"CHR") || temp.substr(0, 3) == std::wstring_view(L"chr")) {
                     lexemes[i].parameters.emplace_back(Var(temp.erase(0, 3)).toCHR());
                 }
-                else if (temp.substr(0, 4) == L"UCHR" || temp.substr(0, 4) == L"uchr") {
+                else if (temp.substr(0, 4) == std::wstring_view(L"UCHR") || temp.substr(0, 4) == std::wstring_view(L"uchr")) {
                     lexemes[i].parameters.emplace_back(Var(temp.erase(0, 4)).toUCHR());
                 }
-                else if (temp == L"ARR" || temp == L"arr") {
+                else if (temp == std::wstring_view(L"ARR") || temp == std::wstring_view(L"arr")) {
                     std::vector<Var> v;
                     v.reserve(1000);
                     lexemes[i].parameters.emplace_back(Var(v));
                 }
-                else if (temp == L"MAP" || temp == L"map") {
+                else if (temp == std::wstring_view(L"MAP") || temp == std::wstring_view(L"map")) {
                     std::unordered_map<std::wstring, Var> map;
                     map.reserve(1000);
                     lexemes[i].parameters.emplace_back(Var(map));
                 }
-                else if (temp == L"TRUE" || temp == L"true") {
+                else if (temp == std::wstring_view(L"TRUE") || temp == std::wstring_view(L"true")) {
                     lexemes[i].parameters.emplace_back(Var(true));
                 }
-                else if (temp == L"FALSE" || temp == L"false") {
+                else if (temp == std::wstring_view(L"FALSE") || temp == std::wstring_view(L"false")) {
                     lexemes[i].parameters.emplace_back(Var(false));
                 }
-                else if (temp == L"NIL" || temp == L"nil") {
+                else if (temp == std::wstring_view(L"NIL") || temp == std::wstring_view(L"nil")) {
                     lexemes[i].parameters.emplace_back(Var());
                 }
                 else if (temp[0] == L'\'') {

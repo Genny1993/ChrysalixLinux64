@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include <algorithm>
 #include <functional>
+#include <string_view>
 
 union Data {
     long long int ntg = 0;

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <string_view>
 
 #include "LangLib.h"
 #include "Var.h"
@@ -103,11 +104,11 @@ Var::Var(const wchar_t* str) {
 }
 
 Var::Var(std::wstring t, int i) {
-    if (t == L"array") {
+    if (t == std::wstring_view(L"array")) {
         this->type = ARR;
         this->arr = std::vector<Var>(i);
     } 
-    else if (t == L"map" && i == 0) {
+    else if (t == std::wstring_view(L"map") && i == 0) {
         this->type = MAP;
         std::unordered_map<std::wstring, Var> map;
         map.reserve(1000);
@@ -621,7 +622,7 @@ Var Var::toBLN() const {
         Var result;
         result.type = BLN;
 
-        if (this->str == L"") {
+        if (this->str == std::wstring_view(L"")) {
             result.data.bln = false;
         }
         else {
@@ -748,7 +749,7 @@ Var Var::toSTR() const {
                 result += L", ";
             }
         }
-        if (result == L"") {
+        if (result == std::wstring_view(L"")) {
             return L"[]";
         }
         else {
@@ -1129,29 +1130,29 @@ Var Var::slice(const Var &x, const Var &y) const {
 }
 
 Var Var::sortarr(const std::wstring &type) const{
-    if (type != L"ASC"
-		&& type != L"DESC"
-		&& type != L"asc"
-		&& type != L"desc") {
+    if (type != std::wstring_view(L"ASC")
+		&& type != std::wstring_view(L"DESC")
+		&& type != std::wstring_view(L"asc")
+		&& type != std::wstring_view(L"desc")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сортировки неизвестен\n")};
 	}
 
     std::vector<Var> clear_arr = this->arr;
 
-    if (type == L"ASC" || type == L"asc") {
+    if (type == std::wstring_view(L"ASC") || type == std::wstring_view(L"asc")) {
 		sort(clear_arr.begin(), clear_arr.end());
 	}
-	else if (type == L"DESC" || type == L"desc") {
+	else if (type == std::wstring_view(L"DESC") || type == std::wstring_view(L"desc")) {
 		sort(clear_arr.begin(), clear_arr.end(), std::greater<Var>());
 	}
     return Var(clear_arr);
 }
 
 Var Var::eq(const std::wstring &type, const Var &b) const {
-    if (type != L"STRICT"
-		&& type != L"DYNAMIC"
-		&& type != L"strict"
-		&& type != L"dynamic") {
+    if (type != std::wstring_view(L"STRICT")
+		&& type != std::wstring_view(L"DYNAMIC")
+		&& type != std::wstring_view(L"strict")
+		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
 
@@ -1181,7 +1182,7 @@ Var Var::eq_recursive(const std::wstring &type, const Var &a, const Var &b) cons
         return Var(false);
     }
     else {
-        if(type == L"STRICT" || type == L"strict") {
+        if(type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
             if (a.type == b.type && a == b) { return Var(true); }
             else { return Var(false); }
         } else {
@@ -1193,10 +1194,10 @@ Var Var::eq_recursive(const std::wstring &type, const Var &a, const Var &b) cons
 }
 
 Var Var::uniq(const std::wstring &type) const {
-    if (type != L"STRICT"
-		&& type != L"DYNAMIC"
-		&& type != L"strict"
-		&& type != L"dynamic") {
+    if (type != std::wstring_view(L"STRICT")
+		&& type != std::wstring_view(L"DYNAMIC")
+		&& type != std::wstring_view(L"strict")
+		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
     
@@ -1204,7 +1205,7 @@ Var Var::uniq(const std::wstring &type) const {
     result.reserve(1000);
     const std::vector<Var>& arr = this->arr;
 
-    if (type == L"STRICT" || type == L"strict") {
+    if (type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
         int size = (int)arr.size();
         for (int i = 0; i < size; ++i) {
             const Var& arr_i = arr[i];
@@ -1215,7 +1216,7 @@ Var Var::uniq(const std::wstring &type) const {
                 if (arr_i == arr_j) {
                     if (arr_i.type == arr_j.type) {
                         if (arr_i.type == ARR && arr_j.type == ARR) {
-                            is_unique = !arr_i.eq(L"strict", arr_j).data.bln;
+                            is_unique = !arr_i.eq(type, arr_j).data.bln;
                         }
                         else {
                             is_unique = false;
@@ -1236,7 +1237,7 @@ Var Var::uniq(const std::wstring &type) const {
             for (int j = i; j < size; ++j) {
                 const Var& arr_j = arr[j];
                 if (j == i) { continue; }
-                if (arr_i.eq(L"strict", arr_j).data.bln) {
+                if (arr_i.eq(type, arr_j).data.bln) {
                     is_unique = false;
                     break;
                 }
@@ -1251,10 +1252,10 @@ Var Var::uniq(const std::wstring &type) const {
  }
 
  Var Var::in(const std::wstring &type, const Var &b) const {
-    if (type != L"STRICT"
-		&& type != L"DYNAMIC"
-		&& type != L"strict"
-		&& type != L"dynamic") {
+    if (type != std::wstring_view(L"STRICT")
+		&& type != std::wstring_view(L"DYNAMIC")
+		&& type != std::wstring_view(L"strict")
+		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
 
@@ -1262,17 +1263,17 @@ Var Var::uniq(const std::wstring &type) const {
 
     int size = (int)arr.size();
     int result = -1;
-    if (type == L"STRICT" || type == L"strict") {
+    if (type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
         for (int i = 0; i < size; ++i) {
-            if (arr[i].eq(L"strict", b).getBool()) {
+            if (arr[i].eq(type, b).getBool()) {
                 result = i;
                 break;
             }
         }
     }
-	else if (type == L"DYNAMIC" || type == L"dynamic") {
+	else if (type == std::wstring_view(L"DYNAMIC") || type == std::wstring_view(L"dynamic")) {
         for (int i = 0; i < size; ++i) {
-            if (arr[i].eq(L"dynamic", b).data.bln) {
+            if (arr[i].eq(type, b).data.bln) {
                 result = i;
                 break;
             }
@@ -1282,10 +1283,10 @@ Var Var::uniq(const std::wstring &type) const {
 }
 
 Var Var::inall(const std::wstring &type, const Var &b) const {
-    if (type != L"STRICT"
-		&& type != L"DYNAMIC"
-		&& type != L"strict"
-		&& type != L"dynamic") {
+    if (type != std::wstring_view(L"STRICT")
+		&& type != std::wstring_view(L"DYNAMIC")
+		&& type != std::wstring_view(L"strict")
+		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
     const std::vector<Var>& arr = this->type != ARR ? this->toARR().arr : this->arr;
@@ -1295,16 +1296,16 @@ Var Var::inall(const std::wstring &type, const Var &b) const {
     std::vector<Var> result;
     result.reserve(1000);
 
-    if (type == L"STRICT" || type == L"strict") {
+    if (type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
         for (int i = 0; i < size; ++i) {
-            if (arr[i].eq(L"strict", b).data.bln) {
+            if (arr[i].eq(type, b).data.bln) {
                 result.emplace_back(Var(i));
             }
         }
 	}
-	else if (type == L"DYNAMIC" || type == L"dynamic") {
+	else if (type == std::wstring_view(L"DYNAMIC") || type == std::wstring_view(L"dynamic")) {
         for (int i = 0; i < size; ++i) {
-            if (arr[i].eq(L"dynamic", b).data.bln) {
+            if (arr[i].eq(type, b).data.bln) {
                 result.emplace_back(Var(i));
             }
         }
@@ -1316,12 +1317,12 @@ Var Var::rin(const std::wstring &type, const Var &b, std::vector<Var> result) co
     if(result.capacity() < 1000) {
         result.reserve(1000);
     }
-    if (type != L"STRICT"
-        && type != L"DYNAMIC"
-        && type != L"strict"
-        && type != L"dynamic") {
-        throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
-    }
+    if (type != std::wstring_view(L"STRICT")
+		&& type != std::wstring_view(L"DYNAMIC")
+		&& type != std::wstring_view(L"strict")
+		&& type != std::wstring_view(L"dynamic")) {
+		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
+	}
 
     rin_recursive(type, *this, b, result);
     if(result.size() > 0) {
@@ -1335,11 +1336,11 @@ Var Var::rin_recursive(const std::wstring &type, const Var &a, const Var &b, std
     const std::vector<Var>& arr = a.type != ARR ? a.toARR().arr : a.arr;
     int size = (int)arr.size();
 
-    if (type == L"STRICT" || type == L"strict") {
+    if (type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
         for (int i = 0; i < size; ++i) {
             const Var& arr_i = arr[i];
             if (arr_i.type == ARR) {
-                if (arr_i.eq(L"strict", b).data.bln) {
+                if (arr_i.eq(type, b).data.bln) {
                     result.emplace_back(Var(i));
                     result.emplace_back(Var(true));
                     break;
@@ -1357,7 +1358,7 @@ Var Var::rin_recursive(const std::wstring &type, const Var &a, const Var &b, std
                 }
             }
             else {
-                if (arr_i.eq(L"strict", b).data.bln) {
+                if (arr_i.eq(type, b).data.bln) {
                     result.emplace_back(Var(i));
                     result.emplace_back(Var(true));
                     break;
@@ -1365,11 +1366,11 @@ Var Var::rin_recursive(const std::wstring &type, const Var &a, const Var &b, std
             }
         }
 	}
-	else if (type == L"DYNAMIC" || type == L"dynamic") {
+	else if (type == std::wstring_view(L"DYNAMIC") || type == std::wstring_view(L"dynamic")) {
         for (int i = 0; i < size; ++i) {
             const Var& arr_i = arr[i];
             if (arr_i.type == ARR) {
-                if (arr_i.eq(L"dynamic", b).getBool()) {
+                if (arr_i.eq(type, b).getBool()) {
                     result.emplace_back(Var(i));
                     result.emplace_back(Var(true));
                     break;
@@ -1387,7 +1388,7 @@ Var Var::rin_recursive(const std::wstring &type, const Var &a, const Var &b, std
                 }
             }
             else {
-                if (arr_i.eq(L"dynamic", b).getBool()) {
+                if (arr_i.eq(type, b).getBool()) {
                     result.emplace_back(Var(i));
                     result.emplace_back(Var(true));
                     break;
@@ -1399,10 +1400,10 @@ Var Var::rin_recursive(const std::wstring &type, const Var &a, const Var &b, std
 }
 
 Var Var::rinall(const std::wstring &type, const Var &b) const{
-    if (type != L"STRICT"
-		&& type != L"DYNAMIC"
-		&& type != L"strict"
-		&& type != L"dynamic") {
+    if (type != std::wstring_view(L"STRICT")
+		&& type != std::wstring_view(L"DYNAMIC")
+		&& type != std::wstring_view(L"strict")
+		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
 
@@ -1430,11 +1431,11 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
     const std::vector<Var>& arr = a.type != ARR ? a.toARR().arr : a.arr;
     int size = (int)arr.size();
 
-    if (type == L"STRICT" || type == L"strict") {
+    if (type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
         for (int i = 0; i < size; ++i) {
             const Var& arr_i = arr[i];
             if (arr_i.type == ARR) {
-                if (arr_i.eq(L"strict", b).data.bln) {
+                if (arr_i.eq(type, b).data.bln) {
                     result.emplace_back(Var(i));
                     result.emplace_back(Var(true));
                     Var res = Var(result);
@@ -1456,7 +1457,7 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
                 }
             }
             else {
-                if (arr[i].eq(L"strict", b).getBool()) {
+                if (arr[i].eq(type, b).getBool()) {
                     result.emplace_back(Var(i));
                     result.emplace_back(Var(true));
                     Var res = Var(result);
@@ -1468,11 +1469,11 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
         }
         return Var(result);
     }
-    else if(type == L"DYNAMIC" || type == L"dynamic"){
+    else if(type == std::wstring_view(L"DYNAMIC") || type == std::wstring_view(L"dynamic")){
         for (int i = 0; i < size; ++i) {
             const Var& arr_i = arr[i];
             if (arr_i.type == ARR) {
-                if (arr_i.eq(L"dynamic", b).getBool()) {
+                if (arr_i.eq(type, b).getBool()) {
                     result.emplace_back(Var(i));
                     result.emplace_back(Var(true));
                     Var res = Var(result);
@@ -1494,7 +1495,7 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
                 }
             }
             else {
-                if (arr_i.eq(L"dynamic", b).getBool()) {
+                if (arr_i.eq(type, b).getBool()) {
                     result.emplace_back(Var(i));
                     result.emplace_back(Var(true));
                     Var res = Var(result);
@@ -1509,10 +1510,10 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
 }
 
 Var Var::intersect(const std::wstring &type, const Var &b) const {
-    if (type != L"STRICT"
-		&& type != L"DYNAMIC"
-		&& type != L"strict"
-		&& type != L"dynamic") {
+    if (type != std::wstring_view(L"STRICT")
+		&& type != std::wstring_view(L"DYNAMIC")
+		&& type != std::wstring_view(L"strict")
+		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
     const std::vector<Var>& arr = this->type != ARR ? this->toARR().uniq(type).arr : this->uniq(type).arr;
@@ -1523,7 +1524,7 @@ Var Var::intersect(const std::wstring &type, const Var &b) const {
         result.arr.reserve(1000);
     }
 
-    if(type == L"STRICT" || type == L"strict") {
+    if(type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
         std::unordered_set<Var> a_set(arr.begin(), arr.end());
         std::unordered_set<Var> b_set(arr_b.begin(), arr_b.end());
 
@@ -1553,10 +1554,10 @@ Var Var::intersect(const std::wstring &type, const Var &b) const {
 }
 
 Var Var::notintersect(const std::wstring &type, const Var &b) const {
-    if (type != L"STRICT"
-		&& type != L"DYNAMIC"
-		&& type != L"strict"
-		&& type != L"dynamic") {
+     if (type != std::wstring_view(L"STRICT")
+		&& type != std::wstring_view(L"DYNAMIC")
+		&& type != std::wstring_view(L"strict")
+		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
     const std::vector<Var>& arr = this->type != ARR ? this->toARR().arr : this->arr;
@@ -1568,7 +1569,7 @@ Var Var::notintersect(const std::wstring &type, const Var &b) const {
         result.arr.reserve(1000);
     }
 
-    if(type == L"STRICT" || type == L"strict") {
+    if(type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
         std::unordered_set<Var> a_set(arr.begin(), arr.end());
         std::unordered_set<Var> b_set(arr_b.begin(), arr_b.end());
 
@@ -2186,7 +2187,7 @@ std::wostream& operator<< (std::wostream& wos, const Var& var)
                 str += L", ";
             }
         }
-        if (str == L"") {
+        if (str == std::wstring_view(L"")) {
             return wos << L"[]";
         }
         else {
@@ -4578,7 +4579,7 @@ bool operator==(const Var& a, const Var& b) {
             return a.str == b.str;
         }
         else if (b.type == NIL) {
-            if (a.str == L"") {
+            if (a.str == std::wstring_view(L"")) {
                 return true;
             }
             return false;
@@ -4651,7 +4652,7 @@ bool operator==(const Var& a, const Var& b) {
             return false;
         }
         else if (b.type == STR) {
-            if ((int)a.arr.size() == 0 && b.str == L"") {
+            if ((int)a.arr.size() == 0 && b.str == std::wstring_view(L"")) {
                 return true;
             }
             return false;

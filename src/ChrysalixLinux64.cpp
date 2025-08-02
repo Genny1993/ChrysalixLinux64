@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
     }
 
     //берем параметр при вызове, это имя файла скрипта для запуска
-    if (filename == L"") {
+    if (filename == std::wstring_view(L"")) {
         filename = std::wstring(argv[1], argv[1] + strlen(argv[1]));
     }
 
