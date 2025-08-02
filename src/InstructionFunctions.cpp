@@ -1696,3 +1696,69 @@ void range(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MEDIAN
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void median(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"MEDIAN";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+	}
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().median();
+		++(*m).instruct_number;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MODE
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void mode(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"MODE";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+	}
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().mode();
+		++(*m).instruct_number;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// STDDEV
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void stddev(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"STDDEV";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+	}
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().stddev();
+		++(*m).instruct_number;
+	}
+}

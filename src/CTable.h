@@ -62,6 +62,9 @@ enum OP_CODE {
     MIN,
     MAX,
     RNGE,
+    MEDIAN,
+    MODE,
+    STDDEV,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -125,5 +128,8 @@ struct CTable {
         {L"MIN", OP_CODE::MIN}, {L"min", OP_CODE::MIN},
         {L"MAX", OP_CODE::MAX}, {L"max", OP_CODE::MAX},
         {L"RANGE", OP_CODE::RNGE}, {L"range", OP_CODE::RNGE},
+        {L"MEDIAN", OP_CODE::MEDIAN}, {L"median", OP_CODE::MEDIAN},
+        {L"MODE", OP_CODE::MODE}, {L"mode", OP_CODE::MODE},
+        {L"STDDEV", OP_CODE::STDDEV}, {L"stddev", OP_CODE::STDDEV},
     };
 };

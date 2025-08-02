@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <functional>
 #include <string_view>
+#include <cmath>
 
 union Data {
     long long int ntg = 0;
@@ -139,6 +140,12 @@ public:
     Var max() const;
     //Разница между максимальным и минимальным значением
     Var range() const;
+    //Поиск медианного значения
+    Var median() const;
+    //Поиск самых частых значений
+    Var mode() const;
+    //Стандартное отклонение массива
+    Var stddev() const;
 
     Var ltrim() const;
     Var rtrim() const;

@@ -68,6 +68,9 @@ void avg(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void min(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void max(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void range(Machine* m, Instruction* i, bool prevalidate, bool prego);
+void median(Machine* m, Instruction* i, bool prevalidate, bool prego);
+void mode(Machine* m, Instruction* i, bool prevalidate, bool prego);
+void stddev(Machine* m, Instruction* i, bool prevalidate, bool prego);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,5 +132,8 @@ struct InstructionMap {
 		&min,
 		&max,
 		&range,
+		&median,
+		&mode,
+		&stddev,
 	};
 };

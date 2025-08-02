@@ -1,4 +1,4 @@
-﻿#include <vector>
+#include <vector>
 #include <unordered_map>
 #include <string>
 #include <iostream>
@@ -1213,16 +1213,14 @@ Var Var::uniq(const std::wstring &type) const {
             for (int j = i; j < size; ++j) {
                 const Var& arr_j = arr[j];
                 if (j == i) { continue; }
-                if (arr_i == arr_j) {
-                    if (arr_i.type == arr_j.type) {
-                        if (arr_i.type == ARR && arr_j.type == ARR) {
-                            is_unique = !arr_i.eq(type, arr_j).data.bln;
-                        }
-                        else {
-                            is_unique = false;
-                        }
-                        break;
+                if (arr_i.type == arr_j.type && arr_i == arr_j) {
+                    if (arr_i.type == ARR && arr_j.type == ARR) {
+                        is_unique = !arr_i.eq(type, arr_j).data.bln;
                     }
+                    else {
+                        is_unique = false;
+                    }
+                    break;
                 }
             }
             if (is_unique) {
@@ -1658,7 +1656,9 @@ Var Var::avg() const {
     for(int i = 0; i < size; ++i) {
         result += arr[i].toDBL().getDouble();
     }
-    result /= (double)size;
+    if(size > 0) {
+        result /= (double)size;
+    }
     return Var(result);
 }
 
@@ -1696,11 +1696,67 @@ Var Var::max() const {
     return Var(result);
 }
 
-Var Var::range() const {
-    Var result = 0.0;
+Var Var::range() const {;
     Var maxval = this->max();
     Var minval = this->min();
     return maxval - minval;
+}
+
+Var Var::median() const {
+    const std::vector<Var>& arr = this->sortarr(L"asc").arr;
+    int size = (int)arr.size();
+    if(size == 0) {
+        return Var(0.0);
+    }
+    if(size % 2 == 1) {
+        return arr[(int)(size / 2)]; 
+    } else {
+        Var a = arr[(int)(size / 2)];
+        Var b = arr[(int)(size / 2) - 1];
+        return (a + b) / Var(2.0);
+    }
+}
+
+Var Var::mode() const {
+    std::unordered_map<std::wstring, int> freq;
+    freq.reserve(1000);
+    std::vector<Var> result;
+    result.reserve(1000);
+    int max_count = 0;
+    if(this->arr.size() == 0) {
+        return Var(0.0);
+    }
+    for (const auto& val : this->arr) {
+        int count = ++freq[val.toSTR().str];
+        if (count > max_count) {
+            max_count = count;
+        }
+    }
+
+    for (const auto& [val, count] : freq) {
+        if (count == max_count) {
+            result.push_back(val);
+        }
+    }
+
+    return Var(result);
+}
+
+Var Var::stddev() const {
+    double result = 0.0;
+    if(this->arr.size() == 0) {
+        return Var(result);
+    }
+    double mean = this->avg().data.dbl;
+
+    double sq_sum = 0.0;
+    for (const Var& v : this->arr) {
+        double diff = v.toDBL().data.dbl - mean;
+        sq_sum += diff * diff;
+    }
+
+    result = std::sqrt(sq_sum / arr.size());
+    return Var(result);
 }
 
 Var Var::in(Var sent) const {

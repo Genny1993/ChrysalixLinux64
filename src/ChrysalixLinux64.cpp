@@ -63,13 +63,13 @@ int main(int argc, char* argv[])
         p.fileLoad(filename);
         auto end = std::chrono::high_resolution_clock::now();
         auto elapsed_ms = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::wcout << LangLib::getTrans(L"Время загрузки файла с исходным кодом: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек\n");
+        std::wcout << LangLib::getTrans(L"Время загрузки файла с исходным кодом: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек") << L" 🦋\n";
 
         begin = std::chrono::high_resolution_clock::now();
         p.parse(mchn);
         end = std::chrono::high_resolution_clock::now();
         elapsed_ms = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::wcout << LangLib::getTrans(L"Время обработки исходного кода: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек\n");
+        std::wcout << LangLib::getTrans(L"Время обработки исходного кода: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек") << L" 🎀\n";
 
         //Выполняем код
         begin = std::chrono::high_resolution_clock::now();
@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
         mchn.go();
         end = std::chrono::high_resolution_clock::now();
         elapsed_ms = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::wcout << LangLib::getTrans(L"Время выполнения кода: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << L" sec 😽\n";
+        std::wcout << LangLib::getTrans(L"Время выполнения кода: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек") << L" 😽\n";
         
         //Пик по используемой памяти
         struct rusage usage;
