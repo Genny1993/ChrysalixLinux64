@@ -1709,7 +1709,7 @@ Var Var::median() const {
         return Var(0.0);
     }
     if(size % 2 == 1) {
-        return arr[(int)(size / 2)]; 
+        return arr[(int)(size / 2)].toDBL(); 
     } else {
         Var a = arr[(int)(size / 2)];
         Var b = arr[(int)(size / 2) - 1];
