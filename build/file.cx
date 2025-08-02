@@ -6,11 +6,11 @@
 	var: $result, nil;
 
  	var: $i, 0;
- 	var: $max, 10000;
+ 	var: $max, 100000;
  	newtemp: 1;
  label: &loop;
 	calc: 'inc', $i;
-	notintersect: 'strict', $result, $intersect1, $intersect2;
+	notintersect: 'dynamic', $result, $intersect1, $intersect2;
 	#print: $result, '\n';
 	comp: '<', $0, $i, $max;
 jif: $0, &loop;

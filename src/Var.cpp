@@ -1534,12 +1534,15 @@ Var Var::intersect(const std::wstring &type, const Var &b) const {
         }
     } 
     else {
-        int size = (int)arr.size();
+        const std::vector<Var>& u_arr = Var(arr).uniq(type).arr;
+        
+        int size = (int)u_arr.size();
         int size_b = (int)arr_b.size();
+
         for(int i = 0; i < size; ++i) {
             for(int j = 0; j < size_b; ++j) {
-                if(arr[i].eq(type, arr_b[j]).data.bln) {
-                    result.pushb(arr[i]);
+                if(u_arr[i].eq(type, arr_b[j]).data.bln) {
+                    result.pushb(u_arr[i]);
                     break;
                 }
             }
@@ -1581,33 +1584,36 @@ Var Var::notintersect(const std::wstring &type, const Var &b) const {
             }
         }
     } 
-    else {
-        int size = (int)arr.size();
-        int size_b = (int)arr_b.size();
-        
+    else {        
+        const std::vector<Var>& u_arr = Var(arr).uniq(type).arr;
+        const std::vector<Var>& u_arr_b = Var(arr_b).uniq(type).arr;
+
+        int size = (int)u_arr.size();
+        int size_b = (int)u_arr_b.size();
+
         for(int i = 0; i < size; ++i) {
             bool is_unique = true;
             for(int j = 0; j < size_b; ++j) {
-                if(arr[i].eq(type, arr_b[j]).data.bln) {
+                if(u_arr[i].eq(type, u_arr_b[j]).data.bln) {
                     is_unique = false;
                     break;
                 }
             }
             if(is_unique) {
-                result.pushb(arr[i]);
+                result.pushb(u_arr[i]);
             }
         }
 
         for(int i = 0; i < size_b; ++i) {
             bool is_unique = true;
             for(int j = 0; j < size; ++j) {
-                if(arr_b[i].eq(type, arr[j]).data.bln) {
+                if(u_arr_b[i].eq(type, u_arr[j]).data.bln) {
                     is_unique = false;
                     break;
                 }
             }
             if(is_unique) {
-                result.pushb(arr_b[i]);
+                result.pushb(u_arr_b[i]);
             }
         }
     }
