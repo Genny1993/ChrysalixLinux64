@@ -3,7 +3,9 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <algorithm>
+#include <functional>
 
 union Data {
     long long int ntg = 0;
@@ -124,6 +126,7 @@ public:
     Var intersect(const std::wstring &type, const Var &b) const;
     //Возвращает непересекающиеся значения массивов
     Var notintersect(const std::wstring &type, const Var &b) const;
+    //Массив в строку с разделителем
     Var arrtostr(const Var &delim) const;
     //Сумма всех элементов массива
     Var sum() const;
@@ -226,3 +229,12 @@ public:
 };
 //Обмен значениями
 void swap(Var& a, Var& b);
+
+namespace std {
+    template <>
+    struct hash<Var> {
+        std::size_t operator()(const Var& v) const noexcept {
+            return  std::hash<std::wstring>{}(v.str);
+        }
+    };
+}
