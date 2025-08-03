@@ -1,5 +1,10 @@
+	vtoarr: $subarr, 5, 2, 3;
+	vtoarr: $subarr2, 5, 4, $subarr, 1;
+	vtoarr: $arr, 5, $subarr2, 4, $subarr2, 3, $subarr2; 
 	var: $result, nil;
-	vtoarr: $arr, 1, 2, 3;
+	rinall: 'strict', $result, $arr, 5;
+	print: $arr, '\n';
+	print: $result, '\n';
 
  	var: $i, 0;
  	var: $max, 100000;
