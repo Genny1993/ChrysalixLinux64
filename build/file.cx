@@ -1,11 +1,8 @@
-	vtoarr: $subarr, 5, 2, 3;
-	vtoarr: $subarr2, 5, 4, $subarr, 1;
-	vtoarr: $arr, 5, $subarr2, 4, $subarr2, 3, $subarr2; 
+	vtoarr: $arr, 1, 5, 1, 4, 7, 8, 4, 5;
 	var: $result, nil;
-	rinall: 'strict', $result, $arr, 5;
-	print: $arr, '\n';
+	stddev: $result, $arr;
 	print: $result, '\n';
-
+##
  	var: $i, 0;
  	var: $max, 100000;
  	newtemp: 1;
@@ -17,7 +14,7 @@
 jif: $0, &loop;
 	forget:;
 	free: $i, $max;
-
+##
  ##
 	vtoarr: $a1, ntg 1, ntg 2, 1;
 	vtoarr: $a2, 3, 2, 1, $a1;
