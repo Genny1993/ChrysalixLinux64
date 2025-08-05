@@ -71,6 +71,8 @@ void range(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void median(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void mode(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void stddev(Machine* m, Instruction* i, bool prevalidate, bool prego);
+void push(Machine* m, Instruction* i, bool prevalidate, bool prego);
+void vtomap(Machine* m, Instruction* i, bool prevalidate, bool prego);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -135,5 +137,7 @@ struct InstructionMap {
 		&median,
 		&mode,
 		&stddev,
+		&push,
+		&vtomap,
 	};
 };

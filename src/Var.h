@@ -156,10 +156,13 @@ public:
     Var upper() const;
     Var lower() const;
 
+    //Работа с массивами
     void pushb(const Var &v);
     Var popb();
     void pushf(const Var &val);
     Var popf();
+    //Добавление элемента в MAP
+    void push(const Var &key, const Var &val);
 
     void clear();
     void erase(const int &x);

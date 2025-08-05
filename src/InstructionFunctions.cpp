@@ -1145,19 +1145,21 @@ void getval(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		int dimensions = (int)(*i).parameters.size() - 2;
-		Var result = (*m).heap[(*i).parameters[1].toSTR().getWStr()];
+		Var* result = &((*m).heap[(*i).parameters[1].toSTR().getWStr()]);
+
 		for (int iter = 0; iter < dimensions; ++iter) {
-			int dimension = (int)getValue(&(*i).parameters[(long long int)iter + 2], &(*m).heap).toUNTG().getUInt();
-			try {
-				Var res = result.getArr().at(dimension);
-				result = res;
-			}
-			catch (std::out_of_range& ex) {
-				std::string temp = ex.what();
-				throw std::wstring{ std::to_wstring(dimension) + L": " + LangLib::getTrans(L"Индекс находится вне диапазона\n") };
+			Var dimension = getValue(&(*i).parameters[(long long int)iter + 2], &(*m).heap);
+			Type type = (*result).type;
+
+			if(type == ARR) {
+				result = &(*result)[dimension.toUNTG().getUInt()];
+			} else if( type == MAP ) {
+				result = &(*result)[dimension.toSTR().getWStr()];
+			} else {
+				throw std::wstring{ (*result).toSTR().getWStr() + L": " + LangLib::getTrans(L"Значение не является массивом или словарем\n") };
 			}
 		}
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = result;
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = *result;
 		++(*m).instruct_number;
 	}
 }
@@ -1184,15 +1186,20 @@ void setval(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		Var* result = &((*m).heap[(*i).parameters[1].toSTR().getWStr()]);
 
 		for (int iter = 0; iter < dimensions; ++iter) {
-			int dimension = (int)getValue(&(*i).parameters[(long long int)iter + 2], &(*m).heap).toUNTG().getUInt();
+			Var dimension = getValue(&(*i).parameters[(long long int)iter + 2], &(*m).heap);
+			Type type = (*result).type;
 			if (iter == dimensions - 1) {
 				(*result)[getValue(&(*i).parameters[(long long int)iter + 2], &(*m).heap)] = getValue(&(*i).parameters[0], &(*m).heap);
 				break;
 			}
-			Var* res = &(*result)[dimension];
-			result = res;
+			if(type == ARR) {
+				result = &(*result)[dimension.toUNTG().getUInt()];
+			} else if( type == MAP ) {
+				result = &(*result)[dimension.toSTR().getWStr()];
+			} else {
+				throw std::wstring{ (*result).toSTR().getWStr() + L": " + LangLib::getTrans(L"Значение не является массивом или словарем\n") };
+			}
 		}
-
 		++(*m).instruct_number;
 	}
 }
@@ -1759,6 +1766,59 @@ void stddev(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().stddev();
+		++(*m).instruct_number;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PUSH
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void push(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"PUSH";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 3);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+	}	
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()].push(getValue(&(*i).parameters[1], &(*m).heap), getValue(&(*i).parameters[2], &(*m).heap));
+		++(*m).instruct_number;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  VTOMAP
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void vtomap(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"VTOMAP";
+		checkParameterCount(MINIMAL, (int)(*i).parameters.size(), &name, 0, 3);
+		if((int)(*i).parameters.size() % 2 == 0) {
+			throw std::wstring{ LangLib::getTrans(L"Неверное число параметров! Каждый ключ должен иметь пару - значение\n") };
+		} 
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkExistValue(&(*i).parameters[0], m);
+	}	
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		int size = (int)(*i).parameters.size();
+		std::unordered_map<std::wstring, Var> map;
+		map.reserve(1000);
+		for(int index = 1; index < size; index+=2) {
+			map.insert({getValue(&(*i).parameters[index], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[index + 1], &(*m).heap)});
+		}
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = map;
 		++(*m).instruct_number;
 	}
 }

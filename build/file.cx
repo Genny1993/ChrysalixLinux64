@@ -1,7 +1,13 @@
-	vtoarr: $arr, 1, 5, 1, 4, 7, 8, 4, 5;
-	var: $result, nil;
-	stddev: $result, $arr;
-	print: $result, '\n';
+	vtoarr: $subarr, 1, 2, 3, 8;
+	vtomap: $submap, 'apple', 10, 'apricot', 6, 'watermelon', 1, 'arr', $subarr;
+	vtomap: $submap2, 'new', 10, 'old', 5, 'fruits', $submap;
+	vtoarr: $arr, 1, 12, 'str', $subarr, $submap2; 
+	var: $elem, nil;
+	print: $submap2, '\n';
+	getval: $elem, $submap2, 'fruits', 'arr', 3;
+	#print: $elem, '\n';
+	setval: $submap2, $submap2, 'fruits', 'arr', 3;
+	print: $submap2, '\n';
 ##
  	var: $i, 0;
  	var: $max, 100000;
@@ -15,25 +21,7 @@ jif: $0, &loop;
 	forget:;
 	free: $i, $max;
 ##
- ##
-	vtoarr: $a1, ntg 1, ntg 2, 1;
-	vtoarr: $a2, 3, 2, 1, $a1;
-	vtoarr: $intersect1, 1, 2, 1, 3, 2, 2, 3, 4, 5, 4, 6, 5, 10, 11, 42, 33, 66, 99, 54, 33, 78, 43, 21, 54, 78, 64, 33, 42, -11, 78, 43, 54. 78. 84, 1, 2, 1, 3, 2, 2, 3, 4, 5, 4, 6, 5, 10, 11, 42, 33, 66, 99, 54, 33, 78, 43, 21, 54, 78, 64, 33, 42, 78, 43, 54. 78. 84;
-	vtoarr: $intersect2, untg 4, untg 3, untg 2, 2, 3, 1, 2, 1, $a2, 11, 78, 54, 66. 21, 64, 43, 84, 11, 64, 63, 62, 14, 23, 22, 22, 22, 89, 12, 12, 19, untg 4, untg 3, untg 2, 2, 3, 1, 2, 1, $a2, 11, 78, 54, 66. 21, 64, 43, 84, 11, 64, 63, 62, 14, 23, 22, 22, 22, 89, 12, 12, 19;
-	var: $result, nil;
-	range: $result, $intersect1;
-	print: $result, '\n';
-##
-##
-	vtoarr: $a1, 1, 2, 1;
-	vtoarr: $a2, 3, 2, 1, $a1;
-	vtoarr: $a3, $a2, 1, 4, 2;
-	var: $path, nil;
-	var: $type, 'strict';
-	rinall: $type, $path, $a3, 2;
-	print: $a3, '\n';
-	print: 'Путь до значения 2: ', $path, '\n';
-##
+
 ##
 	#Циклический расчет факториала:
 	var: $n, 20;		#Факториал чего считаем

@@ -65,6 +65,8 @@ enum OP_CODE {
     MEDIAN,
     MODE,
     STDDEV,
+    PUSH,
+    VTOMAP,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -131,5 +133,7 @@ struct CTable {
         {L"MEDIAN", OP_CODE::MEDIAN}, {L"median", OP_CODE::MEDIAN},
         {L"MODE", OP_CODE::MODE}, {L"mode", OP_CODE::MODE},
         {L"STDDEV", OP_CODE::STDDEV}, {L"stddev", OP_CODE::STDDEV},
+        {L"PUSH", OP_CODE::PUSH}, {L"push", OP_CODE::PUSH},
+        {L"VTOMAP", OP_CODE::VTOMAP}, {L"vtomap", OP_CODE::VTOMAP},
     };
 };

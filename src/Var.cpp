@@ -2021,7 +2021,17 @@ Var Var::popf() {
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
         error += L"ARR\n";
-        throw std::wstring{ error };;
+        throw std::wstring{ error };
+    }
+}
+
+void Var::push(const Var &key, const Var &val) {
+    if (this->type == MAP) {
+        this->mp.insert({key.toSTR().getWStr(), val});
+    } else {
+        std::wstring error = LangLib::getTrans(MESSAGE7);
+        error += L"MAP\n";
+        throw std::wstring{ error };
     }
 }
 
