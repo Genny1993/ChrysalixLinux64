@@ -1262,10 +1262,30 @@ void merge(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		if ((*i).parameters.size() == 2) {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[0], &(*m).heap).toARR().merge(getValue(&(*i).parameters[1], &(*m).heap).toARR());
+			Type typeA = getValue(&(*i).parameters[0], &(*m).heap).type;
+			Type typeB = getValue(&(*i).parameters[1], &(*m).heap).type;
+			if((typeA == MAP && typeB == MAP ) || (typeA == ARR && typeB == ARR )  ) {
+				(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[0], &(*m).heap).merge(getValue(&(*i).parameters[1], &(*m).heap));
+			} else if((typeA == MAP || typeA == ARR) && (typeB != MAP && typeB != ARR)) {
+				(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[0], &(*m).heap).merge(getValue(&(*i).parameters[1], &(*m).heap).toARR());
+			} else if((typeA != MAP && typeA != ARR) && (typeB == MAP || typeB == ARR)) {
+				(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[0], &(*m).heap).toARR().merge(getValue(&(*i).parameters[1], &(*m).heap));
+			} else {
+				(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[0], &(*m).heap).toARR().merge(getValue(&(*i).parameters[1], &(*m).heap).toARR());
+			}
 		}
 		else {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().merge(getValue(&(*i).parameters[2], &(*m).heap).toARR());
+			Type typeA = getValue(&(*i).parameters[1], &(*m).heap).type;
+			Type typeB = getValue(&(*i).parameters[2], &(*m).heap).type;
+			if((typeA == MAP && typeB == MAP ) || (typeA == ARR && typeB == ARR )  ) {
+				(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).merge(getValue(&(*i).parameters[2], &(*m).heap));
+			} else if((typeA == MAP || typeA == ARR) && (typeB != MAP && typeB != ARR)) {
+				(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).merge(getValue(&(*i).parameters[2], &(*m).heap).toARR());
+			} else if((typeA != MAP && typeA != ARR) && (typeB == MAP || typeB == ARR)) {
+				(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().merge(getValue(&(*i).parameters[2], &(*m).heap));
+			} else {
+				(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().merge(getValue(&(*i).parameters[2], &(*m).heap).toARR());
+			}
 		}
 		++(*m).instruct_number;
 	}

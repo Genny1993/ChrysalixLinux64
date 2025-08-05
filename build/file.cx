@@ -1,13 +1,7 @@
-	vtoarr: $subarr, 1, 2, 3, 8;
-	vtomap: $submap, 'apple', 10, 'apricot', 6, 'watermelon', 1, 'arr', $subarr;
-	vtomap: $submap2, 'new', 10, 'old', 5, 'fruits', $submap;
-	vtoarr: $arr, 1, 12, 'str', $subarr, $submap2; 
-	var: $elem, nil;
-	print: $submap2, '\n';
-	getval: $elem, $submap2, 'fruits', 'arr', 3;
-	#print: $elem, '\n';
-	setval: $submap2, $submap2, 'fruits', 'arr', 3;
-	print: $submap2, '\n';
+	vtomap: $map1, 'apple', 1, 'apricot', 3;
+	vtomap: $map2, 'apple', 3, 'melon', 6;
+	merge: $map1, $map2;
+	print: $map1, '\n';
 ##
  	var: $i, 0;
  	var: $max, 100000;

@@ -940,7 +940,7 @@ Var& Var::operator[](int ind) {
         catch (std::exception& err)
         {
             std::string temp = err.what();
-            throw std::wstring{ LangLib::getTrans(MESSAGE4) };
+            throw std::wstring{ std::to_wstring(ind) + L": " + LangLib::getTrans(MESSAGE4) };
         }
     }
     else if (this->type == STR) {
@@ -952,7 +952,7 @@ Var& Var::operator[](int ind) {
         catch (std::exception& err)
         {
             std::string temp = err.what();
-            throw std::wstring{ LangLib::getTrans(MESSAGE4) };
+            throw std::wstring{ std::to_wstring(ind) + L": " + LangLib::getTrans(MESSAGE4) };
         }
     }
     else {
@@ -974,7 +974,7 @@ Var& Var::operator[](const wchar_t* str) {
     }
     catch (std::exception& err) {
         std::string temp = err.what();
-        throw std::wstring{ LangLib::getTrans(MESSAGE6) };
+        throw std::wstring{ std::wstring(str) + L": " + LangLib::getTrans(MESSAGE6) };
     }
 }
 Var& Var::operator[](std::wstring str) {
@@ -990,7 +990,7 @@ Var& Var::operator[](std::wstring str) {
     }
     catch (std::exception& err) {
         std::string temp = err.what();
-        throw std::wstring{ LangLib::getTrans(MESSAGE6) };
+        throw std::wstring{ str + L": " + LangLib::getTrans(MESSAGE6) };
     }
 }
 Var& Var::operator[](Var v) {
@@ -1002,7 +1002,7 @@ Var& Var::operator[](Var v) {
             catch (std::exception& err)
             {
                 std::string temp = err.what();
-                throw std::wstring{ LangLib::getTrans(MESSAGE4) };
+                throw std::wstring{ v.toSTR().getWStr() + L": " + LangLib::getTrans(MESSAGE4) };
             }
         }
         else if (this->type == STR) {
@@ -1014,7 +1014,7 @@ Var& Var::operator[](Var v) {
             catch (std::exception& err)
             {
                 std::string temp = err.what();
-                throw std::wstring{ LangLib::getTrans(MESSAGE4) };
+                throw std::wstring{ v.toSTR().getWStr() + L": " + LangLib::getTrans(MESSAGE4) };
             }
         }
         else {
@@ -1036,7 +1036,7 @@ Var& Var::operator[](Var v) {
         }
         catch (std::exception& err) {
             std::string temp = err.what();
-            throw std::wstring{ LangLib::getTrans(MESSAGE6) };
+            throw std::wstring{ v.toSTR().getWStr() + L": " + LangLib::getTrans(MESSAGE6) };
         }
     }
     else {
