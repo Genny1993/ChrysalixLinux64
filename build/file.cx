@@ -1,7 +1,19 @@
-	vtomap: $map1, 'apple', 1, 'apricot', 3;
-	vtomap: $map2, 'apple', 3, 'melon', 6;
-	merge: $map1, $map2;
-	print: $map1, '\n';
+	print:	'          ／l、
+         （ﾟ､ ｡７
+            l、ﾞ~ヽ
+            じしf_, )ノ', '\n';
+	print: '♥️ MEOW! I LOVE YOU ALL SO MUCH!♥️', '\n';
+##
+	vtomap: $submap, 'test', 1, 'test1', 2;
+	vtomap: $submap2, 'test', 1, 'test1', 2;
+	vtoarr: $subarr, 1, 2, 5;
+	vtoarr: $subarr2, 1, 2, 3;
+	vtomap: $map1, 'apple', 3, 'melon', 6, 'sm', $submap, 'sa', $subarr;
+	vtomap: $map2, 'apple', 3, 'melon', 6, 'sm', $submap2, 'sa', $subarr;
+	var: $result, nil;
+	equal: 'strict', $result, $map1, $map2;
+	print: $result, '\n';
+##
 ##
  	var: $i, 0;
  	var: $max, 100000;

@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
         p.parse(mchn);
         end = std::chrono::high_resolution_clock::now();
         elapsed_ms = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::wcout <<  L"⚙️🎀" + LangLib::getTrans(L"Время обработки исходного кода: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек") <<L"\n";
+        std::wcout <<  L"⚙️ 🎀" + LangLib::getTrans(L"Время обработки исходного кода: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек") <<L"\n";
 
         //Выполняем код
         begin = std::chrono::high_resolution_clock::now();

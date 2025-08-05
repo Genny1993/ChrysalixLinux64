@@ -1027,7 +1027,7 @@ Var& Var::operator[](Var v) {
         try {
             if (this->type == MAP) {
                 return this->mp.at(v.getWStr());
-            } 
+            }
             else {
                 std::wstring error = LangLib::getTrans(MESSAGE5);
                 error += L"STR, ARR, MAP\n";
@@ -1160,7 +1160,7 @@ Var Var::eq(const std::wstring &type, const Var &b) const {
 }
 
 Var Var::eq_recursive(const std::wstring &type, const Var &a, const Var &b) const {
-    if (this->type == ARR && b.type == ARR) {
+    if (a.type == ARR && b.type == ARR) {
         const std::vector<Var>& arr_a = a.arr;
         const std::vector<Var>& arr_b = b.arr;
 
@@ -1177,8 +1177,32 @@ Var Var::eq_recursive(const std::wstring &type, const Var &a, const Var &b) cons
             }
         }
         return Var(is_equal);
+    } else if (a.type == MAP && b.type == MAP) {
+        const std::unordered_map<std::wstring, Var> map_a = a.mp;
+        const std::unordered_map<std::wstring, Var>& map_b = b.mp;
+
+        int size_a = (int)map_a.size();
+        int size_b = (int)map_b.size();
+
+        if (size_a != size_b) { Var(false); }
+
+        bool is_equal = true;
+        for (const auto& [key, val] : map_a) {
+            try {
+                if (this->eq_recursive(type, map_a.at(key), map_b.at(key)) == false) {
+                    is_equal = false;
+                    break;
+                }
+            } catch(std::exception& err) {
+                std::string temp = err.what();
+                return Var(false);
+            }
+        }
+        return Var(is_equal);
     }
     else if ((a.type == ARR && b.type != ARR) || (a.type != ARR && b.type == ARR)) {
+        return Var(false);
+    }  else if ((a.type == MAP && b.type != MAP) || (a.type != MAP && b.type == MAP)) {
         return Var(false);
     }
     else {

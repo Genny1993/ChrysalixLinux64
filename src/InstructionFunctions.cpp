@@ -1393,7 +1393,7 @@ void equal(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().eq(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap).toARR());
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).eq(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
