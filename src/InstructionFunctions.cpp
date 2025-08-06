@@ -1339,10 +1339,10 @@ void unique(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		if ((*i).parameters.size() == 2) {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().uniq(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr());
+			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).uniq(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr());
 		}
 		else {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().uniq(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr());
+			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).uniq(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr());
 		}
 		++(*m).instruct_number;
 	}
@@ -1446,7 +1446,7 @@ void in(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().in(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).in(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }

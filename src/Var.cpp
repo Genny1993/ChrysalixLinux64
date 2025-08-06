@@ -1227,7 +1227,17 @@ Var Var::uniq(const std::wstring &type) const {
     
     std::vector<Var> result;
     result.reserve(1000);
-    const std::vector<Var>& arr = this->arr;
+    std::vector<Var> arr;
+    if(this->type == ARR) {
+        arr = this->arr;
+    } else if(this->type == MAP) {
+        const std::unordered_map<std::wstring, Var>& map = this->mp;
+        for (const auto& [key, val] : map) {
+           arr.emplace_back(val);
+        }
+    } else {
+        arr =this->toARR().arr;
+    }
 
     if (type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
         int size = (int)arr.size();
@@ -1281,27 +1291,31 @@ Var Var::uniq(const std::wstring &type) const {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
 
-    const std::vector<Var>& arr = this->type != ARR ? this->toARR().arr : this->arr;
+    if(this->type != MAP) {
+         const std::vector<Var>& arr = this->type != ARR ? this->toARR().arr : this->arr;
 
-    int size = (int)arr.size();
-    int result = -1;
-    if (type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
-        for (int i = 0; i < size; ++i) {
-            if (arr[i].eq(type, b).getBool()) {
-                result = i;
-                break;
-            }
-        }
-    }
-	else if (type == std::wstring_view(L"DYNAMIC") || type == std::wstring_view(L"dynamic")) {
+        int size = (int)arr.size();
+        int result = -1;
+
         for (int i = 0; i < size; ++i) {
             if (arr[i].eq(type, b).data.bln) {
                 result = i;
                 break;
             }
         }
+        return Var(result);
+    } else {
+        const std::unordered_map<std::wstring, Var>&  map = this->mp;
+        Var result = -1;
+
+        for (const auto& [key, val] : map) {
+            if (map.at(key).eq(type, b).data.bln) {
+                result = key;
+                break;
+            }
+        }
+        return result;
     }
-    return Var(result);
 }
 
 Var Var::inall(const std::wstring &type, const Var &b) const {
