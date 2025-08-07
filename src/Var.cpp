@@ -1325,28 +1325,32 @@ Var Var::inall(const std::wstring &type, const Var &b) const {
 		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
-    const std::vector<Var>& arr = this->type != ARR ? this->toARR().arr : this->arr;
+    if(this->type != MAP) {
+        const std::vector<Var>& arr = this->type != ARR ? this->toARR().arr : this->arr;
 
-    int size = (int)arr.size();
+        int size = (int)arr.size();
 
-    std::vector<Var> result;
-    result.reserve(1000);
+        std::vector<Var> result;
+        result.reserve(1000);
 
-    if (type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
         for (int i = 0; i < size; ++i) {
             if (arr[i].eq(type, b).data.bln) {
                 result.emplace_back(Var(i));
             }
         }
-	}
-	else if (type == std::wstring_view(L"DYNAMIC") || type == std::wstring_view(L"dynamic")) {
-        for (int i = 0; i < size; ++i) {
-            if (arr[i].eq(type, b).data.bln) {
-                result.emplace_back(Var(i));
+        return Var(result);
+    } else {
+        const std::unordered_map<std::wstring, Var>&  map = this->mp;
+        std::vector<Var> result;
+        result.reserve(1000);
+
+        for (const auto& [key, val] : map) {
+            if (map.at(key).eq(type, b).data.bln) {
+                result.emplace_back(Var(key));
             }
         }
-	}
-    return Var(result);
+        return result;
+    }
 }
 
 Var Var::rin(const std::wstring &type, const Var &b, std::vector<Var> result) const {
@@ -1369,13 +1373,13 @@ Var Var::rin(const std::wstring &type, const Var &b, std::vector<Var> result) co
 
 Var Var::rin_recursive(const std::wstring &type, const Var &a, const Var &b, std::vector<Var> &result) const {
 
-    const std::vector<Var>& arr = a.type != ARR ? a.toARR().arr : a.arr;
-    int size = (int)arr.size();
+    if (a.type != MAP) {
+        const std::vector<Var>& arr = a.type != ARR ? a.toARR().arr : a.arr;
+        int size = (int)arr.size();
 
-    if (type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
         for (int i = 0; i < size; ++i) {
             const Var& arr_i = arr[i];
-            if (arr_i.type == ARR) {
+            if (arr_i.type == ARR || arr_i.type == MAP) {
                 if (arr_i.eq(type, b).data.bln) {
                     result.emplace_back(Var(i));
                     result.emplace_back(Var(true));
@@ -1402,17 +1406,19 @@ Var Var::rin_recursive(const std::wstring &type, const Var &a, const Var &b, std
             }
         }
 	}
-	else if (type == std::wstring_view(L"DYNAMIC") || type == std::wstring_view(L"dynamic")) {
-        for (int i = 0; i < size; ++i) {
-            const Var& arr_i = arr[i];
-            if (arr_i.type == ARR) {
+	else {
+        const std::unordered_map<std::wstring, Var>&  map = a.mp;
+
+        for (const auto& [key, val] : map) {
+            const Var& arr_i = val;
+            if (arr_i.type == ARR || arr_i.type == MAP) {
                 if (arr_i.eq(type, b).getBool()) {
-                    result.emplace_back(Var(i));
+                    result.emplace_back(Var(key));
                     result.emplace_back(Var(true));
                     break;
                 }
                 else {
-                    result.emplace_back(Var(i));
+                    result.emplace_back(Var(key));
                     result = this->rin_recursive(type, arr_i, b, result).arr;
                     int size = (int)result.size();
                     if (result[(long long int)size - 1].type == BLN && result[(long long int)size - 1].data.bln == true) {
@@ -1425,7 +1431,7 @@ Var Var::rin_recursive(const std::wstring &type, const Var &a, const Var &b, std
             }
             else {
                 if (arr_i.eq(type, b).getBool()) {
-                    result.emplace_back(Var(i));
+                    result.emplace_back(Var(key));
                     result.emplace_back(Var(true));
                     break;
                 }
@@ -1463,14 +1469,12 @@ Var Var::rinall(const std::wstring &type, const Var &b) const{
 }
 
 Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, std::vector<Var>* all_results, std::vector<Var> result) const {
-   
-    const std::vector<Var>& arr = a.type != ARR ? a.toARR().arr : a.arr;
-    int size = (int)arr.size();
-
-    if (type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
+    if (a.type != MAP) {
+        const std::vector<Var>& arr = a.type != ARR ? a.toARR().arr : a.arr;
+        int size = (int)arr.size();
         for (int i = 0; i < size; ++i) {
             const Var& arr_i = arr[i];
-            if (arr_i.type == ARR) {
+            if (arr_i.type == ARR || arr_i.type == MAP) {
                 if (arr_i.eq(type, b).data.bln) {
                     result.emplace_back(Var(i));
                     result.emplace_back(Var(true));
@@ -1493,7 +1497,7 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
                 }
             }
             else {
-                if (arr[i].eq(type, b).getBool()) {
+                if (arr_i.eq(type, b).getBool()) {
                     result.emplace_back(Var(i));
                     result.emplace_back(Var(true));
                     Var res = Var(result);
@@ -1505,12 +1509,13 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
         }
         return Var(result);
     }
-    else if(type == std::wstring_view(L"DYNAMIC") || type == std::wstring_view(L"dynamic")){
-        for (int i = 0; i < size; ++i) {
-            const Var& arr_i = arr[i];
-            if (arr_i.type == ARR) {
-                if (arr_i.eq(type, b).getBool()) {
-                    result.emplace_back(Var(i));
+    else {
+        const std::unordered_map<std::wstring, Var>&  map = a.mp;
+
+        for (const auto& [key, val] : map) {
+            if (val.type == ARR || val.type == MAP) {
+                if (val.eq(type, b).data.bln) {
+                    result.emplace_back(Var(key));
                     result.emplace_back(Var(true));
                     Var res = Var(result);
                     (*all_results).emplace_back(res);
@@ -1518,8 +1523,8 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
                     result.pop_back();
                 }
                 else {
-                    result.emplace_back(Var(i));
-                    result = this->rinall_recursive(type, arr_i, b, all_results, result).arr;
+                    result.emplace_back(Var(key));
+                    result = this->rinall_recursive(type, val, b, all_results, result).arr;
                     int size = (int)result.size();
                     if (result[(long long int)size - 1].type == BLN && result[(long long int)size - 1].data.bln == true) {
                         Var res = Var(result);
@@ -1531,8 +1536,8 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
                 }
             }
             else {
-                if (arr_i.eq(type, b).getBool()) {
-                    result.emplace_back(Var(i));
+                if (val.eq(type, b).getBool()) {
+                    result.emplace_back(Var(key));
                     result.emplace_back(Var(true));
                     Var res = Var(result);
                     (*all_results).emplace_back(res);
@@ -1541,8 +1546,8 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
                 }
             }
         }
+        return Var(result);
     }
-    return Var(result);
 }
 
 Var Var::intersect(const std::wstring &type, const Var &b) const {

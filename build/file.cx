@@ -3,12 +3,13 @@
             l、ﾞ~ヽ
             じしf_, )ノ', '\n';
 	print: '♥️ MEOW! I LOVE YOU ALL SO MUCH!♥️', '\n';
-
-	vtomap: $map, 'apple', 1, 'melon', 2, 'watermelon', 1, 'apricot', 2;
-	vtoarr: $arr, 3;
+	vtomap: $map2, 'test1', 1, 'test2', 2, 'test3', 3, 'test4', 4;
+	vtoarr: $arr, 3, $map2;
+	vtomap: $map, 'apple', 1, 'melon', 2, 'watermelon', $arr, 'apricot', 2;
+	vtoarr: $arr2, 7, 5, 4, $map, 2, 2, 3, 9, $map;
 	var: $result, nil;
-	in: 'strict', $result, $arr, 3;
-	print: $map, '\n';
+	rin: 'strict', $result, $arr2, 3;
+	print: $arr2, '\n';
 	print: $result, '\n';
 
 ##

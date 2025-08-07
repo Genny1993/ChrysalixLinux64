@@ -1468,7 +1468,7 @@ void inall(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().inall(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).inall(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1490,7 +1490,7 @@ void rin(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().rin(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).rin(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1512,7 +1512,7 @@ void rinall(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().rinall(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).rinall(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
