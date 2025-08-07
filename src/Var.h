@@ -146,6 +146,8 @@ public:
     Var mode() const;
     //Стандартное отклонение массива
     Var stddev() const;
+    //Проверка ключа на существование
+    Var kexist(const Var &key) const;
 
     Var ltrim() const;
     Var rtrim() const;

@@ -1802,6 +1802,19 @@ Var Var::stddev() const {
     return Var(result);
 }
 
+ Var Var::kexist(const Var &key) const {
+    if(this->type != MAP) {
+        std::wstring error = LangLib::getTrans(MESSAGE7);
+        error += L"MAP\n";
+        throw std::wstring{ error };
+    }
+    if (this->mp.find(key.toSTR().getWStr()) == this->mp.end()) {
+        return Var(false);
+    } else {
+        return Var(true);
+    }
+ }
+
 Var Var::in(Var sent) const {
     if(this->type == STR) {
         bool exists = this->str.find(sent.str) != std::wstring::npos;

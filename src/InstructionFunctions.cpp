@@ -97,7 +97,8 @@ void sleepf(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 void var(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	if (prevalidate) {
 		std::wstring name = L"VAR";
-		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		int v[2]{ 1, 2 };
+		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), &name, 0, 0, nullptr, v, 2);
 		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
 	}
 	else {
@@ -108,7 +109,11 @@ void var(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap);
+		if((int)(*i).parameters.size() == 1) {
+			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var();
+		} else {
+			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap);
+		}
 		++(*m).instruct_number;
 	}
 }
@@ -1839,6 +1844,30 @@ void vtomap(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 			map.insert({getValue(&(*i).parameters[index], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[index + 1], &(*m).heap)});
 		}
 		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = map;
+		++(*m).instruct_number;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  KEXIST
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void kexist(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"KEXIST";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 3);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+		checkNotExistValue(&(*i).parameters[1], m);
+	}	
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).kexist(getValue(&(*i).parameters[2], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
