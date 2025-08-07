@@ -68,6 +68,8 @@ enum OP_CODE {
     PUSH,
     VTOMAP,
     KEXIST,
+    GETVALS,
+    GETKEYS,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -137,5 +139,7 @@ struct CTable {
         {L"PUSH", OP_CODE::PUSH}, {L"push", OP_CODE::PUSH},
         {L"VTOMAP", OP_CODE::VTOMAP}, {L"vtomap", OP_CODE::VTOMAP},
         {L"KEXIST", OP_CODE::KEXIST}, {L"kexist", OP_CODE::KEXIST},
+        {L"GETVALS", OP_CODE::GETVALS}, {L"getvals", OP_CODE::GETVALS},
+        {L"GETKEYS", OP_CODE::GETKEYS}, {L"getkeys", OP_CODE::GETKEYS},
     };
 };

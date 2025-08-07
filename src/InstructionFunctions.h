@@ -74,6 +74,8 @@ void stddev(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void push(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void vtomap(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void kexist(Machine* m, Instruction* i, bool prevalidate, bool prego);
+void getvals(Machine* m, Instruction* i, bool prevalidate, bool prego);
+void getkeys(Machine* m, Instruction* i, bool prevalidate, bool prego);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,5 +143,7 @@ struct InstructionMap {
 		&push,
 		&vtomap,
 		&kexist,
+		&getvals,
+		&getkeys,
 	};
 };

@@ -1871,3 +1871,77 @@ void kexist(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  GETVALS
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void getvals(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"GETVALS";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+		checkNotExistValue(&(*i).parameters[1], m);
+	}	
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		const Var &map = getValue(&(*i).parameters[1], &(*m).heap);
+		if(map.type != MAP) {
+			std::wstring error = LangLib::getTrans(L"Инструкция используется только для следующих типов: ");
+        	error += L"MAP\n";
+        	throw std::wstring{ error };
+		}
+		std::vector<Var> vals;
+		vals.reserve(1000);
+
+		for (const auto& [key, val] : map.mp) {
+			vals.emplace_back(val);
+		}
+
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var(vals);
+		++(*m).instruct_number;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  GETKEYS
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void getkeys(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"GETKEYS";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+		checkNotExistValue(&(*i).parameters[1], m);
+	}	
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		const Var &map = getValue(&(*i).parameters[1], &(*m).heap);
+		if(map.type != MAP) {
+			std::wstring error = LangLib::getTrans(L"Инструкция используется только для следующих типов: ");
+        	error += L"MAP\n";
+        	throw std::wstring{ error };
+		}
+		std::vector<Var> keys;
+		keys.reserve(1000);
+
+		for (const auto& [key, val] : map.mp) {
+			keys.emplace_back(key);
+		}
+
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var(keys);
+		++(*m).instruct_number;
+	}
+}
