@@ -1188,7 +1188,8 @@ void setval(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	else {
 
 		int dimensions = (int)(*i).parameters.size() - 2;
-		Var* result = &getValue(&(*i).parameters[1], &(*m).heap);
+		
+		Var* result = &setValue(&(*i).parameters[1], &(*m).heap);
 
 		for (int iter = 0; iter < dimensions; ++iter) {
 			Var dimension = getValue(&(*i).parameters[(long long int)iter + 2], &(*m).heap);
