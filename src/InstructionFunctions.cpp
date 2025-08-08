@@ -235,7 +235,7 @@ void input(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	else {
 		std::wstring str;
 		getline(std::wcin, str);
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var(str);
+		setValue(&(*i).parameters[0], &(*m).heap) = Var(str);
 		++(*m).instruct_number;
 	}
 }
@@ -257,7 +257,7 @@ void change(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap);
+		setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap);
 		++(*m).instruct_number;
 	}
 }
@@ -284,28 +284,28 @@ void to(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 
 		if ((*i).parameters.size() == 2) {
 			if (type == std::wstring_view(L"NTG") || type == std::wstring_view(L"ntg")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toNTG();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toNTG();
 			}
 			else if (type == std::wstring_view(L"UNTG") || type == std::wstring_view(L"untg")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toUNTG();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toUNTG();
 			}
 			else if (type == std::wstring_view(L"DBL") || type == std::wstring_view(L"dbl")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toDBL();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toDBL();
 			}
 			else if (type == std::wstring_view(L"CHR") || type == std::wstring_view(L"chr")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toCHR();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toCHR();
 			}
 			else if (type == std::wstring_view(L"UCHR") || type == std::wstring_view(L"uchr")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toUCHR();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toUCHR();
 			}
 			else if (type == std::wstring_view(L"BLN") || type == std::wstring_view(L"bln")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toBLN();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toBLN();
 			}
 			else if (type == std::wstring_view(L"STR") || type == std::wstring_view(L"str")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toSTR();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toSTR();
 			}
 			else if (type == std::wstring_view(L"ARR") || type == std::wstring_view(L"arr")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toARR();
 			}
 			else {
 				throw std::wstring{ type + LangLib::getTrans(L": Тип данных неизвестен\n") };
@@ -313,28 +313,28 @@ void to(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		}
 		else if ((*i).parameters.size() == 3) {
 			if (type == std::wstring_view(L"NTG") || type == std::wstring_view(L"ntg")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toNTG();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).toNTG();
 			}
 			else if (type == std::wstring_view(L"UNTG") || type == std::wstring_view(L"untg")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toUNTG();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).toUNTG();
 			}
 			else if (type == std::wstring_view(L"DBL") || type == std::wstring_view(L"dbl")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toDBL();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).toDBL();
 			}
 			else if (type == std::wstring_view(L"CHR") || type == std::wstring_view(L"chr")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toCHR();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).toCHR();
 			}
 			else if (type == std::wstring_view(L"UCHR") || type == std::wstring_view(L"uchr")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toUCHR();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).toUCHR();
 			}
 			else if (type == std::wstring_view(L"BLN") || type == std::wstring_view(L"bln")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toBLN();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).toBLN();
 			}
 			else if (type == std::wstring_view(L"STR") || type == std::wstring_view(L"str")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toSTR();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).toSTR();
 			}
 			else if (type == std::wstring_view(L"ARR") || type == std::wstring_view(L"arr")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).toARR();
 			}
 			else {
 				throw std::wstring{ LangLib::getTrans(L": Тип данных неизвестен\n") };
@@ -386,10 +386,10 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		}
 		if ((*i).parameters.size() == 2) {
 			if (type == std::wstring_view(L"INC") || type == std::wstring_view(L"inc")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] += Var(1);
+				setValue(&(*i).parameters[1], &(*m).heap) += Var(1);
 			}
 			else if (type == std::wstring_view(L"DEC") || type == std::wstring_view(L"dec")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] -= Var(1);
+				setValue(&(*i).parameters[1], &(*m).heap) -= Var(1);
 			}
 			else if (type == std::wstring_view(L"FACT") || type == std::wstring_view(L"fact")) {
 				int fact = (int)(*m).heap[(*i).parameters[1].getWStr()].toUNTG().getUInt();
@@ -397,10 +397,10 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 				for (int i = 1; i <= fact; ++i) {
 					result *= i;
 				}
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = Var(result);
+				setValue(&(*i).parameters[1], &(*m).heap) = Var(result);
 			}
 			else if (type == std::wstring_view(L"LN") || type == std::wstring_view(L"ln")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = Var(log((*m).heap[(*i).parameters[1].getWStr()].toDBL().getDouble()));
+				setValue(&(*i).parameters[1], &(*m).heap) = Var(log((*m).heap[(*i).parameters[1].getWStr()].toDBL().getDouble()));
 			}
 			else {
 				throw std::wstring{ type + LangLib::getTrans(L"Математическая операция принимает 2 и больше параметров\n") };
@@ -408,10 +408,10 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		}
 		if ((*i).parameters.size() == 3) {
 			if (type == std::wstring_view(L"INC") || type == std::wstring_view(L"inc")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap) + Var(1);
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap) + Var(1);
 			}
 			else if (type == std::wstring_view(L"DEC") || type == std::wstring_view(L"dec")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap) - Var(1);
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap) - Var(1);
 			}
 			else if (type == std::wstring_view(L"FACT") || type == std::wstring_view(L"fact")) {
 				long long int fact = getValue(&(*i).parameters[2], &(*m).heap).toUNTG().getUInt();
@@ -419,77 +419,77 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 				for (int i = 1; i <= fact; ++i) {
 					result *= i;
 				}
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = Var(result);
+				setValue(&(*i).parameters[1], &(*m).heap) = Var(result);
 			}
 			else if (type == std::wstring_view(L"LN") || type == std::wstring_view(L"ln")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = Var(log(getValue(&(*i).parameters[2], &(*m).heap).toDBL().getDouble()));
+				setValue(&(*i).parameters[1], &(*m).heap) = Var(log(getValue(&(*i).parameters[2], &(*m).heap).toDBL().getDouble()));
 			}
 			else if (type == std::wstring_view(L"+")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] += getValue(&(*i).parameters[2], &(*m).heap);
+				setValue(&(*i).parameters[1], &(*m).heap) += getValue(&(*i).parameters[2], &(*m).heap);
 			}
 			else if (type == std::wstring_view(L"-")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] -= getValue(&(*i).parameters[2], &(*m).heap);
+				setValue(&(*i).parameters[1], &(*m).heap) -= getValue(&(*i).parameters[2], &(*m).heap);
 			}
 			else if (type == std::wstring_view(L"*")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] *= getValue(&(*i).parameters[2], &(*m).heap);
+				setValue(&(*i).parameters[1], &(*m).heap) *= getValue(&(*i).parameters[2], &(*m).heap);
 			}
 			else if (type == std::wstring_view(L"/")) {
 				Var param = getValue(&(*i).parameters[2], &(*m).heap);
 				if (param == Var(0)) {
 					throw std::wstring{ (*i).parameters[2].toSTR().getWStr() + LangLib::getTrans(L"Деление на 0. Параметр равен нулю\n") };
 				}
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] /= getValue(&(*i).parameters[2], &(*m).heap);
+				setValue(&(*i).parameters[1], &(*m).heap) /= getValue(&(*i).parameters[2], &(*m).heap);
 			}
 			else if (type == std::wstring_view(L"%")) {
 				Var param = getValue(&(*i).parameters[2], &(*m).heap);
 				if (param == Var(0)) {
 					throw std::wstring{ (*i).parameters[2].toSTR().getWStr() + LangLib::getTrans(L"Деление на 0. Параметр равен нулю\n") };
 				}
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] %= getValue(&(*i).parameters[2], &(*m).heap);
+				setValue(&(*i).parameters[1], &(*m).heap) %= getValue(&(*i).parameters[2], &(*m).heap);
 			}
 			else if (type == std::wstring_view(L"^")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = Var(pow(getValue(&(*i).parameters[1], &(*m).heap).toDBL().getDouble(), getValue(&(*i).parameters[2], &(*m).heap).toDBL().getDouble()));
+				setValue(&(*i).parameters[1], &(*m).heap) = Var(pow(getValue(&(*i).parameters[1], &(*m).heap).toDBL().getDouble(), getValue(&(*i).parameters[2], &(*m).heap).toDBL().getDouble()));
 			}
 			else if (type == std::wstring_view(L"ROOT") || type == std::wstring_view(L"root")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = Var(pow(getValue(&(*i).parameters[1], &(*m).heap).toDBL().getDouble(), 1.0 / getValue(&(*i).parameters[2], &(*m).heap).toDBL().getDouble()));
+				setValue(&(*i).parameters[1], &(*m).heap) = Var(pow(getValue(&(*i).parameters[1], &(*m).heap).toDBL().getDouble(), 1.0 / getValue(&(*i).parameters[2], &(*m).heap).toDBL().getDouble()));
 			}
 			else if (type == std::wstring_view(L"LOG") || type == std::wstring_view(L"log")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = log(getValue(&(*i).parameters[1], &(*m).heap).toDBL().getDouble()) / log(getValue(&(*i).parameters[2], &(*m).heap).toDBL().getDouble());
+				setValue(&(*i).parameters[1], &(*m).heap) = log(getValue(&(*i).parameters[1], &(*m).heap).toDBL().getDouble()) / log(getValue(&(*i).parameters[2], &(*m).heap).toDBL().getDouble());
 
 			}
 		}
 		if ((*i).parameters.size() == 4) {
 			if (type == std::wstring_view(L"+")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap) + getValue(&(*i).parameters[3], &(*m).heap);
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap) + getValue(&(*i).parameters[3], &(*m).heap);
 			}
 			else if (type == std::wstring_view(L"-")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap) - getValue(&(*i).parameters[3], &(*m).heap);
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap) - getValue(&(*i).parameters[3], &(*m).heap);
 			}
 			else if (type == std::wstring_view(L"*")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap) * getValue(&(*i).parameters[3], &(*m).heap);
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap) * getValue(&(*i).parameters[3], &(*m).heap);
 			}
 			else if (type == std::wstring_view(L"/")) {
 				Var param = getValue(&(*i).parameters[3], &(*m).heap);
 				if (param == Var(0)) {
 					throw std::wstring{ (*i).parameters[3].toSTR().getWStr() + LangLib::getTrans(L"Деление на 0. Параметр равен нулю\n") };
 				}
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap) / getValue(&(*i).parameters[3], &(*m).heap);
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap) / getValue(&(*i).parameters[3], &(*m).heap);
 			}
 			else if (type == std::wstring_view(L"%")) {
 				Var param = getValue(&(*i).parameters[3], &(*m).heap);
 				if (param == Var(0)) {
 					throw std::wstring{ (*i).parameters[3].toSTR().getWStr() + LangLib::getTrans(L"Деление на 0. Параметр равен нулю\n") };
 				}
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap) % getValue(&(*i).parameters[3], &(*m).heap);
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap) % getValue(&(*i).parameters[3], &(*m).heap);
 			}
 			else if (type == std::wstring_view(L"^")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = Var(pow(getValue(&(*i).parameters[2], &(*m).heap).toDBL().getDouble(), getValue(&(*i).parameters[3], &(*m).heap).toDBL().getDouble()));
+				setValue(&(*i).parameters[1], &(*m).heap) = Var(pow(getValue(&(*i).parameters[2], &(*m).heap).toDBL().getDouble(), getValue(&(*i).parameters[3], &(*m).heap).toDBL().getDouble()));
 			}
 			else if (type == std::wstring_view(L"ROOT") || type == std::wstring_view(L"root")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = Var(pow(getValue(&(*i).parameters[2], &(*m).heap).toDBL().getDouble(), 1.0 / getValue(&(*i).parameters[3], &(*m).heap).toDBL().getDouble()));
+				setValue(&(*i).parameters[1], &(*m).heap) = Var(pow(getValue(&(*i).parameters[2], &(*m).heap).toDBL().getDouble(), 1.0 / getValue(&(*i).parameters[3], &(*m).heap).toDBL().getDouble()));
 			}
 			else if (type == std::wstring_view(L"LOG") || type == std::wstring_view(L"log")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = log(getValue(&(*i).parameters[2], &(*m).heap).toDBL().getDouble()) / log(getValue(&(*i).parameters[3], &(*m).heap).toDBL().getDouble());
+				setValue(&(*i).parameters[1], &(*m).heap) = log(getValue(&(*i).parameters[2], &(*m).heap).toDBL().getDouble()) / log(getValue(&(*i).parameters[3], &(*m).heap).toDBL().getDouble());
 
 			}
 			else {
@@ -574,7 +574,7 @@ void tcount(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var((*m).tmp_count);
+		setValue(&(*i).parameters[0], &(*m).heap) = Var((*m).tmp_count);
 		++(*m).instruct_number;
 	}
 
@@ -599,10 +599,10 @@ void isset(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		if ((*m).heap.find((*i).parameters[1].toSTR().getWStr()) != (*m).heap.end()) {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var(true);
+			setValue(&(*i).parameters[0], &(*m).heap) = Var(true);
 		}
 		else {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var(false);
+			setValue(&(*i).parameters[0], &(*m).heap) = Var(false);
 		}
 		++(*m).instruct_number;
 	}
@@ -627,7 +627,7 @@ void typeofv(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).typeOf();
+		setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).typeOf();
 		++(*m).instruct_number;
 	}
 
@@ -653,22 +653,22 @@ void comp(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr();
 
 		if (type == std::wstring_view(L"==")) {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap) == getValue(&(*i).parameters[3], &(*m).heap);
+			setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap) == getValue(&(*i).parameters[3], &(*m).heap);
 		}
 		else if (type == std::wstring_view(L"!=")) {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap) != getValue(&(*i).parameters[3], &(*m).heap);
+			setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap) != getValue(&(*i).parameters[3], &(*m).heap);
 		}
 		else if (type == std::wstring_view(L">")) {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap) > getValue(&(*i).parameters[3], &(*m).heap);
+			setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap) > getValue(&(*i).parameters[3], &(*m).heap);
 		}
 		else if (type == std::wstring_view(L"<")) {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap) < getValue(&(*i).parameters[3], &(*m).heap);
+			setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap) < getValue(&(*i).parameters[3], &(*m).heap);
 		}
 		else if (type == std::wstring_view(L">=")) {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap) >= getValue(&(*i).parameters[3], &(*m).heap);
+			setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap) >= getValue(&(*i).parameters[3], &(*m).heap);
 		}
 		else if (type == std::wstring_view(L"<=")) {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap) <= getValue(&(*i).parameters[3], &(*m).heap);
+			setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap) <= getValue(&(*i).parameters[3], &(*m).heap);
 		}
 		else {
 			throw std::wstring{ type + LangLib::getTrans(L": Операция сравнения неизвестна\n") };
@@ -716,7 +716,7 @@ void logic(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		}
 		if ((*i).parameters.size() == 3) {
 			if (type == std::wstring_view(L"NOT") || type == std::wstring_view(L"not")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = !getValue(&(*i).parameters[2], &(*m).heap).toBLN().getBool();
+				setValue(&(*i).parameters[1], &(*m).heap) = !getValue(&(*i).parameters[2], &(*m).heap).toBLN().getBool();
 			}
 			else {
 				throw std::wstring{ type + LangLib::getTrans(L": Логическая операция принимет не менее 4 параметров\n") };
@@ -724,22 +724,22 @@ void logic(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		}
 		else if ((*i).parameters.size() == 4) {
 			if (type == std::wstring_view(L"AND") || type == std::wstring_view(L"and")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toBLN().getBool() && getValue(&(*i).parameters[3], &(*m).heap).toBLN().getBool();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).toBLN().getBool() && getValue(&(*i).parameters[3], &(*m).heap).toBLN().getBool();
 			}
 			else if (type == std::wstring_view(L"OR") || type == std::wstring_view(L"or")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toBLN().getBool() || getValue(&(*i).parameters[3], &(*m).heap).toBLN().getBool();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).toBLN().getBool() || getValue(&(*i).parameters[3], &(*m).heap).toBLN().getBool();
 			}
 			else if (type == std::wstring_view(L"NAND") || type == std::wstring_view(L"nand")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = !(getValue(&(*i).parameters[2], &(*m).heap).toBLN().getBool() && getValue(&(*i).parameters[3], &(*m).heap).toBLN().getBool());
+				setValue(&(*i).parameters[1], &(*m).heap) = !(getValue(&(*i).parameters[2], &(*m).heap).toBLN().getBool() && getValue(&(*i).parameters[3], &(*m).heap).toBLN().getBool());
 			}
 			else if (type == std::wstring_view(L"NOR") || type == std::wstring_view(L"nor")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = !(getValue(&(*i).parameters[2], &(*m).heap).toBLN().getBool() || getValue(&(*i).parameters[3], &(*m).heap).toBLN().getBool());
+				setValue(&(*i).parameters[1], &(*m).heap) = !(getValue(&(*i).parameters[2], &(*m).heap).toBLN().getBool() || getValue(&(*i).parameters[3], &(*m).heap).toBLN().getBool());
 			}
 			else if (type == std::wstring_view(L"XOR") || type == std::wstring_view(L"xor")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = !(getValue(&(*i).parameters[2], &(*m).heap).toBLN().getBool()) != !(getValue(&(*i).parameters[3], &(*m).heap).toBLN().getBool());
+				setValue(&(*i).parameters[1], &(*m).heap) = !(getValue(&(*i).parameters[2], &(*m).heap).toBLN().getBool()) != !(getValue(&(*i).parameters[3], &(*m).heap).toBLN().getBool());
 			}
 			else if (type == std::wstring_view(L"XNOR") || type == std::wstring_view(L"xnor")) {
-				(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toBLN().getBool() == getValue(&(*i).parameters[3], &(*m).heap).toBLN().getBool();
+				setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).toBLN().getBool() == getValue(&(*i).parameters[3], &(*m).heap).toBLN().getBool();
 			}
 			else {
 				throw std::wstring{ type + LangLib::getTrans(L": Логическая операция принимет не более 3 параметров\n") };
@@ -839,8 +839,8 @@ void swap(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		Var secondval = getValue(&(*i).parameters[1], &(*m).heap);
 		swap(firstval, secondval);
 
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = firstval;
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = secondval;
+		setValue(&(*i).parameters[0], &(*m).heap) = firstval;
+		setValue(&(*i).parameters[1], &(*m).heap) = secondval;
 		++(*m).instruct_number;
 	}
 }
@@ -875,7 +875,7 @@ void arr(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 			result = arr;
 		}
 
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = result;
+		setValue(&(*i).parameters[0], &(*m).heap) = result;
 		++(*m).instruct_number;
 	}
 
@@ -906,7 +906,7 @@ void vtoarr(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 			arr.pushb(getValue(&(*i).parameters[iter], &(*m).heap));
 		}
 
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = arr;
+		setValue(&(*i).parameters[0], &(*m).heap) = arr;
 		++(*m).instruct_number;
 	}
 
@@ -930,7 +930,7 @@ void pushb(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()].pushb(getValue(&(*i).parameters[1], &(*m).heap));
+		setValue(&(*i).parameters[0], &(*m).heap).pushb(getValue(&(*i).parameters[1], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -960,11 +960,11 @@ void popb(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		if ((*i).parameters.size() == 1) {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()].popb();
+			setValue(&(*i).parameters[0], &(*m).heap).popb();
 			++(*m).instruct_number;
 		}
 		else {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = (*m).heap[(*i).parameters[1].toSTR().getWStr()].popb();
+			setValue(&(*i).parameters[0], &(*m).heap) = setValue(&(*i).parameters[1], &(*m).heap).popb();
 			++(*m).instruct_number;
 		}
 	}
@@ -987,7 +987,7 @@ void pushf(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()].pushf(getValue(&(*i).parameters[1], &(*m).heap));
+		setValue(&(*i).parameters[0], &(*m).heap).pushf(getValue(&(*i).parameters[1], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1017,11 +1017,11 @@ void popf(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		if ((*i).parameters.size() == 1) {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()].popf();
+			setValue(&(*i).parameters[0], &(*m).heap).popf();
 			++(*m).instruct_number;
 		}
 		else {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = (*m).heap[(*i).parameters[1].toSTR().getWStr()].popf();
+			setValue(&(*i).parameters[0], &(*m).heap) = setValue(&(*i).parameters[1], &(*m).heap).popf();
 			++(*m).instruct_number;
 		}
 	}
@@ -1052,11 +1052,11 @@ void erase(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		if ((*i).parameters.size() == 2) {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()].erase(getValue(&(*i).parameters[1], &(*m).heap));
+			setValue(&(*i).parameters[0], &(*m).heap).erase(getValue(&(*i).parameters[1], &(*m).heap));
 			++(*m).instruct_number;
 		}
 		else {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = (*m).heap[(*i).parameters[1].toSTR().getWStr()].erase(getValue(&(*i).parameters[2], &(*m).heap));
+			setValue(&(*i).parameters[0], &(*m).heap) = setValue(&(*i).parameters[1], &(*m).heap).erase(getValue(&(*i).parameters[2], &(*m).heap));
 			++(*m).instruct_number;
 		}
 	}
@@ -1079,7 +1079,7 @@ void insrt(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()].insert_vector(getValue(&(*i).parameters[2], &(*m).heap), getValue(&(*i).parameters[1], &(*m).heap));
+		setValue(&(*i).parameters[0], &(*m).heap).insert_vector(getValue(&(*i).parameters[2], &(*m).heap), getValue(&(*i).parameters[1], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1101,7 +1101,7 @@ void clear(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()].clear();
+		setValue(&(*i).parameters[0], &(*m).heap).clear();
 		++(*m).instruct_number;
 	}
 }
@@ -1125,7 +1125,7 @@ void sizearr(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = (*m).heap[(*i).parameters[1].toSTR().getWStr()].len();
+		setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[0], &(*m).heap).len();
 		++(*m).instruct_number;
 	}
 }
@@ -1164,7 +1164,7 @@ void getval(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 				throw std::wstring{ (*result).toSTR().getWStr() + L": " + LangLib::getTrans(L"Значение не является массивом или словарем\n") };
 			}
 		}
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = *result;
+		setValue(&(*i).parameters[0], &(*m).heap) = *result;
 		++(*m).instruct_number;
 	}
 }
@@ -1188,7 +1188,7 @@ void setval(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	else {
 
 		int dimensions = (int)(*i).parameters.size() - 2;
-		Var* result = &((*m).heap[(*i).parameters[1].toSTR().getWStr()]);
+		Var* result = &getValue(&(*i).parameters[1], &(*m).heap);
 
 		for (int iter = 0; iter < dimensions; ++iter) {
 			Var dimension = getValue(&(*i).parameters[(long long int)iter + 2], &(*m).heap);
@@ -1243,7 +1243,7 @@ void slice(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 			throw std::wstring{ (*i).parameters[3].toSTR().getWStr() + L": " + LangLib::getTrans(L"Индекс находится вне диапазона\n") };
 		}
 
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().slice(x, y);
+		setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toARR().slice(x, y);
 		++(*m).instruct_number;
 	}
 }
@@ -1270,26 +1270,26 @@ void merge(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 			Type typeA = getValue(&(*i).parameters[0], &(*m).heap).type;
 			Type typeB = getValue(&(*i).parameters[1], &(*m).heap).type;
 			if((typeA == MAP && typeB == MAP ) || (typeA == ARR && typeB == ARR )  ) {
-				(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[0], &(*m).heap).merge(getValue(&(*i).parameters[1], &(*m).heap));
+				setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[0], &(*m).heap).merge(getValue(&(*i).parameters[1], &(*m).heap));
 			} else if((typeA == MAP || typeA == ARR) && (typeB != MAP && typeB != ARR)) {
-				(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[0], &(*m).heap).merge(getValue(&(*i).parameters[1], &(*m).heap).toARR());
+				setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[0], &(*m).heap).merge(getValue(&(*i).parameters[1], &(*m).heap).toARR());
 			} else if((typeA != MAP && typeA != ARR) && (typeB == MAP || typeB == ARR)) {
-				(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[0], &(*m).heap).toARR().merge(getValue(&(*i).parameters[1], &(*m).heap));
+				setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[0], &(*m).heap).toARR().merge(getValue(&(*i).parameters[1], &(*m).heap));
 			} else {
-				(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[0], &(*m).heap).toARR().merge(getValue(&(*i).parameters[1], &(*m).heap).toARR());
+				setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[0], &(*m).heap).toARR().merge(getValue(&(*i).parameters[1], &(*m).heap).toARR());
 			}
 		}
 		else {
 			Type typeA = getValue(&(*i).parameters[1], &(*m).heap).type;
 			Type typeB = getValue(&(*i).parameters[2], &(*m).heap).type;
 			if((typeA == MAP && typeB == MAP ) || (typeA == ARR && typeB == ARR )  ) {
-				(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).merge(getValue(&(*i).parameters[2], &(*m).heap));
+				setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).merge(getValue(&(*i).parameters[2], &(*m).heap));
 			} else if((typeA == MAP || typeA == ARR) && (typeB != MAP && typeB != ARR)) {
-				(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).merge(getValue(&(*i).parameters[2], &(*m).heap).toARR());
+				setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).merge(getValue(&(*i).parameters[2], &(*m).heap).toARR());
 			} else if((typeA != MAP && typeA != ARR) && (typeB == MAP || typeB == ARR)) {
-				(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().merge(getValue(&(*i).parameters[2], &(*m).heap));
+				setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toARR().merge(getValue(&(*i).parameters[2], &(*m).heap));
 			} else {
-				(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().merge(getValue(&(*i).parameters[2], &(*m).heap).toARR());
+				setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toARR().merge(getValue(&(*i).parameters[2], &(*m).heap).toARR());
 			}
 		}
 		++(*m).instruct_number;
@@ -1316,10 +1316,10 @@ void sort(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	else {
 
 		if ((*i).parameters.size() == 2) {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().sortarr(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr());
+			setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toARR().sortarr(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr());
 		}
 		else {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().sortarr(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr());
+			setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).toARR().sortarr(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr());
 		}
 		++(*m).instruct_number;
 	}
@@ -1344,10 +1344,10 @@ void unique(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		if ((*i).parameters.size() == 2) {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).uniq(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr());
+			setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).uniq(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr());
 		}
 		else {
-			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).uniq(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr());
+			setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).uniq(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr());
 		}
 		++(*m).instruct_number;
 	}
@@ -1372,10 +1372,10 @@ void reverse(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 	}
 	else {
 		if ((*i).parameters.size() == 1) {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[0], &(*m).heap).toARR().rev();
+			setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[0], &(*m).heap).toARR().rev();
 		}
 		else {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().rev();
+			setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toARR().rev();
 		}
 		++(*m).instruct_number;
 	}
@@ -1398,7 +1398,7 @@ void equal(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).eq(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
+		setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).eq(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1425,10 +1425,10 @@ void iexist(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		}
 		Var size = getValue(&(*i).parameters[1], &(*m).heap).csize();
 		if (getValue(&(*i).parameters[2], &(*m).heap).toNTG() >= size || getValue(&(*i).parameters[2], &(*m).heap).toNTG() < 0) {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var(false);
+			setValue(&(*i).parameters[0], &(*m).heap) = Var(false);
 		}
 		else {
-			(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var(true);
+			setValue(&(*i).parameters[0], &(*m).heap) = Var(true);
 		}
 		++(*m).instruct_number;
 	}
@@ -1451,7 +1451,7 @@ void in(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).in(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
+		setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).in(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1473,7 +1473,7 @@ void inall(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).inall(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
+		setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).inall(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1495,7 +1495,7 @@ void rin(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).rin(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
+		setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).rin(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1517,7 +1517,7 @@ void rinall(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).rinall(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
+		setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).rinall(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1548,7 +1548,7 @@ void arrtomap(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		for(int i = 0; i < size; ++i) {
 			map.insert({std::to_wstring(i), arr[i]});
 		}
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var(map);
+		setValue(&(*i).parameters[0], &(*m).heap) = Var(map);
 		++(*m).instruct_number;
 	}
 }
@@ -1570,7 +1570,7 @@ void intersect(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().intersect(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap).toARR());
+		setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).toARR().intersect(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap).toARR());
 		++(*m).instruct_number;
 	}
 }
@@ -1592,7 +1592,7 @@ void notintersect(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).toARR().notintersect(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap).toARR());
+		setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).toARR().notintersect(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap).toARR());
 		++(*m).instruct_number;
 	}
 }
@@ -1614,7 +1614,7 @@ void arrtostr(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().arrtostr(getValue(&(*i).parameters[2], &(*m).heap));
+		setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toARR().arrtostr(getValue(&(*i).parameters[2], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1636,7 +1636,7 @@ void sum(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().sum();
+		setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toARR().sum();
 		++(*m).instruct_number;
 	}
 }
@@ -1658,7 +1658,7 @@ void avg(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().avg();
+		setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toARR().avg();
 		++(*m).instruct_number;
 	}
 }
@@ -1680,7 +1680,7 @@ void min(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().min();
+		setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toARR().min();
 		++(*m).instruct_number;
 	}
 }
@@ -1702,7 +1702,7 @@ void max(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().max();
+		setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toARR().max();
 		++(*m).instruct_number;
 	}
 }
@@ -1724,7 +1724,7 @@ void range(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().range();
+		setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toARR().range();
 		++(*m).instruct_number;
 	}
 }
@@ -1746,7 +1746,7 @@ void median(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().median();
+		setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toARR().median();
 		++(*m).instruct_number;
 	}
 }
@@ -1768,7 +1768,7 @@ void mode(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().mode();
+		setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toARR().mode();
 		++(*m).instruct_number;
 	}
 }
@@ -1790,7 +1790,7 @@ void stddev(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).toARR().stddev();
+		setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).toARR().stddev();
 		++(*m).instruct_number;
 	}
 }
@@ -1812,7 +1812,7 @@ void push(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()].push(getValue(&(*i).parameters[1], &(*m).heap), getValue(&(*i).parameters[2], &(*m).heap));
+		setValue(&(*i).parameters[0], &(*m).heap).push(getValue(&(*i).parameters[1], &(*m).heap), getValue(&(*i).parameters[2], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1843,7 +1843,7 @@ void vtomap(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		for(int index = 1; index < size; index+=2) {
 			map.insert({getValue(&(*i).parameters[index], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[index + 1], &(*m).heap)});
 		}
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = map;
+		setValue(&(*i).parameters[0], &(*m).heap) = map;
 		++(*m).instruct_number;
 	}
 }
@@ -1867,7 +1867,7 @@ void kexist(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap).kexist(getValue(&(*i).parameters[2], &(*m).heap));
+		setValue(&(*i).parameters[0], &(*m).heap) = getValue(&(*i).parameters[1], &(*m).heap).kexist(getValue(&(*i).parameters[2], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -1904,7 +1904,7 @@ void getvals(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 			vals.emplace_back(val);
 		}
 
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var(vals);
+		setValue(&(*i).parameters[0], &(*m).heap) = Var(vals);
 		++(*m).instruct_number;
 	}
 }
@@ -1941,7 +1941,7 @@ void getkeys(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 			keys.emplace_back(key);
 		}
 
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var(keys);
+		setValue(&(*i).parameters[0], &(*m).heap) = Var(keys);
 		++(*m).instruct_number;
 	}
 }
@@ -1982,7 +1982,7 @@ void getinterform(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 			pairs.emplace_back(Var(pair));
 		}
 
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var(pairs);
+		setValue(&(*i).parameters[0], &(*m).heap) = Var(pairs);
 		++(*m).instruct_number;
 	}
 }
@@ -2004,7 +2004,7 @@ void kvintersect(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).kvintersect(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
+		setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).kvintersect(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }
@@ -2026,7 +2026,7 @@ void kvnotintersect(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 	else {
-		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).kvnotintersect(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
+		setValue(&(*i).parameters[1], &(*m).heap) = getValue(&(*i).parameters[2], &(*m).heap).kvnotintersect(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
 		++(*m).instruct_number;
 	}
 }

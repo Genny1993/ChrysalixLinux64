@@ -5,6 +5,9 @@
             じしf_, )ノ', '\n';
 	print: '♥️ MEOW! I LOVE YOU ALL SO MUCH!♥️', '\n';
 ##
+	var: $test;
+	input: $test;
+	print: $test, '\n';
 	vtoarr: $subarr, 'apricot', 2, 1;
 	vtoarr: $arr2, 1, 0, 4;
 	vtoarr: $arr, 'apple', 2, 3, $subarr;

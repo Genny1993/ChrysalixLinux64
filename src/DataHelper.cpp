@@ -116,6 +116,10 @@ Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap) {
 	}
 }
 
+Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap) {
+	return (*heap)[val->toSTR().getWStr()];
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // getLabel
 // Возвращает значение параметра по имени переменной или литералу
