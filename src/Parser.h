@@ -27,3 +27,5 @@ public:
 private: 
 	Var parseVar(std::wstring val, int instruction);
 };
+
+std::wstring showVar(Var var);

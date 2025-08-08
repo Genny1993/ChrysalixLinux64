@@ -156,7 +156,7 @@ void Parser::parse(Machine& m) {
             int params_size = (int)lexemes[i].str_parameters.size();
             for (int j = 0; j < params_size; ++j) {
                 Var parsed = parseVar(lexemes[i].str_parameters[j], i);
-                lexemes[i].parameters.emplace_back(Var(parsed));
+                lexemes[i].parameters.emplace_back(parsed);
             }
         }
         catch (const std::wstring& error_message) {
@@ -179,8 +179,11 @@ void Parser::parse(Machine& m) {
             std::string temp = ex.what();
             throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i) + LangLib::getTrans(L": ") + lexeme.type + LangLib::getTrans(L": Неизвестная инструкция\n") };
         }
-
-        inst.parameters = lexeme.parameters;
+        
+        int size = (int)lexeme.parameters.size();
+        for(int i = 0; i < size; ++i) {
+            inst.parameters.emplace_back(lexeme.parameters[i]);
+        }
         int max_size = (int)lexeme.str_parameters.size();
         for (int param = 0; param < max_size; ++param) {
             inst.as_string += lexeme.str_parameters[param];
@@ -190,6 +193,9 @@ void Parser::parse(Machine& m) {
         }
         inst.as_string += L";";
         m.instructions.emplace_back(inst);
+        inst.opCode = NOP;
+        inst.as_string.clear();
+        inst.parameters.clear();
         ++i;
     }
 }
@@ -227,7 +233,7 @@ Var Parser::parseVar(std::wstring val, int instruction) {
                         ++braces_count;
                     } else {
                         name += c;
-                    }
+                }
                 } else {
                     if(braces_count > 0 || (braces_count == 0 && new_brace == true)) {
                         if(c == L'[') {
@@ -238,7 +244,7 @@ Var Parser::parseVar(std::wstring val, int instruction) {
                             new_brace = false;
                         } else if(c == L']') {
                             --braces_count;
-                                if(braces_count > 0) {
+                            if(braces_count > 0) {
                                 part += c;
                             }
                             if(braces_count == 0){
@@ -402,4 +408,22 @@ Var Parser::parseVar(std::wstring val, int instruction) {
         throw std::wstring{temp + LangLib::getTrans(L": Неизвестный литерал\n")};
     }
     return Var();
+}
+
+std::wstring showVar(Var var) {
+    std::wstring str = L"";
+    if(var.arr.size() >0) {
+        str += var.str + L": ";
+        int sz = var.arr.size();
+        for(int i = 0; i < sz; ++i) {
+            if(var.arr[i].arr.size() > 0) {
+                str += L"(" + showVar(var.arr[i]) + L"), ";
+            } else {
+                str += var.arr[i].toSTR().str + L", ";
+            }
+        }
+    } else {
+        str = var.toSTR().str;
+    }
+    return str;
 }
