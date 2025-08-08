@@ -160,7 +160,18 @@ void Parser::parse(Machine& m) {
             }
         }
         catch (const std::wstring& error_message) {
-            throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i + 1) + LangLib::getTrans(L": ") + error_message + LangLib::getTrans(L"\n")};
+            std::wstring str_instr = L"";
+            str_instr += lexemes[i].type + L": ";
+            int params_size = (int)lexemes[i].str_parameters.size();
+            for (int j = 0; j < params_size; ++j) {
+                str_instr += lexemes[i].str_parameters[j];
+                if(j < params_size - 1) {
+                    str_instr += L", ";
+                } else {
+                    str_instr += L";";
+                }
+            }
+            throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i + 1) + L" (" + str_instr + L")" + LangLib::getTrans(L": ") + error_message };
         }
     }
     
@@ -177,7 +188,18 @@ void Parser::parse(Machine& m) {
         }
         catch (std::out_of_range& ex) {
             std::string temp = ex.what();
-            throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i) + LangLib::getTrans(L": ") + lexeme.type + LangLib::getTrans(L": Неизвестная инструкция\n") };
+            std::wstring str_instr = L"";
+            str_instr += lexeme.type + L": ";
+            int params_size = (int)lexeme.str_parameters.size();
+            for (int j = 0; j < params_size; ++j) {
+                str_instr += lexeme.str_parameters[j];
+                if(j < params_size - 1) {
+                    str_instr += L", ";
+                } else {
+                    str_instr += L";";
+                }
+            }
+            throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i) + L" (" + str_instr + L")" + LangLib::getTrans(L": ") + lexeme.type + LangLib::getTrans(L": Неизвестная инструкция\n") };
         }
         
         int size = (int)lexeme.parameters.size();
@@ -216,7 +238,7 @@ Var Parser::parseVar(std::wstring val, int instruction) {
             }
             size_t is_empty_braces = check.find(L"[]");
             if (is_empty_braces != std::wstring::npos) {
-                throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(instruction) + LangLib::getTrans(L": ") + L"Пустые скобки []\n" };
+                throw std::wstring{ LangLib::getTrans(L"Пустые скобки []\n") };
             }
 
             std::wstring name;
@@ -252,7 +274,7 @@ Var Parser::parseVar(std::wstring val, int instruction) {
                             }
                         } else {
                             if(new_brace && c != L' ' && c != L'\t' && c!= L'\n' && c!= '\r') {
-                                throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(instruction) + LangLib::getTrans(L": ") + L"Лишний символ между скобок: " + c + L"\n" };
+                                throw std::wstring{ LangLib::getTrans(L"Лишний символ между скобок: ") + c + L"\n" };
                             } else {
                                 if(c != L' ' && c != L'\t' && c!= L'\n' && c!= '\r') {
                                     part += c;
@@ -266,12 +288,12 @@ Var Parser::parseVar(std::wstring val, int instruction) {
                         continue;
                     } 
                     if(braces_count < 0) {
-                        throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(instruction) + LangLib::getTrans(L": ") + L"Лишняя закрывающая скобка ']'\n" };
+                        throw std::wstring{  LangLib::getTrans(L"Лишняя закрывающая скобка ']'\n") };
                     }
                 }
             }
             if(braces_count > 0) {
-                throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(instruction) + LangLib::getTrans(L": ") + L"Лишняя открывающая скобка '['\n" };
+                throw std::wstring{ LangLib::getTrans(L"Лишняя открывающая скобка '['\n") };
             }
             Var parsed;
             parsed.str = name;

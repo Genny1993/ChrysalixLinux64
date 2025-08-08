@@ -28,14 +28,14 @@ Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap) {
 								value = &(value->arr.at(index.toNTG().data.ntg));
 							} catch (std::out_of_range& ex) {
 								std::string temp = ex.what();
-								throw std::wstring{ index.toSTR().str + LangLib::getTrans(L": Индекс не существует!\n") };
+								throw std::wstring{ index.toSTR().str + LangLib::getTrans(L": ") + LangLib::getTrans(L"Индекс находится вне диапазона\n") };
 							}
 						} else if(value->type == MAP) {
 							try {
 								value = &(value->mp.at(index.toSTR().str));
 							} catch (std::out_of_range& ex) {
 								std::string temp = ex.what();
-								throw std::wstring{ index.toSTR().str + LangLib::getTrans(L": Ключ не существует!\n") };
+								throw std::wstring{ index.toSTR().str + LangLib::getTrans(L": ") + LangLib::getTrans(L"Индекс словаря не существует\n") };
 							}
 							
 						} else {
@@ -56,7 +56,7 @@ Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap) {
 							} 
 							catch (std::out_of_range& ex) {
 								std::string temp = ex.what();
-								throw std::wstring{ std::to_wstring(index) + LangLib::getTrans(L": Индекс не существует!\n") };
+								throw std::wstring{ std::to_wstring(index) + LangLib::getTrans(L": ") + LangLib::getTrans(L"Индекс находится вне диапазона\n") };
 							}
 						} else if(value->type == MAP) {
 							std::wstring index;
@@ -72,7 +72,7 @@ Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap) {
 							} 
 							catch (std::out_of_range& ex) {
 								std::string temp = ex.what();
-								throw std::wstring{ index + LangLib::getTrans(L": Ключ не существует!\n") };
+								throw std::wstring{ index + LangLib::getTrans(L": ") + LangLib::getTrans(L"Индекс словаря не существует\n") };
 							}
 						} else {
 							throw std::wstring{ value->getWStr() + LangLib::getTrans(L": Переменная не является массивом или словарем\n") };
@@ -85,7 +85,7 @@ Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap) {
 						}
 						catch (std::out_of_range& ex) {
 							std::string temp = ex.what();
-							throw std::wstring{ std::to_wstring(val->arr[i].toNTG().data.ntg) + LangLib::getTrans(L": Индекс не существует!\n") };
+							throw std::wstring{ std::to_wstring(val->arr[i].toNTG().data.ntg) + LangLib::getTrans(L": ") + LangLib::getTrans(L"Индекс находится вне диапазона\n") };
 						}
 					} else if(value->type == MAP) {
 						try{
@@ -93,7 +93,7 @@ Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap) {
 						}
 						catch (std::out_of_range& ex) {
 							std::string temp = ex.what();
-							throw std::wstring{ val->arr[i].toSTR().str + LangLib::getTrans(L": Ключ не существует!\n") };
+							throw std::wstring{ val->arr[i].toSTR().str + LangLib::getTrans(L": ") + LangLib::getTrans(L"Индекс словаря не существует\n") };
 						}
 					} else {
 						throw std::wstring{ value->toSTR().getWStr() + LangLib::getTrans(L": Переменная не является массивом или словарем\n") };
