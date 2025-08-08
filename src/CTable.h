@@ -70,6 +70,9 @@ enum OP_CODE {
     KEXIST,
     GETVALS,
     GETKEYS,
+    GETINTERFORM,
+    KVINTERSECT,
+    KVNOTINTERSECT,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,5 +144,8 @@ struct CTable {
         {L"KEXIST", OP_CODE::KEXIST}, {L"kexist", OP_CODE::KEXIST},
         {L"GETVALS", OP_CODE::GETVALS}, {L"getvals", OP_CODE::GETVALS},
         {L"GETKEYS", OP_CODE::GETKEYS}, {L"getkeys", OP_CODE::GETKEYS},
+        {L"GETINTERFORM", OP_CODE::GETINTERFORM}, {L"getinterform", OP_CODE::GETINTERFORM},
+        {L"KVINTERSECT", OP_CODE::KVINTERSECT}, {L"kvintersect", OP_CODE::KVINTERSECT},
+        {L"KVNOTINTERSECT", OP_CODE::KVNOTINTERSECT}, {L"kvnotintersect", OP_CODE::KVNOTINTERSECT},
     };
 };

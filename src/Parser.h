@@ -24,5 +24,6 @@ public:
 	
 	void fileLoad(std::wstring file_name);
 	void parse(Machine& m);
-
+private: 
+	Var parseVar(std::wstring val, int instruction);
 };

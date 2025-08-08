@@ -155,131 +155,8 @@ void Parser::parse(Machine& m) {
         try {
             int params_size = (int)lexemes[i].str_parameters.size();
             for (int j = 0; j < params_size; ++j) {
-                std::wstring temp = lexemes[i].str_parameters[j];
-                temp.erase(0, temp.find_first_not_of(L" \n\r\t"));
-                temp.erase(temp.find_last_not_of(L" \n\r\t") + 1);
-                if (temp[0] == L'$' || temp[0] == L'&') {
-                    lexemes[i].parameters.emplace_back(Var(temp));
-                }
-                else if (temp.substr(0, 3) == std::wstring_view(L"NTG") || temp.substr(0, 3) == std::wstring_view(L"ntg")) {
-                    lexemes[i].parameters.emplace_back(Var(temp.erase(0, 3)).toNTG());
-                }
-                else if (temp.substr(0, 4) == std::wstring_view(L"UNTG") || temp.substr(0, 4) == std::wstring_view(L"untg")) {
-                    lexemes[i].parameters.emplace_back(Var(temp.erase(0, 4)).toUNTG());
-                }
-                else if (temp.substr(0, 3) == std::wstring_view(L"DBL") || temp.substr(0, 3) == std::wstring_view(L"dbl")) {
-                    lexemes[i].parameters.emplace_back(Var(temp.erase(0, 3)).toDBL());
-                }
-                else if (temp.substr(0, 3) == std::wstring_view(L"CHR") || temp.substr(0, 3) == std::wstring_view(L"chr")) {
-                    lexemes[i].parameters.emplace_back(Var(temp.erase(0, 3)).toCHR());
-                }
-                else if (temp.substr(0, 4) == std::wstring_view(L"UCHR") || temp.substr(0, 4) == std::wstring_view(L"uchr")) {
-                    lexemes[i].parameters.emplace_back(Var(temp.erase(0, 4)).toUCHR());
-                }
-                else if (temp == std::wstring_view(L"ARR") || temp == std::wstring_view(L"arr")) {
-                    std::vector<Var> v;
-                    v.reserve(1000);
-                    lexemes[i].parameters.emplace_back(Var(v));
-                }
-                else if (temp == std::wstring_view(L"MAP") || temp == std::wstring_view(L"map")) {
-                    std::unordered_map<std::wstring, Var> map;
-                    map.reserve(1000);
-                    lexemes[i].parameters.emplace_back(Var(map));
-                }
-                else if (temp == std::wstring_view(L"TRUE") || temp == std::wstring_view(L"true")) {
-                    lexemes[i].parameters.emplace_back(Var(true));
-                }
-                else if (temp == std::wstring_view(L"FALSE") || temp == std::wstring_view(L"false")) {
-                    lexemes[i].parameters.emplace_back(Var(false));
-                }
-                else if (temp == std::wstring_view(L"NIL") || temp == std::wstring_view(L"nil")) {
-                    lexemes[i].parameters.emplace_back(Var());
-                }
-                else if (temp[0] == L'\'') {
-                    std::wstring s_temp = temp;
-                    std::wstring str = s_temp.erase(0, s_temp.find_first_not_of(L"\'"));
-                    str = s_temp.erase(s_temp.find_last_not_of(L"\'") + 1);
-                   
-                    std::wstring new_str = L"";
-                    bool escape_ch = false;
-                    for (wchar_t& c : str) {
-                        if (c != L'\\' && !escape_ch) {
-                            new_str += c;
-                            continue;
-                        }
-                        if (c == L'\\' && !escape_ch) {
-                            escape_ch = true;
-                            continue;
-                        }
-                        if (escape_ch) {
-                            switch (c) {
-                            case L't':
-                                new_str += L'\t';
-                                break;
-                            case L'n':
-                                new_str += L'\n';
-                                break;
-                            case L'a':
-                                new_str += L'\a';
-                                break;
-                            case L'q':
-                                new_str += L'\'';
-                                break;
-                            case L'b':
-                                new_str += L'\b';
-                                break;
-                            case L'f':
-                                new_str += L'\f';
-                                break;
-                            case L'r':
-                                new_str += L'\r';
-                                break;
-                            case L'v':
-                                new_str += L'\v';
-                                break;
-                            case L'"':
-                                new_str += L'"';
-                                break;
-                            case L'?':
-                                new_str += L'?';
-                                break;
-                            case L'\'':
-                                new_str += L'\'';
-                                break;
-                            case L'\\':
-                                new_str += L'\\';
-                            }
-                            escape_ch = false;
-                            continue;
-                        }
-                    }
-                    lexemes[i].parameters.emplace_back(Var(new_str));
-                } //Пытаемся работать с числами, если не указан тип данных
-                else if (temp[0] == L'0'
-                    || temp[0] == L'1'
-                    || temp[0] == L'2'
-                    || temp[0] == L'3'
-                    || temp[0] == L'4'
-                    || temp[0] == L'5'
-                    || temp[0] == L'6'
-                    || temp[0] == L'7'
-                    || temp[0] == L'8'
-                    || temp[0] == L'9'
-                    || temp[0] == L'+'
-                    || temp[0] == L'-') {
-                    Var numberdbl = Var(temp).toDBL();
-                    Var numberntg = Var(temp).toNTG();
-                    if (numberdbl == numberntg) {
-                        lexemes[i].parameters.emplace_back(numberntg);
-                    }
-                    else {
-                        lexemes[i].parameters.emplace_back(numberdbl);
-                    }
-                }
-                else {
-                    throw std::wstring{temp + LangLib::getTrans(L": Неизвестный литерал\n")};
-
-                }
+                Var parsed = parseVar(lexemes[i].str_parameters[j], i);
+                lexemes[i].parameters.emplace_back(Var(parsed));
             }
         }
         catch (const std::wstring& error_message) {
@@ -315,4 +192,214 @@ void Parser::parse(Machine& m) {
         m.instructions.emplace_back(inst);
         ++i;
     }
+}
+
+Var Parser::parseVar(std::wstring val, int instruction) {
+    std::wstring temp = val;
+    temp.erase(0, temp.find_first_not_of(L" \n\r\t"));
+    temp.erase(temp.find_last_not_of(L" \n\r\t") + 1);
+    if (temp[0] == L'$') {
+        size_t is_arr = temp.find(L"[");
+        if (is_arr != std::wstring::npos) {
+            //Проверка на пустые скобки
+            std::wstring check = L"";
+            for (wchar_t& c : temp) {
+                if(c != L' ' && c != '\n' && c!= L'\t' && c != L'\r') {
+                    check += c;
+                }
+            }
+            size_t is_empty_braces = check.find(L"[]");
+            if (is_empty_braces != std::wstring::npos) {
+                throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(instruction) + LangLib::getTrans(L": ") + L"Пустые скобки []\n" };
+            }
+
+            std::wstring name;
+            std::vector<std::wstring> parts;
+            parts.reserve(255);
+            bool indexes = false;
+            int braces_count = 0;
+            bool new_brace = false;
+            std::wstring part = L"";
+            for (wchar_t& c : temp) {
+                if(indexes == false) {
+                    if(c == L'[') {
+                        indexes = true;
+                        ++braces_count;
+                    } else {
+                        name += c;
+                    }
+                } else {
+                    if(braces_count > 0 || (braces_count == 0 && new_brace == true)) {
+                        if(c == L'[') {
+                            if(braces_count > 0) {
+                                part += c;
+                            }
+                            ++braces_count;
+                            new_brace = false;
+                        } else if(c == L']') {
+                            --braces_count;
+                                if(braces_count > 0) {
+                                part += c;
+                            }
+                            if(braces_count == 0){
+                                new_brace = true;
+                            }
+                        } else {
+                            if(new_brace && c != L' ' && c != L'\t' && c!= L'\n' && c!= '\r') {
+                                throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(instruction) + LangLib::getTrans(L": ") + L"Лишний символ между скобок: " + c + L"\n" };
+                            } else {
+                                if(c != L' ' && c != L'\t' && c!= L'\n' && c!= '\r') {
+                                    part += c;
+                                }
+                            }
+                        }
+                    }
+                    if(braces_count == 0 && part != L"") {
+                        parts.emplace_back(part);
+                        part = L"";
+                        continue;
+                    } 
+                    if(braces_count < 0) {
+                        throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(instruction) + LangLib::getTrans(L": ") + L"Лишняя закрывающая скобка ']'\n" };
+                    }
+                }
+            }
+            if(braces_count > 0) {
+                throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(instruction) + LangLib::getTrans(L": ") + L"Лишняя открывающая скобка '['\n" };
+            }
+            Var parsed;
+            parsed.str = name;
+            parsed.type = STR;
+            int size = (int)parts.size();
+            for(int i = 0; i < size; ++i) {
+                Var temp = parseVar(parts[i], instruction);
+                parsed.arr.emplace_back(parseVar(parts[i], instruction));
+            }
+            return parsed; 
+        } else {
+            return Var(temp);
+        }
+    }
+    else if(temp[0] == L'&') {
+        return Var(temp);
+    }
+    else if (temp.substr(0, 3) == std::wstring_view(L"NTG") || temp.substr(0, 3) == std::wstring_view(L"ntg")) {
+        return Var(temp.erase(0, 3)).toNTG();
+    }
+    else if (temp.substr(0, 4) == std::wstring_view(L"UNTG") || temp.substr(0, 4) == std::wstring_view(L"untg")) {
+        return Var(temp.erase(0, 4)).toUNTG();
+    }
+    else if (temp.substr(0, 3) == std::wstring_view(L"DBL") || temp.substr(0, 3) == std::wstring_view(L"dbl")) {
+        return Var(temp.erase(0, 3)).toDBL();
+    }
+    else if (temp.substr(0, 3) == std::wstring_view(L"CHR") || temp.substr(0, 3) == std::wstring_view(L"chr")) {
+        return Var(temp.erase(0, 3)).toCHR();
+    }
+    else if (temp.substr(0, 4) == std::wstring_view(L"UCHR") || temp.substr(0, 4) == std::wstring_view(L"uchr")) {
+        return Var(temp.erase(0, 4)).toUCHR();
+    }
+    else if (temp == std::wstring_view(L"ARR") || temp == std::wstring_view(L"arr")) {
+        std::vector<Var> v;
+        v.reserve(1000);
+        return Var(v);
+    }
+    else if (temp == std::wstring_view(L"MAP") || temp == std::wstring_view(L"map")) {
+        std::unordered_map<std::wstring, Var> map;
+        map.reserve(1000);
+        return Var(map);
+    }
+    else if (temp == std::wstring_view(L"TRUE") || temp == std::wstring_view(L"true")) {
+        return Var(true);
+    }
+    else if (temp == std::wstring_view(L"FALSE") || temp == std::wstring_view(L"false")) {
+        return Var(false);
+    }
+    else if (temp == std::wstring_view(L"NIL") || temp == std::wstring_view(L"nil")) {
+        return Var();
+    }
+    else if (temp[0] == L'\'') {
+        std::wstring s_temp = temp;
+        std::wstring str = s_temp.erase(0, s_temp.find_first_not_of(L"\'"));
+        str = s_temp.erase(s_temp.find_last_not_of(L"\'") + 1);
+                   
+        std::wstring new_str = L"";
+        bool escape_ch = false;
+        for (wchar_t& c : str) {
+            if (c != L'\\' && !escape_ch) {
+                new_str += c;
+                continue;
+            }
+            if (c == L'\\' && !escape_ch) {
+                escape_ch = true;
+                continue;
+            }
+            if (escape_ch) {
+                switch (c) {
+                case L't':
+                    new_str += L'\t';
+                    break;
+                case L'n':
+                    new_str += L'\n';
+                    break;
+                case L'a':
+                    new_str += L'\a';
+                    break;
+                case L'q':
+                    new_str += L'\'';
+                    break;
+                case L'b':
+                    new_str += L'\b';
+                    break;
+                case L'f':
+                    new_str += L'\f';
+                    break;
+                case L'r':
+                    new_str += L'\r';
+                    break;
+                case L'v':
+                    new_str += L'\v';
+                    break;
+                case L'"':
+                    new_str += L'"';
+                    break;
+                case L'?':
+                    new_str += L'?';
+                    break;
+                case L'\'':
+                    new_str += L'\'';
+                    break;
+                case L'\\':
+                    new_str += L'\\';
+                }
+                escape_ch = false;
+                continue;
+            }
+        }
+        return Var(new_str);
+    } //Пытаемся работать с числами, если не указан тип данных
+    else if (temp[0] == L'0'
+        || temp[0] == L'1'
+        || temp[0] == L'2'
+        || temp[0] == L'3'
+        || temp[0] == L'4'
+        || temp[0] == L'5'
+        || temp[0] == L'6'
+        || temp[0] == L'7'
+        || temp[0] == L'8'
+        || temp[0] == L'9'
+        || temp[0] == L'+'
+        || temp[0] == L'-') {
+        Var numberdbl = Var(temp).toDBL();
+        Var numberntg = Var(temp).toNTG();
+        if (numberdbl == numberntg) {
+            return numberntg;
+        }
+        else {
+            return numberdbl;
+        }
+    }
+    else {
+        throw std::wstring{temp + LangLib::getTrans(L": Неизвестный литерал\n")};
+    }
+    return Var();
 }

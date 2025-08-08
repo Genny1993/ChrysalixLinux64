@@ -128,6 +128,10 @@ public:
     Var intersect(const std::wstring &type, const Var &b) const;
     //Возвращает непересекающиеся значения массивов
     Var notintersect(const std::wstring &type, const Var &b) const;
+    //Возвращает пересечение значений словарей
+    Var kvintersect(const std::wstring &type, const Var &b) const;
+    //Возвращает непересекающиеся значения словарей
+    Var kvnotintersect(const std::wstring &type, const Var &b) const;
     //Массив в строку с разделителем
     Var arrtostr(const Var &delim) const;
     //Сумма всех элементов массива

@@ -1564,29 +1564,15 @@ Var Var::intersect(const std::wstring &type, const Var &b) const {
     if(result.arr.capacity() < 1000) {
         result.arr.reserve(1000);
     }
-
-    if(type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
-        std::unordered_set<Var> a_set(arr.begin(), arr.end());
-        std::unordered_set<Var> b_set(arr_b.begin(), arr_b.end());
-
-        for (const auto& x : a_set) {
-            if (b_set.find(x) != b_set.end()) {
-                result.pushb(x);
-            }
-        }
-    } 
-    else {
-        const std::vector<Var>& u_arr = Var(arr).uniq(type).arr;
         
-        int size = (int)u_arr.size();
-        int size_b = (int)arr_b.size();
+    int size = (int)arr.size();
+    int size_b = (int)arr_b.size();
 
-        for(int i = 0; i < size; ++i) {
-            for(int j = 0; j < size_b; ++j) {
-                if(u_arr[i].eq(type, arr_b[j]).data.bln) {
-                    result.pushb(u_arr[i]);
-                    break;
-                }
+    for(int i = 0; i < size; ++i) {
+        for(int j = 0; j < size_b; ++j) {
+            if(arr[i].eq(type, arr_b[j]).data.bln) {
+                result.pushb(arr[i]);
+                 break;
             }
         }
     }
@@ -1601,8 +1587,8 @@ Var Var::notintersect(const std::wstring &type, const Var &b) const {
 		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
-    const std::vector<Var>& arr = this->type != ARR ? this->toARR().arr : this->arr;
-    const std::vector<Var>& arr_b = b.type != ARR ? b.toARR().arr : b.arr;
+    const std::vector<Var>& arr = this->type != ARR ? this->toARR().uniq(type).arr : this->uniq(type).arr;
+    const std::vector<Var>& arr_b = b.type != ARR ? b.toARR().uniq(type).arr : b.uniq(type).arr;
 
 
     Var result = Var(std::vector<Var>());
@@ -1610,56 +1596,113 @@ Var Var::notintersect(const std::wstring &type, const Var &b) const {
         result.arr.reserve(1000);
     }
 
-    if(type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
-        std::unordered_set<Var> a_set(arr.begin(), arr.end());
-        std::unordered_set<Var> b_set(arr_b.begin(), arr_b.end());
+    int size = (int)arr.size();
+    int size_b = (int)arr_b.size();
 
-        for (const auto& x : a_set) {
-            if (b_set.find(x) == b_set.end()) {
-                result.pushb(x);
+    for(int i = 0; i < size; ++i) {
+        bool is_unique = true;
+        for(int j = 0; j < size_b; ++j) {
+            if(arr[i].eq(type, arr_b[j]).data.bln) {
+                is_unique = false;
+                break;
             }
         }
+        if(is_unique) {
+            result.pushb(arr[i]);
+        }
+    }
 
-        for (const auto& y : b_set) {
-            if (a_set.find(y) == a_set.end()) {
-                result.pushb(y);
+    for(int i = 0; i < size_b; ++i) {
+        bool is_unique = true;
+        for(int j = 0; j < size; ++j) {
+            if(arr_b[i].eq(type, arr[j]).data.bln) {
+                is_unique = false;
+                break;
             }
         }
-    } 
-    else {        
-        const std::vector<Var>& u_arr = Var(arr).uniq(type).arr;
-        const std::vector<Var>& u_arr_b = Var(arr_b).uniq(type).arr;
-
-        int size = (int)u_arr.size();
-        int size_b = (int)u_arr_b.size();
-
-        for(int i = 0; i < size; ++i) {
-            bool is_unique = true;
-            for(int j = 0; j < size_b; ++j) {
-                if(u_arr[i].eq(type, u_arr_b[j]).data.bln) {
-                    is_unique = false;
-                    break;
-                }
-            }
-            if(is_unique) {
-                result.pushb(u_arr[i]);
-            }
+        if(is_unique) {
+            result.pushb(arr_b[i]);
         }
+    }
 
-        for(int i = 0; i < size_b; ++i) {
-            bool is_unique = true;
-            for(int j = 0; j < size; ++j) {
-                if(u_arr_b[i].eq(type, u_arr[j]).data.bln) {
-                    is_unique = false;
-                    break;
-                }
-            }
-            if(is_unique) {
-                result.pushb(u_arr_b[i]);
+    return result;
+}
+
+Var Var::kvintersect(const std::wstring &type, const Var &b) const {
+    if (type != std::wstring_view(L"STRICT")
+		&& type != std::wstring_view(L"DYNAMIC")
+		&& type != std::wstring_view(L"strict")
+		&& type != std::wstring_view(L"dynamic")) {
+		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
+	}
+
+    if(this->type != MAP || b.type != MAP) {
+        std::wstring error = LangLib::getTrans(MESSAGE7);
+        error += L"MAP\n";
+        throw std::wstring{ error };
+    }
+
+    Var result = Var(std::unordered_map<std::wstring, Var>());
+    if(result.mp.bucket_count() < 1000) {
+        result.mp.reserve(1000);
+    }
+
+    for (const auto& [key, val] : this->mp) {
+        for (const auto& [key_b, val_b] : b.mp) {
+            if(key == key_b && val.eq(type, val_b).data.bln) {
+                result.push(key, val);
             }
         }
     }
 
+    return result;
+}
+
+Var Var::kvnotintersect(const std::wstring &type, const Var &b) const {
+     if (type != std::wstring_view(L"STRICT")
+		&& type != std::wstring_view(L"DYNAMIC")
+		&& type != std::wstring_view(L"strict")
+		&& type != std::wstring_view(L"dynamic")) {
+		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
+	}
+
+    if(this->type != MAP || b.type != MAP) {
+        std::wstring error = LangLib::getTrans(MESSAGE7);
+        error += L"MAP\n";
+        throw std::wstring{ error };
+    }
+
+    Var result = Var(std::unordered_map<std::wstring, Var>());
+    if(result.mp.bucket_count() < 1000) {
+        result.mp.reserve(1000);
+    }
+
+    for (const auto& [key, val] : this->mp) {
+        bool is_unique = true;
+        for (const auto& [key_b, val_b] : b.mp) {
+            if(key == key_b && val.eq(type, val_b).data.bln) {
+                is_unique = false;
+                break;
+            }
+        }
+        if(is_unique) {
+            result.push(key, val);
+        }
+    }
+
+    for (const auto& [key, val] : b.mp) {
+    bool is_unique = true;
+        for (const auto& [key_b, val_b] : this->mp) {
+            if(key == key_b && val.eq(type, val_b).data.bln) {
+                is_unique = false;
+                break;
+            }
+        }
+        if(is_unique) {
+            result.push(key, val);
+        }
+    }
+    
     return result;
 }
 

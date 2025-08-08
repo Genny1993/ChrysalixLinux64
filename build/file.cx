@@ -1,18 +1,16 @@
-	print:	'          ／l、
+	##print:	'          ／l、
          （ﾟ､ ｡７
             l、ﾞ~ヽ
             じしf_, )ノ', '\n';
-	print: '♥️ MEOW! I LOVE YOU ALL SO MUCH!♥️', '\n';
-	var: $1, 1;
-	print: $1, '\n';
-	vtomap: $map2, 'test1', 1, 'test2', 2, 'test3', 3, 'test4', 4;
-	vtoarr: $arr, 3, $map2;
-	vtomap: $map, 'apple', 1, 'melon', 2, 'watermelon', $arr, 'apricot', 2;
-	vtoarr: $arr2, 7, 5, 4, $map, 2, 2, 3, 9, $map;
-	var: $result, nil;
-	getkeys: $result, $map;
+	print: '♥️ MEOW! I LOVE YOU ALL SO MUCH!♥️', '\n';##
+	var: $result;
+	vtomap: $map1, 'apple', 1, 'banana', 2, 'apricot', 3, 'melon', 4;
+	#vtomap: $map2, 'apple', 3, 'banana', 2, 'apricot', 3, 'watermelon', 4;
+	#kvnotintersect: 'strict', $result, $map1, $map2;
+	vtoarr: $arr1, $map1[$map2[ 'index'	] [4] [$map3][$map4['index2'][10]['lol'] ] ] [3] [dbl 6 ][$map4['index2'][10]['lol']], 2, 3, 4, 5, 6, 7;
+	vtoarr: $arr2, 1, untg 2, 3, chr 4, 5, 6, true;
+	notintersect: 'strict', $result, $arr1, $arr2;
 	print: $result, '\n';
-
 ##
  	var: $i, 0;
  	var: $max, 100000;

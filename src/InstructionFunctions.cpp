@@ -1945,3 +1945,88 @@ void getkeys(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		++(*m).instruct_number;
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  GETINTERFORM
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void getinterform(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"GETINTERFORM";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+		checkNotExistValue(&(*i).parameters[1], m);
+	}	
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		const Var &map = getValue(&(*i).parameters[1], &(*m).heap);
+		if(map.type != MAP) {
+			std::wstring error = LangLib::getTrans(L"Инструкция используется только для следующих типов: ");
+        	error += L"MAP\n";
+        	throw std::wstring{ error };
+		}
+		std::vector<Var> pairs;
+		pairs.reserve(1000);
+
+		for (const auto& [key, val] : map.mp) {
+			std::vector<Var> pair;
+			pair.reserve(2);
+			pair.emplace_back(key);
+			pair.emplace_back(val);
+			pairs.emplace_back(Var(pair));
+		}
+
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var(pairs);
+		++(*m).instruct_number;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// KVINTERSECT
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void kvintersect(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"KVINTERSECT";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 4);
+		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[1], m);
+	}
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).kvintersect(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
+		++(*m).instruct_number;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// KVNOTINTERSECT
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void kvnotintersect(Machine* m, Instruction* i, bool prevalidate, bool prego) {
+	if (prevalidate) {
+		std::wstring name = L"KVNOTINTERSECT";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 4);
+		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[1], m);
+	}
+
+	if (prego) {
+		++(*m).instruct_number;
+	}
+	else {
+		(*m).heap[(*i).parameters[1].toSTR().getWStr()] = getValue(&(*i).parameters[2], &(*m).heap).kvnotintersect(getValue(&(*i).parameters[0], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap));
+		++(*m).instruct_number;
+	}
+}

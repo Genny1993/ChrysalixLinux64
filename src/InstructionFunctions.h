@@ -76,6 +76,9 @@ void vtomap(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void kexist(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void getvals(Machine* m, Instruction* i, bool prevalidate, bool prego);
 void getkeys(Machine* m, Instruction* i, bool prevalidate, bool prego);
+void getinterform(Machine* m, Instruction* i, bool prevalidate, bool prego);
+void kvintersect(Machine* m, Instruction* i, bool prevalidate, bool prego);
+void kvnotintersect(Machine* m, Instruction* i, bool prevalidate, bool prego);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -145,5 +148,8 @@ struct InstructionMap {
 		&kexist,
 		&getvals,
 		&getkeys,
+		&getinterform,
+		&kvintersect,
+		&kvnotintersect,
 	};
 };
