@@ -9,7 +9,9 @@
 #include <string_view>
 #include <cmath>
 
-#include "Parser.h"
+#include "Instruction.h"
+
+class Instruction;
 
 union Data {
     long long int ntg = 0;
@@ -32,7 +34,6 @@ enum Type {
     UNKNOWN,
     ARR,
     MAP,
-    LEX,
     INST,
 };
 
@@ -47,7 +48,6 @@ public:
     std::unordered_map<std::wstring, Var> mp;
     std::wstring str = L"";
     Type type = NIL;
-    std::vector<Lexeme> lexemes;
     std::vector<Instruction> instructions;
     //Конструкторы для обычны типов данных
     Var(const Var&) = default;

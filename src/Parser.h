@@ -9,7 +9,8 @@
 class Lexeme {
 public:
 	std::wstring type;
-	std::vector<std::wstring> str_parameters;
+	std::wstring content;
+	std::vector<Lexeme> lex_parameters;
 	std::vector<Var> parameters;
 
 	Lexeme() {

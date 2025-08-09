@@ -125,18 +125,24 @@ void Parser::parse(Machine& m) {
                             //Парсим параметры инструкции. Если у нас запятая, параметр кончился.
                             if (c == ',') {
                                 if (str != L"") {
-                                    instruction.str_parameters.emplace_back(str);
+                                    Lexeme temp;
+                                    temp.type = L"PAR";
+                                    temp.content = str;
+                                    instruction.lex_parameters.emplace_back(temp);
                                     str = L"";
                                 }
                             }
                             //если точка с запятой, инструкция вообще кончилась
                             else if (c == ';') {
                                 if (str != L"") {
-                                    instruction.str_parameters.emplace_back(str);
+                                    Lexeme temp;
+                                    temp.type = L"PAR";
+                                    temp.content = str;
+                                    instruction.lex_parameters.emplace_back(temp);
                                     str = L"";
                                 }
                                 lexemes.emplace_back(instruction);
-                                instruction.str_parameters.clear();
+                                instruction.lex_parameters.clear();
                                 instruction.type = L"";
                                 instruction_parameters = false;
                             }
@@ -155,18 +161,18 @@ void Parser::parse(Machine& m) {
     int size = (int)lexemes.size();
     for (int i = 0; i < size; ++i) {
         try {
-            int params_size = (int)lexemes[i].str_parameters.size();
+            int params_size = (int)lexemes[i].lex_parameters.size();
             for (int j = 0; j < params_size; ++j) {
-                Var parsed = parseVar(lexemes[i].str_parameters[j], i);
+                Var parsed = parseVar(lexemes[i].lex_parameters[j].content, i);
                 lexemes[i].parameters.emplace_back(parsed);
             }
         }
         catch (const std::wstring& error_message) {
             std::wstring str_instr = L"";
             str_instr += lexemes[i].type + L": ";
-            int params_size = (int)lexemes[i].str_parameters.size();
+            int params_size = (int)lexemes[i].lex_parameters.size();
             for (int j = 0; j < params_size; ++j) {
-                str_instr += lexemes[i].str_parameters[j];
+                str_instr += lexemes[i].lex_parameters[j].content;
                 if(j < params_size - 1) {
                     str_instr += L", ";
                 } else {
@@ -192,9 +198,9 @@ void Parser::parse(Machine& m) {
             std::string temp = ex.what();
             std::wstring str_instr = L"";
             str_instr += lexeme.type + L": ";
-            int params_size = (int)lexeme.str_parameters.size();
+            int params_size = (int)lexeme.lex_parameters.size();
             for (int j = 0; j < params_size; ++j) {
-                str_instr += lexeme.str_parameters[j];
+                str_instr += lexeme.lex_parameters[j].content;
                 if(j < params_size - 1) {
                     str_instr += L", ";
                 } else {
@@ -208,9 +214,9 @@ void Parser::parse(Machine& m) {
         for(int i = 0; i < size; ++i) {
             inst.parameters.emplace_back(lexeme.parameters[i]);
         }
-        int max_size = (int)lexeme.str_parameters.size();
+        int max_size = (int)lexeme.lex_parameters.size();
         for (int param = 0; param < max_size; ++param) {
-            inst.as_string += lexeme.str_parameters[param];
+            inst.as_string += lexeme.lex_parameters[param].content;
             if (param != max_size - 1) {
                 inst.as_string += L",";
             }
