@@ -9,6 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void checkExistValue(Var* val, Machine* m) {
 	if ((*val).type == STR && (*val).getWStr()[0] == L'$') {
+		size_t is_arr = val->str.find(L"[");
+		if (is_arr != std::wstring::npos) {
+			throw std::wstring{ (*val).getWStr() + LangLib::getTrans(L":  Переменная не должна находиться в массиве или словаре\n") };
+		}
 		if ((*m).heap.find((*val).getWStr()) != (*m).heap.end()) {
 			throw std::wstring{ (*val).getWStr() + LangLib::getTrans(L": Переменная уже определена\n") };
 		}

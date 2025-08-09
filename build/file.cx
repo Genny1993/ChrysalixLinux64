@@ -12,9 +12,11 @@
 	vtoarr: $arr2, 1, 0, 4;
 	vtoarr: $arr, 'apple', 2, 3, $subarr;
 	vtomap: $submap, 'test1', 1, 'test2', 6;
-	var: $key, 'test2';
+	var: $key[1], 'test2';
+	print: $key, '\n';
 	vtomap: $map, 'apple', 1, 'banana', 2, 'apricot', $submap, 'melon', 4;
-	print: $map[$arr[3][$arr2[1]]][$key], '\n';
+	change: $map[$subarr[$arr2[1]]]['test1'], 'many apples';
+	print: $map, '\n';
 ##
  	var: $i, 0;
  	var: $max, 100000;

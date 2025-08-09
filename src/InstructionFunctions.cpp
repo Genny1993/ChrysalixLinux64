@@ -875,7 +875,7 @@ void arr(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 			result = arr;
 		}
 
-		setValue(&(*i).parameters[0], &(*m).heap) = result;
+		(*m).heap[(*i).parameters[0].toSTR().str] = result;
 		++(*m).instruct_number;
 	}
 
@@ -906,7 +906,7 @@ void vtoarr(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 			arr.pushb(getValue(&(*i).parameters[iter], &(*m).heap));
 		}
 
-		setValue(&(*i).parameters[0], &(*m).heap) = arr;
+		(*m).heap[(*i).parameters[0].toSTR().str] = arr;
 		++(*m).instruct_number;
 	}
 
@@ -1844,7 +1844,7 @@ void vtomap(Machine* m, Instruction* i, bool prevalidate, bool prego) {
 		for(int index = 1; index < size; index+=2) {
 			map.insert({getValue(&(*i).parameters[index], &(*m).heap).toSTR().getWStr(), getValue(&(*i).parameters[index + 1], &(*m).heap)});
 		}
-		setValue(&(*i).parameters[0], &(*m).heap) = map;
+		(*m).heap[(*i).parameters[0].toSTR().str] = map;
 		++(*m).instruct_number;
 	}
 }

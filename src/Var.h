@@ -9,6 +9,8 @@
 #include <string_view>
 #include <cmath>
 
+#include "Parser.h"
+
 union Data {
     long long int ntg = 0;
     unsigned long long int untg;
@@ -29,7 +31,9 @@ enum Type {
     NIL,
     UNKNOWN,
     ARR,
-    MAP
+    MAP,
+    LEX,
+    INST,
 };
 
 class Var {
@@ -43,6 +47,8 @@ public:
     std::unordered_map<std::wstring, Var> mp;
     std::wstring str = L"";
     Type type = NIL;
+    std::vector<Lexeme> lexemes;
+    std::vector<Instruction> instructions;
     //Конструкторы для обычны типов данных
     Var(const Var&) = default;
     Var();

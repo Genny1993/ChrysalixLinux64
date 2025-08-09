@@ -90,6 +90,8 @@ std::unordered_map<std::wstring, std::wstring> ru = {
 	{L"Лишняя закрывающая скобка ']'\n", L"Лишняя закрывающая скобка ']'\n"},
 	{L"Лишняя открывающая скобка '['\n", L"Лишняя открывающая скобка '['\n"},
 	{L": Переменная не является массивом или словарем\n", L": Переменная не является массивом или словарем\n"},
+	{L": Литерал не может быть использован как lavalue\n", L": Литерал не может быть использован как lavalue\n"},
+	{L":  Переменная не должна находиться в массиве или словаре\n", L":  Переменная не должна находиться в массиве или словаре\n"},
 };
 
 std::unordered_map<std::wstring, std::wstring> en = {
@@ -166,6 +168,8 @@ std::unordered_map<std::wstring, std::wstring> en = {
 	{L"Лишняя закрывающая скобка ']'\n", L"Extra closing brace ']'\n"},
 	{L"Лишняя открывающая скобка '['\n", L"Extra opening brace '['\n"},
 	{L": Переменная не является массивом или словарем\n", L": Variable is not an array or dictionary\n"},
+	{L": Литерал не может быть использован как lavalue\n", L": Literal cannot be used as a lavalue\n"},
+	{L":  Переменная не должна находиться в массиве или словаре\n", L":  Variable must not be in an array or dictionary\n"},
 };
 
 LANGUAGES LangLib::current_lang = RU;

@@ -20,6 +20,8 @@ void Parser::parse(Machine& m) {
     bool is_comment = false;
     bool is_string = false;
     bool escape = false;
+    bool parenthesis_count = 0;
+
     Lexeme instruction;
     std::vector<Lexeme> lexemes;
     lexemes.reserve(10000);
