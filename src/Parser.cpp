@@ -449,6 +449,7 @@ std::vector<Lexeme> Parser::parseLex(std::wstring val) {
             }
         }
     }
+    return lexemes;
 }
 
 std::wstring showVar(Var var) {
