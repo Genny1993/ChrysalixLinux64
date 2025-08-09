@@ -66,7 +66,11 @@ int main(int argc, char* argv[])
         std::wcout << L"📂📄" << LangLib::getTrans(L"Время загрузки файла с исходным кодом: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек") << L"\n";
 
         begin = std::chrono::high_resolution_clock::now();
-        p.parse(mchn);
+        std::vector<Instruction> instructions = p.parse(p.file_content);
+        int size = (int)instructions.size();
+        for(int i = 0; i < size; ++i) {
+            mchn.instructions.emplace_back(instructions[i]);
+        }
         end = std::chrono::high_resolution_clock::now();
         elapsed_ms = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::wcout <<  L"⚙️ 🎀" + LangLib::getTrans(L"Время обработки исходного кода: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек") <<L"\n";

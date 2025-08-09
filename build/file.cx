@@ -5,7 +5,7 @@
             じしf_, )ノ', '\n';
 	print: '♥️ MEOW! I LOVE YOU ALL SO MUCH!♥️', '\n';
 ##
- var: $var1, (calc: '-', $, 3, 1) , (calc: '-', $, 7, 6)  	
+ 	var: $var1, (calc: '-', $, 3, 1) , (calc: '-', $, 7, 6)  	
 	print: (calc: '+', $a, $b), (calc: '+', $c, $d) ;
 ##
  	var: $i, 0;

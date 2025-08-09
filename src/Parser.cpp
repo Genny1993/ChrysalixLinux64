@@ -11,30 +11,17 @@ void Parser::fileLoad(std::wstring file_name) {
     this->file_content = loadFile(this->file);
 }
 
-void Parser::parse(Machine& m) {
-    std::vector<Lexeme> lexemes = this->parseLex(this->file_content);
-    int size = (int)lexemes.size();
-    for(int i = 0; i < size; ++i) {
-        std::wcout << showLexeme(lexemes[i]) << std::endl;
-    }
+std::vector<Instruction> Parser::parse(std::wstring string) {
+    std::vector<Lexeme> lexemes = this->parseLex(string);
 
     std::vector<Instruction> instructions;
-    int lsize = (int)lexemes.size();
-    for(int i = 0; i < lsize; ++i) {
+    int size = (int)lexemes.size();
+    for(int i = 0; i < size; ++i) {
         instructions.emplace_back(this->toInstruction(lexemes[i], i + 1));
     }
 
+    return instructions;
     /*
-    //Парсим параметры, превращая литералы в объект VAR со значением
-    int size = (int)lexemes.size();
-    for (int i = 0; i < size; ++i) {
-        try {
-            int params_size = (int)lexemes[i].lex_parameters.size();
-            for (int j = 0; j < params_size; ++j) {
-                Var parsed = parseVar(lexemes[i].lex_parameters[j].content, i);
-                lexemes[i].parameters.emplace_back(parsed);
-            }
-        }
         catch (const std::wstring& error_message) {
             std::wstring str_instr = L"";
             str_instr += lexemes[i].content + L": ";
@@ -48,55 +35,7 @@ void Parser::parse(Machine& m) {
                 }
             }
             throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i + 1) + L" (" + str_instr + L")" + LangLib::getTrans(L": ") + error_message };
-        }
-    }
-    
-    int i = 1;
-    Instruction inst;
-
-    //Таблица опкодов
-    CTable table;
-
-    for (Lexeme& lexeme : lexemes) {
-        try {
-            inst.opCode = table.opCodeMap.at(lexeme.content);
-            inst.as_string = lexeme.content + L":";
-        }
-        catch (std::out_of_range& ex) {
-            std::string temp = ex.what();
-            std::wstring str_instr = L"";
-            str_instr += lexeme.content + L": ";
-            int params_size = (int)lexeme.lex_parameters.size();
-            for (int j = 0; j < params_size; ++j) {
-                str_instr += lexeme.lex_parameters[j].content;
-                if(j < params_size - 1) {
-                    str_instr += L", ";
-                } else {
-                    str_instr += L";";
-                }
-            }
-            throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i) + L" (" + str_instr + L")" + LangLib::getTrans(L": ") + lexeme.content + LangLib::getTrans(L": Неизвестная инструкция\n") };
-        }
-        
-        int size = (int)lexeme.parameters.size();
-        for(int i = 0; i < size; ++i) {
-            inst.parameters.emplace_back(lexeme.parameters[i]);
-        }
-        int max_size = (int)lexeme.lex_parameters.size();
-        for (int param = 0; param < max_size; ++param) {
-            inst.as_string += lexeme.lex_parameters[param].content;
-            if (param != max_size - 1) {
-                inst.as_string += L",";
-            }
-        }
-        inst.as_string += L";";
-        m.instructions.emplace_back(inst);
-        inst.opCode = NOP;
-        inst.as_string.clear();
-        inst.parameters.clear();
-        ++i;
-    }
-        */
+*/
 }
 
 Var Parser::parseVar(std::wstring val, int instruction) {
@@ -623,20 +562,38 @@ Instruction Parser::toInstruction(Lexeme lex, int i) {
             //вывод инструкции
             std::string temp = ex.what();
             std::wstring str_instr = L"";
-            /*str_instr += lex.content + L": ";
-            int params_size = (int)lex.lex_parameters.size();
-            for (int j = 0; j < params_size; ++j) {
-                str_instr += lex.lex_parameters[j].content;
-                if(j < params_size - 1) {
-                    str_instr += L", ";
-                } else {
-                    str_instr += L";";
-                }
-            }*/
             throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i) + L" (" + str_instr + L")" + LangLib::getTrans(L": ") + lex.content + LangLib::getTrans(L": Неизвестная инструкция\n") };
         }
 
+        int size = (int)lex.lex_parameters.size();
+        const std::vector<Lexeme>& parameters =  lex.lex_parameters;
+        for (int i = 0; i < size; ++i) {
+            try {
+                if(parameters[i].type == LEXTYPE::PAR) {
+                    //Сделать инструкцию в строковом виде для вывода ошибок
+                    Var parsed = parseVar(parameters[i].content, i);
+                    inst.parameters.emplace_back(parsed);
+                } else if(parameters[i].type == LEXTYPE::INSTBLOCK) {
+                    Var result;
+                    result.type = Type::INST;
+
+                    const std::vector<Lexeme>& inst_block = parameters[i].lex_parameters;
+                    int block_size = (int)inst_block.size();
+
+                    for(int j = 0; j < block_size; ++j) {
+                        result.instructions.emplace_back(toInstruction(inst_block[j], i));
+                    }
+                    inst.parameters.emplace_back(result);
+                }
+            }
+            catch (const std::wstring& error_message) {
+                std::wstring str_instr = L"";
+                throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i + 1) + L" (" + str_instr + L")" + LangLib::getTrans(L": ") + error_message };
+            }
+        }
         return inst;
+    } else  {
+        throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции: ") + LangLib::getTrans(L"Неверный тип лексемы") };
     }
 }
 
@@ -688,4 +645,33 @@ std::wstring showLexeme(Lexeme lex) {
     } else {
         return L"ERROR";
     }
+}
+
+std::wstring showInstruction(Instruction inst) {
+    std::wstring str = L"";
+    str += std::to_wstring(inst.opCode) + L": ";
+    int size = (int)inst.parameters.size();
+    for(int i = 0; i < size; ++i) {
+        if(inst.parameters[i].type == Type::INST) {
+            str += L"(";
+            int size_iblock = (int)inst.parameters[i].instructions.size();
+            for(int j = 0; j < size_iblock; ++j) {
+                str += showInstruction(inst.parameters[i].instructions[j]);
+            }
+            str += L")";
+            if(i < size - 1) {
+                str += L", ";
+            } else {
+                str += L";";
+            }
+        } else {
+            str += inst.parameters[i].toSTR().str;
+            if(i < size - 1) {
+                str += L", ";
+            } else {
+                str += L";";
+            }
+        }
+    }
+    return str;
 }

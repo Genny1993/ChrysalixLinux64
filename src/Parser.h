@@ -29,7 +29,7 @@ public:
 	std::wstring file_content;
 	
 	void fileLoad(std::wstring file_name);
-	void parse(Machine& m);
+	std::vector<Instruction> parse(std::wstring string);
 private: 
 	Var parseVar(std::wstring val, int instruction);
 	std::vector<Lexeme> parseLex(std::wstring val);
@@ -38,3 +38,4 @@ private:
 
 std::wstring showVar(Var var);
 std::wstring showLexeme(Lexeme lex);
+std::wstring showInstruction(Instruction inst);
