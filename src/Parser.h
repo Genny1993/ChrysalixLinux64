@@ -5,10 +5,15 @@
 #include "Var.h"
 #include "Machine.h"
 
+enum LEXTYPE {
+	INSTR,
+	PAR,
+	INSTBLOCK
+};
 
 class Lexeme {
 public:
-	std::wstring type;
+	LEXTYPE type;
 	std::wstring content;
 	std::vector<Lexeme> lex_parameters;
 	std::vector<Var> parameters;
@@ -28,6 +33,8 @@ public:
 private: 
 	Var parseVar(std::wstring val, int instruction);
 	std::vector<Lexeme> parseLex(std::wstring val);
+	Instruction toInstruction(Lexeme lex, int i);
 };
 
 std::wstring showVar(Var var);
+std::wstring showLexeme(Lexeme lex);

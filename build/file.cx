@@ -5,20 +5,13 @@
             じしf_, )ノ', '\n';
 	print: '♥️ MEOW! I LOVE YOU ALL SO MUCH!♥️', '\n';
 ##
-	var: $test; vtoarr: $subarr, 'apricot', 2, 1   
-	vtoarr: $arr2, 1, 0, 4
-	vtoarr: $arr, 'apple', 2, 3, $subarr
-	vtomap: $submap, 'test1', 1, 'test2', 6
-	var: $key, 'test2'
-	print: $key, '\n'  
-	vtomap: $map, 'apple', 1, 'banana', 2, 'apricot', $submap, 'melon', 4
-	change: $map[$subarr[$arr2[1]]]['test1'], 'many apples'
-	print: $map, '\n'
+ var: $var1, (calc: '-', $, 3, 1) , (calc: '-', $, 7, 6)  	
+	print: (calc: '+', $a, $b), (calc: '+', $c, $d) ;
 ##
  	var: $i, 0;
  	var: $max, 100000;
  	newtemp: 1;
- label: &loop;
+ label: &loop
 	calc: 'inc', $i;
 	stddev: $result, $arr;
 	#print: $result, '\n';
@@ -61,4 +54,4 @@ jif: $0, &main_loop;
 	#free: $n, $i, $result, $j, $max;
 	#pause:;
 ##
-end: 0   
+#end: 0   
