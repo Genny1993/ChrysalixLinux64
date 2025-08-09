@@ -12,150 +12,7 @@ void Parser::fileLoad(std::wstring file_name) {
 }
 
 void Parser::parse(Machine& m) {
-    //Перебираем каждый символ в строке
-    std::wstring str = L"";
-    bool instruction_parameters = false;
-    bool first_comment_char = false;
-    bool is_long_comment = false;
-    bool is_comment = false;
-    bool is_string = false;
-    bool escape = false;
-    bool parenthesis_count = 0;
-
-    Lexeme instruction;
-    std::vector<Lexeme> lexemes;
-    lexemes.reserve(10000);
-
-    for (wchar_t& c : this->file_content) {
-        //Вырезаем комментарии, если они есть, игнорируем сиволы после начала комментария до конца строки
-        if (is_comment) {
-            //Если предыдущий знак был равен #
-            if (first_comment_char == true) {
-                //Если у нас многострочный комментарий
-                if (is_long_comment == true) {
-                    //и попадается знак #, многострочный комментарий заканчивается
-                    if (c == L'#') {
-                        is_long_comment = false;
-                        is_comment = false;
-                    }
-                }
-                else {
-                    //Если предыдущий знак был # а многострочный комментарий не начался, начинаем многострочный комментарий
-                    if (c == L'#') {
-                        is_long_comment = true;
-                    }
-                }
-                //В любом случае сбрасываем флаг первого символа
-                first_comment_char = false;
-            }
-            else {
-                //Если предыдущий знак  не был # и у нас длинный комментарий
-                if (is_long_comment == true) {
-                    //Если текущий знак # ставим флаг первого знака комментария
-                    if (c == L'#') {
-                        first_comment_char = true;
-                    }
-                }
-                //если это однострочный комментарий, заканчиваем его с момента перевода на другую строку
-                else {
-                    if (c == L'\n') {
-                        is_comment = false;
-                        is_long_comment = false;
-                        first_comment_char = false;
-                    }
-                }
-            }
-
-        }
-        else {
-            //Если у нас кавычка ' это значит, началась или кончилась строка. Игнорируем все синтаксические символы
-            if (c == L'\'') {
-                if (is_string == true) {
-                    if (escape == false) {
-                        is_string = false;
-                    }
-                }
-                else {
-                    is_string = true;
-                }
-                escape = false;
-                str += c;
-            }
-            else {
-                if (is_string == true) {
-                    if (c == L'\\') {
-                        if (escape == false) {
-                            escape = true;
-                        }
-                        else {
-                            escape = false;
-                        }
-                    }
-                    else {
-                        escape = false;
-                    }
-                    str += c;
-                }
-                else {
-                    //Если у нас имеется знак #, у нас начался однострочный или многострочный комментарий
-                    if (c == L'#') {
-                        if (is_comment == false) {
-                            is_comment = true;
-                            first_comment_char = true;
-                        }
-                    }
-                    else {
-                        //Перебираем символы до тех пор, пока не найдем двоеточие :
-                        //Это конец наименования инструкции
-                        if (instruction_parameters == false) {
-                            if (c == L':') {
-                                str.erase(0, str.find_first_not_of(L" \n\r\t"));
-                                str.erase(str.find_last_not_of(L" \n\r\t") + 1);
-                                instruction.type = str;
-                                str = L"";
-                                //устанавливаем флаг, что начались параметры инструкции
-                                instruction_parameters = true;
-                            }
-                            else {
-                                //Иначе записываем символ в переменную с названием инструкции
-                                str += c;
-                            }
-                        }
-                        else {
-                            //Парсим параметры инструкции. Если у нас запятая, параметр кончился.
-                            if (c == ',') {
-                                if (str != L"") {
-                                    Lexeme temp;
-                                    temp.type = L"PAR";
-                                    temp.content = str;
-                                    instruction.lex_parameters.emplace_back(temp);
-                                    str = L"";
-                                }
-                            }
-                            //если точка с запятой, инструкция вообще кончилась
-                            else if (c == ';') {
-                                if (str != L"") {
-                                    Lexeme temp;
-                                    temp.type = L"PAR";
-                                    temp.content = str;
-                                    instruction.lex_parameters.emplace_back(temp);
-                                    str = L"";
-                                }
-                                lexemes.emplace_back(instruction);
-                                instruction.lex_parameters.clear();
-                                instruction.type = L"";
-                                instruction_parameters = false;
-                            }
-                            else {
-                                str += c;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
+    std::vector<Lexeme> lexemes = parseLex(this->file_content);
 
     //Парсим параметры, превращая литералы в объект VAR со значением
     int size = (int)lexemes.size();
@@ -169,7 +26,7 @@ void Parser::parse(Machine& m) {
         }
         catch (const std::wstring& error_message) {
             std::wstring str_instr = L"";
-            str_instr += lexemes[i].type + L": ";
+            str_instr += lexemes[i].content + L": ";
             int params_size = (int)lexemes[i].lex_parameters.size();
             for (int j = 0; j < params_size; ++j) {
                 str_instr += lexemes[i].lex_parameters[j].content;
@@ -191,13 +48,13 @@ void Parser::parse(Machine& m) {
 
     for (Lexeme& lexeme : lexemes) {
         try {
-            inst.opCode = table.opCodeMap.at(lexeme.type);
-            inst.as_string = lexeme.type + L":";
+            inst.opCode = table.opCodeMap.at(lexeme.content);
+            inst.as_string = lexeme.content + L":";
         }
         catch (std::out_of_range& ex) {
             std::string temp = ex.what();
             std::wstring str_instr = L"";
-            str_instr += lexeme.type + L": ";
+            str_instr += lexeme.content + L": ";
             int params_size = (int)lexeme.lex_parameters.size();
             for (int j = 0; j < params_size; ++j) {
                 str_instr += lexeme.lex_parameters[j].content;
@@ -207,7 +64,7 @@ void Parser::parse(Machine& m) {
                     str_instr += L";";
                 }
             }
-            throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i) + L" (" + str_instr + L")" + LangLib::getTrans(L": ") + lexeme.type + LangLib::getTrans(L": Неизвестная инструкция\n") };
+            throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i) + L" (" + str_instr + L")" + LangLib::getTrans(L": ") + lexeme.content + LangLib::getTrans(L": Неизвестная инструкция\n") };
         }
         
         int size = (int)lexeme.parameters.size();
@@ -438,6 +295,160 @@ Var Parser::parseVar(std::wstring val, int instruction) {
         throw std::wstring{temp + LangLib::getTrans(L": Неизвестный литерал\n")};
     }
     return Var();
+}
+
+std::vector<Lexeme> Parser::parseLex(std::wstring val) {
+    //Перебираем каждый символ в строке
+    std::wstring str = L"";
+    bool instruction_parameters = false;
+    bool first_comment_char = false;
+    bool is_long_comment = false;
+    bool is_comment = false;
+    bool is_string = false;
+    bool escape = false;
+    bool parenthesis_count = 0;
+
+    Lexeme instruction;
+    std::vector<Lexeme> lexemes;
+    lexemes.reserve(10000);
+
+    int size_str = (int)val.size();
+    for(int i = 0; i < size_str; ++i) {
+        wchar_t c = val[i]; 
+        //Вырезаем комментарии, если они есть, игнорируем сиволы после начала комментария до конца строки
+        if (is_comment) {
+            //Если предыдущий знак был равен #
+            if (first_comment_char == true) {
+                //Если у нас многострочный комментарий
+                if (is_long_comment == true) {
+                    //и попадается знак #, многострочный комментарий заканчивается
+                    if (c == L'#') {
+                        is_long_comment = false;
+                        is_comment = false;
+                    }
+                }
+                else {
+                    //Если предыдущий знак был # а многострочный комментарий не начался, начинаем многострочный комментарий
+                    if (c == L'#') {
+                        is_long_comment = true;
+                    }
+                }
+                //В любом случае сбрасываем флаг первого символа
+                first_comment_char = false;
+            }
+            else {
+                //Если предыдущий знак  не был # и у нас длинный комментарий
+                if (is_long_comment == true) {
+                    //Если текущий знак # ставим флаг первого знака комментария
+                    if (c == L'#') {
+                        first_comment_char = true;
+                    }
+                }
+                //если это однострочный комментарий, заканчиваем его с момента перевода на другую строку
+                else {
+                    if (c == L'\n') {
+                        is_comment = false;
+                        is_long_comment = false;
+                        first_comment_char = false;
+                    }
+                }
+            }
+
+        }
+        else {
+            //Если у нас кавычка ' это значит, началась или кончилась строка. Игнорируем все синтаксические символы
+            if (c == L'\'') {
+                if (is_string == true) {
+                    if (escape == false) {
+                        is_string = false;
+                    }
+                }
+                else {
+                    is_string = true;
+                }
+                escape = false;
+                str += c;
+            }
+            else {
+                if (is_string == true) {
+                    if (c == L'\\') {
+                        if (escape == false) {
+                            escape = true;
+                        }
+                        else {
+                            escape = false;
+                        }
+                    }
+                    else {
+                        escape = false;
+                    }
+                    str += c;
+                }
+                else {
+                    //Если у нас имеется знак #, у нас начался однострочный или многострочный комментарий
+                    if (c == L'#') {
+                        if (is_comment == false) {
+                            is_comment = true;
+                            first_comment_char = true;
+                        }
+                    }
+                    else {
+                        //Перебираем символы до тех пор, пока не найдем двоеточие :
+                        //Это конец наименования инструкции
+                        if (instruction_parameters == false) {
+                            if (c == L':') {
+                                str.erase(0, str.find_first_not_of(L" \n\r\t"));
+                                str.erase(str.find_last_not_of(L" \n\r\t") + 1);
+                                instruction.type = L"INST";
+                                instruction.content = str;
+                                str = L"";
+                                //устанавливаем флаг, что начались параметры инструкции
+                                instruction_parameters = true;
+                            }
+                            else {
+                                //Иначе записываем символ в переменную с названием инструкции
+                                str += c;
+                            }
+                        }
+                        else {
+                            //Парсим параметры инструкции. Если у нас запятая, параметр кончился.
+                            if (c == ',') {
+                                if (str != L"") {
+                                    Lexeme temp;
+                                    temp.type = L"PAR";
+                                    temp.content = str;
+                                    instruction.lex_parameters.emplace_back(temp);
+                                    str = L"";
+                                }
+                            }
+                            //если точка с запятой или перевод строки или конец строки, инструкция вообще кончилась
+                            else if (c == ';' || c == '\n' || i == (size_str - 1)) {
+                                if (str != L"") {
+                                    Lexeme temp;
+                                    temp.type = L"PAR";
+                                    if(i == (size_str - 1)) {
+                                        temp.content = str + c;
+                                    } else {
+                                        temp.content = str;
+                                    }
+                                    instruction.lex_parameters.emplace_back(temp);
+                                    str = L"";
+                                }
+                                lexemes.emplace_back(instruction);
+                                instruction.lex_parameters.clear();
+                                instruction.type = L"";
+                                instruction.content = L"";
+                                instruction_parameters = false;
+                            }
+                            else {
+                                str += c;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 std::wstring showVar(Var var) {

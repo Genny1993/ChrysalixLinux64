@@ -27,6 +27,7 @@ public:
 	void parse(Machine& m);
 private: 
 	Var parseVar(std::wstring val, int instruction);
+	std::vector<Lexeme> parseLex(std::wstring val);
 };
 
 std::wstring showVar(Var var);
