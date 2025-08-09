@@ -2,6 +2,7 @@
 
 #include "Helpers.h"
 #include "LangLib.h"
+#include "InstructionFunctions.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // checkExistValue
@@ -107,4 +108,20 @@ void requiredLabel(Var* val, std::wstring* type, std::wstring num) {
 	if ((*val).type != STR || (*val).getWStr()[0] != L'&') {
 		throw std::wstring{ (*type) + LangLib::getTrans(L": ") + num + LangLib::getTrans(L" параметр инструкции должен быть именем метки\n") };
 	}
+}
+
+void validateInstruction(Instruction& inst, Machine* m) {
+	InstructionMap inst_map;
+	inst_map.functions[inst.opCode](m, &inst, true, true, true);
+
+	int size_param = (int)inst.parameters.size();
+	for(int i = 0; i < size_param; ++i) {
+		if(inst.parameters[i].type == Type::INST) {
+			int size_block = inst.parameters[i].instructions.size();
+			for(int j = 0; j < size_block; ++j) {
+				validateInstruction(inst.parameters[i].instructions[j], m);
+			}
+		}
+	}
+
 }

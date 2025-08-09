@@ -1,12 +1,39 @@
-##
 	print:	'          ／l、
          （ﾟ､ ｡７
             l、ﾞ~ヽ
             じしf_, )ノ', '\n';
 	print: '♥️ MEOW! I LOVE YOU ALL SO MUCH!♥️', '\n';
+
+	#Циклический расчет факториала:
+	var: $n, 20;		#Факториал чего считаем
+	var: $i, 1;			#С какого числа ведем итерацию
+	var: $result, 1;	#Переменная результата
+	var: $j, 1;			#Итератор главного цикла
+	var: $max, 5;  		#Максимальне количество итераций главного цикла.
+	nop:
+
+label: &main_loop;
+	print: (nop:);
+	input: $n;
+
+	label: &cycle_start;
+		calc: '*', $result, $i;
+		calc: 'inc', $i;
+	jif: (comp: '<=', $, $i, $n), &cycle_start;
+
+	print: 'Факториал ', $n, ' равен ', $result, '\n';
+	
+	#Сбрасывем значения переменных перед следующей итерацией
+	change: $i, 1; change: $result, 1;
+
+	calc: 'inc', $j;
+jif: (comp: '<', $, $j, $max), &main_loop;	
+
 ##
- 	var: $var1, (calc: '-', $, 3, 1) , (calc: '-', $, 7, 6)  	
-	print: (calc: '+', $a, $b), (calc: '+', $c, $d) ;
+	print: (calc: '+', $, (calc: '+', $, 3 , (calc: '+', $, 2, 4) ) , 2), ' ', (calc: '+', $, 3, 4; calc: '-', $, $, 1; var: $1, 2), '\n'
+	print: $1, '\n';
+	end: 0
+##
 ##
  	var: $i, 0;
  	var: $max, 100000;
@@ -21,37 +48,4 @@ jif: $0, &loop;
 	free: $i, $max;
 ##
 
-##
-	#Циклический расчет факториала:
-	var: $n, 20;		#Факториал чего считаем
-	var: $i, 1;			#С какого числа ведем итерацию
-	var: $result, 1;	#Переменная результата
-	var: $j, 1;			#Итератор главного цикла
-	var: $max, 100000;  #Максимальне количество итераций главного цикла.
-	newtemp: 2;
-
-label: &main_loop;
-	#print: 'Введите число, по которому будет расчет факториала: ';
-	#input:$n;
-
-	label: &cycle_start;
-		calc: '*', $result, $i;
-		calc: 'inc', $i;
-		comp: '<=', $1, $i, $n;
-	jif: $1, &cycle_start;
-
-	#print: 'Факториал ', $n, ' равен ', $result, '\n';
-	
-	#Сбрасывем значения переменных перед следующей итерацией
-	change: $i, 1;
-	change: $result, 1;
-
-	calc: 'inc', $j;
-	comp: '<', $0, $j, $max;
-jif: $0, &main_loop;	
-	#Освобождаем память, конец программы
-	#forget:;
-	#free: $n, $i, $result, $j, $max;
-	#pause:;
-##
-#end: 0   
+end: 0   

@@ -13,7 +13,7 @@ void Parser::fileLoad(std::wstring file_name) {
 
 std::vector<Instruction> Parser::parse(std::wstring string) {
     std::vector<Lexeme> lexemes = this->parseLex(string);
-
+    
     std::vector<Instruction> instructions;
     int size = (int)lexemes.size();
     for(int i = 0; i < size; ++i) {
@@ -593,7 +593,7 @@ Instruction Parser::toInstruction(Lexeme lex, int i) {
         }
         return inst;
     } else  {
-        throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции: ") + LangLib::getTrans(L"Неверный тип лексемы") };
+        throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции: ") + LangLib::getTrans(L"Неверный тип лексемы\n") };
     }
 }
 

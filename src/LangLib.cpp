@@ -98,6 +98,8 @@ std::unordered_map<std::wstring, std::wstring> ru = {
 	{L"Пустая вложенная инструкция '()'\n", L"Пустая вложенная инструкция '()'\n"},
 	{L": Лишний символ после вложенной инструкции\n", L": Лишний символ после вложенной инструкции\n"},
 	{L"Входная строка не является исходным кодом: ", L"Входная строка не является исходным кодом: "},
+	{L"Неверный тип лексемы\n", L"Неверный тип лексемы\n"},
+	{L"Невозможно удалить нулевой регистр '$'\n", L"Невозможно удалить нулевой регистр '$'\n"},
 };
 
 std::unordered_map<std::wstring, std::wstring> en = {
@@ -182,6 +184,8 @@ std::unordered_map<std::wstring, std::wstring> en = {
 	{L"Пустая вложенная инструкция '()'\n", L"Empty nested instruction '()'\n"},
 	{L": Лишний символ после вложенной инструкции\n", L": Extra character after nested instruction\n"},
 	{L"Входная строка не является исходным кодом: ", L"Input string is not source code: "},
+	{L"Неверный тип лексемы\n", L"Invalid lexeme type\n"},
+	{L"Невозможно удалить нулевой регистр '$'\n", L"Unable to remove null register '$'\n"},
 };
 
 LANGUAGES LangLib::current_lang = RU;

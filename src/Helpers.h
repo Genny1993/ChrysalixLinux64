@@ -13,7 +13,7 @@ const unsigned char VARIANTS = 4;	//Варианты количества пар
 // getValue 
 // Возвращает значение параметра по имени переменной или литералу
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Var getValue(Var* val,std::unordered_map<std::wstring, Var>* heap);
+Var getValue(Var* val,std::unordered_map<std::wstring, Var>* heap, Machine *m);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // getLabel
 // Возвращает значение параметра по имени переменной или литералу
@@ -23,7 +23,7 @@ Var getLabel(Var* val,std::unordered_map<std::wstring, int>* pointers);
 //  setValue 
 // Возвращает переменную для присваивания
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Var& setValue(Var* val,std::unordered_map<std::wstring, Var>* heap);
+Var& setValue(Var* val,std::unordered_map<std::wstring, Var>* heap, Machine* m);
 
 //Хелперы валидации инструкций
 
@@ -57,6 +57,8 @@ void requiredVar(Var* val, std::wstring* type, std::wstring num);
 // Проверяет то, что требуется метка
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void requiredLabel(Var* val, std::wstring* type, std::wstring num);
+
+void validateInstruction(Instruction& inst, Machine *m);
 
 //Хелперы кодировки
 std::wstring loadFile(std::wstring filename);

@@ -2,12 +2,12 @@
 
 #include "Helpers.h"
 #include "LangLib.h"
-
+#include "InstructionFunctions.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // getValue 
 // Возвращает значение параметра по имени переменной или литералу
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap) {
+Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m) {
 	if ((*val).type == STR && (*val).getWStr()[0] == L'$') {
 		if((int)val->arr.size() > 0) {
 			int size = (int)val->arr.size();
@@ -22,7 +22,7 @@ Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap) {
 			for(int i = 0; i < size; ++i) {
 				if(val->type == STR && (val->arr[i]).toSTR().getWStr()[0] == L'$') {
 					if((int)val->arr.size() > 0) {
-						Var index = getValue(&(val->arr[i]), heap);
+						Var index = getValue(&(val->arr[i]), heap, m);
 						if(value->type == ARR) {
 							try {
 								value = &(value->arr.at(index.toNTG().data.ntg));
@@ -111,12 +111,21 @@ Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap) {
 			}
 		}
 	}
-	else {
-		return *val;
+	else if((*val).type == Type::INST) {
+		InstructionMap inst;
+		int size = (int)(*val).instructions.size();
+		Var result;
+		for(int i = 0; i < size; ++i) {		
+			inst.functions[(*val).instructions[i].opCode](m, &(*val).instructions[i], false, false, false);
+			result = (*heap)[L"$"];
+		}
+		return result;
 	}
+	
+	return *val;
 }
 
-Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap) {
+Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m) {
 	if(val->type == STR && (*val).getWStr()[0] == L'$') {
 		if((int)val->arr.size() > 0) {
 			int size = (int)val->arr.size();
@@ -131,7 +140,7 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap) {
 			for(int i = 0; i < size; ++i) {
 				if(val->type == STR && (val->arr[i]).toSTR().getWStr()[0] == L'$') {
 					if((int)val->arr.size() > 0) {
-						Var index = getValue(&(val->arr[i]), heap);
+						Var index = getValue(&(val->arr[i]), heap, m);
 						if(value->type == ARR) {
 							try {
 								value = &(value->arr.at(index.toNTG().data.ntg));
