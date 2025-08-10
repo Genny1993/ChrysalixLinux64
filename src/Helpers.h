@@ -58,7 +58,7 @@ void requiredVar(Var* val, std::wstring* type, std::wstring num);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void requiredLabel(Var* val, std::wstring* type, std::wstring num);
 
-void validateInstruction(Instruction& inst, Machine *m);
+void validateInstruction(Instruction& inst, Machine *m, bool nested = false);
 
 //Хелперы кодировки
 std::wstring loadFile(std::wstring filename);

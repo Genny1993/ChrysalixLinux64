@@ -110,16 +110,16 @@ void requiredLabel(Var* val, std::wstring* type, std::wstring num) {
 	}
 }
 
-void validateInstruction(Instruction& inst, Machine* m) {
+void validateInstruction(Instruction& inst, Machine* m, bool nested) {
 	InstructionMap inst_map;
-	inst_map.functions[inst.opCode](m, &inst, true, true, true);
+	inst_map.functions[inst.opCode](m, &inst, true, true, !nested);
 
 	int size_param = (int)inst.parameters.size();
 	for(int i = 0; i < size_param; ++i) {
 		if(inst.parameters[i].type == Type::INST) {
 			int size_block = inst.parameters[i].instructions.size();
 			for(int j = 0; j < size_block; ++j) {
-				validateInstruction(inst.parameters[i].instructions[j], m);
+				validateInstruction(inst.parameters[i].instructions[j], m, true);
 			}
 		}
 	}

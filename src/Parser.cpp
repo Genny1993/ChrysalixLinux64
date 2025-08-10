@@ -266,7 +266,7 @@ std::vector<Lexeme> Parser::parseLex(std::wstring val) {
 
     int size_str = (int)val.size();
     for(int i = 0; i < size_str; ++i) {
-        wchar_t c = val[i]; 
+        wchar_t c = val[i];
         //Вырезаем комментарии, если они есть, игнорируем сиволы после начала комментария до конца строки
         if (is_comment) {
             //Если предыдущий знак был равен #
@@ -399,11 +399,7 @@ std::vector<Lexeme> Parser::parseLex(std::wstring val) {
                                     if (str != L"") {
                                         Lexeme temp;
                                         temp.type =  LEXTYPE::PAR;
-                                        if(i == (size_str - 1)) {
-                                            temp.content = str + c;
-                                        } else {
-                                            temp.content = str;
-                                        }
+                                        temp.content = str;
                                         instruction.lex_parameters.emplace_back(temp);
                                         str = L"";
                                     }
@@ -456,7 +452,12 @@ std::vector<Lexeme> Parser::parseLex(std::wstring val) {
 
                                         Lexeme temp;
                                         temp.type =  LEXTYPE::INSTBLOCK;
+                                        //Добавляем конец инструкции ;, чтобы избавиться от излишних ; во вложенных инструкциях
+                                        if(str[str.size() - 1] != L';' ) {
+                                            str += L';';
+                                        }
                                         std::vector<Lexeme> tlexemes = parseLex(str);
+
                                         int lsize = (int)tlexemes.size();
                                         for(int i = 0; i < lsize; ++i) {
                                             temp.lex_parameters.emplace_back(tlexemes[i]);
@@ -505,7 +506,12 @@ std::vector<Lexeme> Parser::parseLex(std::wstring val) {
 
                                         Lexeme temp;
                                         temp.type =  LEXTYPE::INSTBLOCK;
+                                        //Добавляем конец инструкции ;, чтобы избавиться от излишних ; во вложенных инструкциях
+                                        if(str[str.size() - 1] != L';' ) {
+                                            str += L';';
+                                        }
                                         std::vector<Lexeme> tlexemes = parseLex(str);
+
                                         int lsize = (int)tlexemes.size();
                                         for(int i = 0; i < lsize; ++i) {
                                             temp.lex_parameters.emplace_back(tlexemes[i]);
@@ -549,7 +555,12 @@ std::vector<Lexeme> Parser::parseLex(std::wstring val) {
 
                                         Lexeme temp;
                                         temp.type =  LEXTYPE::INSTBLOCK;
+                                        //Добавляем конец инструкции ;, чтобы избавиться от излишних ; во вложенных инструкциях
+                                        if(str[str.size() - 1] != L';' ) {
+                                            str += L';';
+                                        }
                                         std::vector<Lexeme> tlexemes = parseLex(str);
+
                                         int lsize = (int)tlexemes.size();
                                         for(int i = 0; i < lsize; ++i) {
                                             temp.lex_parameters.emplace_back(tlexemes[i]);
@@ -567,6 +578,8 @@ std::vector<Lexeme> Parser::parseLex(std::wstring val) {
                                     } else {
                                         throw std::wstring{ str + LangLib::getTrans(L": Лишняя закрывающая скобка ')'\n") };
                                     }
+                                } else if(parenthesis_count > 0 && i == (size_str - 1)) {
+                                    throw std::wstring{ str + LangLib::getTrans(L": Лишняя открывающая скобка '('\n") };
                                 } else {
                                     str +=c;
                                 }
@@ -578,7 +591,7 @@ std::vector<Lexeme> Parser::parseLex(std::wstring val) {
         }
     }
     if(lexemes.size() == 0) {
-        throw std::wstring{ LangLib::getTrans(L"Входная строка не является исходным кодом: " + val + L"\n") };
+        throw std::wstring{ LangLib::getTrans(L"Входная строка не является инструкцией: " + val + L"\n") };
     }
     return lexemes;
 }
