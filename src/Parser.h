@@ -39,3 +39,4 @@ private:
 std::wstring showVar(Var var);
 std::wstring showLexeme(Lexeme lex);
 std::wstring showInstruction(Instruction inst);
+std::wstring getInstBlockAsString(Lexeme block);

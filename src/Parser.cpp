@@ -614,6 +614,16 @@ Instruction Parser::toInstruction(Lexeme lex, int i) {
         int size = (int)lex.lex_parameters.size();
         const std::vector<Lexeme>& parameters =  lex.lex_parameters;
         for (int i = 0; i < size; ++i) {
+            if(parameters[i].type == LEXTYPE::PAR) {
+                inst.as_string += parameters[i].content;
+            } else if(parameters[i].type == LEXTYPE::INSTBLOCK) {
+                 inst.as_string += getInstBlockAsString(parameters[i]);
+            }
+            if(i < size - 1) {
+                inst.as_string += L", ";
+            } else {
+                 inst.as_string += L";";
+            }
             try {
                 if(parameters[i].type == LEXTYPE::PAR) {
                     //Сделать инструкцию в строковом виде для вывода ошибок
@@ -720,4 +730,33 @@ std::wstring showInstruction(Instruction inst) {
         }
     }
     return str;
+}
+
+std::wstring getInstBlockAsString(Lexeme block) {
+    if(block.type ==  LEXTYPE::INSTR) {
+        std::wstring str = block.content + L": ";
+        int size = (int)block.lex_parameters.size();
+        for(int i = 0; i < size; ++i) {
+            str += getInstBlockAsString(block.lex_parameters[i]);
+            if(i < size -1) {
+                str += L", ";
+            }
+        }
+        return str;
+    } else if(block.type ==  LEXTYPE::PAR) {
+        return block.content;
+    } else if(block.type ==  LEXTYPE::INSTBLOCK) {
+        std::wstring str = L"(";
+        int size = (int)block.lex_parameters.size();
+        for(int i = 0; i < size; ++i) {
+            str += getInstBlockAsString(block.lex_parameters[i]);
+            if(i < size -1) {
+                str += L", ";
+            }
+        }
+        str += L")";
+        return str;
+    } else {
+        return L"ERROR";
+    }
 }
