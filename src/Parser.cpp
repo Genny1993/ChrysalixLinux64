@@ -12,30 +12,22 @@ void Parser::fileLoad(std::wstring file_name) {
 }
 
 std::vector<Instruction> Parser::parse(std::wstring string) {
+
     std::vector<Lexeme> lexemes = this->parseLex(string);
     
     std::vector<Instruction> instructions;
+
     int size = (int)lexemes.size();
     for(int i = 0; i < size; ++i) {
-        instructions.emplace_back(this->toInstruction(lexemes[i], i + 1));
+        try {
+            instructions.emplace_back(this->toInstruction(lexemes[i], i + 1));
+        } catch (const std::wstring& error_message) {
+            std::wstring str_instr = getInstBlockAsString(lexemes[i]);
+            throw std::wstring{  LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i + 1) + L" (" + str_instr + L")" + LangLib::getTrans(L": ") + error_message };
+        }
     }
 
     return instructions;
-    /*
-        catch (const std::wstring& error_message) {
-            std::wstring str_instr = L"";
-            str_instr += lexemes[i].content + L": ";
-            int params_size = (int)lexemes[i].lex_parameters.size();
-            for (int j = 0; j < params_size; ++j) {
-                str_instr += lexemes[i].lex_parameters[j].content;
-                if(j < params_size - 1) {
-                    str_instr += L", ";
-                } else {
-                    str_instr += L";";
-                }
-            }
-            throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i + 1) + L" (" + str_instr + L")" + LangLib::getTrans(L": ") + error_message };
-*/
 }
 
 Var Parser::parseVar(std::wstring val, int instruction) {
@@ -607,8 +599,7 @@ Instruction Parser::toInstruction(Lexeme lex, int i) {
         catch (std::out_of_range& ex) {
             //вывод инструкции
             std::string temp = ex.what();
-            std::wstring str_instr = L"";
-            throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i) + L" (" + str_instr + L")" + LangLib::getTrans(L": ") + lex.content + LangLib::getTrans(L": Неизвестная инструкция\n") };
+            throw std::wstring{ lex.content + LangLib::getTrans(L": Неизвестная инструкция\n") };
         }
 
         int size = (int)lex.lex_parameters.size();
@@ -643,13 +634,12 @@ Instruction Parser::toInstruction(Lexeme lex, int i) {
                 }
             }
             catch (const std::wstring& error_message) {
-                std::wstring str_instr = L"";
-                throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i + 1) + L" (" + str_instr + L")" + LangLib::getTrans(L": ") + error_message };
+                throw std::wstring{ error_message };
             }
         }
         return inst;
     } else  {
-        throw std::wstring{ LangLib::getTrans(L"Синтаксическая ошибка в инструкции: ") + LangLib::getTrans(L"Неверный тип лексемы\n") };
+        throw std::wstring{ LangLib::getTrans(L"Неверный тип лексемы\n") };
     }
 }
 
