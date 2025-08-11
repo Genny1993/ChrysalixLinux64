@@ -33,7 +33,7 @@ public:
 private: 
 	Var parseVar(std::wstring val, int instruction);
 	std::vector<Lexeme> parseLex(std::wstring val);
-	Instruction toInstruction(Lexeme lex, int i);
+	Instruction toInstruction(Lexeme lex);
 };
 
 std::wstring showVar(Var var);

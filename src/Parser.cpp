@@ -14,13 +14,13 @@ void Parser::fileLoad(std::wstring file_name) {
 std::vector<Instruction> Parser::parse(std::wstring string) {
 
     std::vector<Lexeme> lexemes = this->parseLex(string);
-    
+
     std::vector<Instruction> instructions;
 
     int size = (int)lexemes.size();
     for(int i = 0; i < size; ++i) {
         try {
-            instructions.emplace_back(this->toInstruction(lexemes[i], i + 1));
+            instructions.emplace_back(this->toInstruction(lexemes[i]));
         } catch (const std::wstring& error_message) {
             std::wstring str_instr = getInstBlockAsString(lexemes[i]);
             throw std::wstring{  LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i + 1) + L" (" + str_instr + L")" + LangLib::getTrans(L": ") + error_message };
@@ -155,8 +155,11 @@ Var Parser::parseVar(std::wstring val, int instruction) {
     }
     else if (temp[0] == L'\'') {
         std::wstring s_temp = temp;
-        std::wstring str = s_temp.erase(0, s_temp.find_first_not_of(L"\'"));
-        str = s_temp.erase(s_temp.find_last_not_of(L"\'") + 1);
+        s_temp.erase(0, s_temp.find_first_not_of(L" \n\r\t"));
+        s_temp.erase(s_temp.find_last_not_of(L" \n\r\t") + 1);
+        s_temp.erase(0, 1);
+        s_temp.erase(s_temp.size() - 1);
+        std::wstring str = s_temp;
                    
         std::wstring new_str = L"";
         bool escape_ch = false;
@@ -588,7 +591,7 @@ std::vector<Lexeme> Parser::parseLex(std::wstring val) {
     return lexemes;
 }
 
-Instruction Parser::toInstruction(Lexeme lex, int i) {
+Instruction Parser::toInstruction(Lexeme lex) {
     CTable table;
     if(lex.type ==  LEXTYPE::INSTR) {
         Instruction inst;
@@ -628,7 +631,7 @@ Instruction Parser::toInstruction(Lexeme lex, int i) {
                     int block_size = (int)inst_block.size();
 
                     for(int j = 0; j < block_size; ++j) {
-                        result.instructions.emplace_back(toInstruction(inst_block[j], i));
+                        result.instructions.emplace_back(toInstruction(inst_block[j]));
                     }
                     inst.parameters.emplace_back(result);
                 }
