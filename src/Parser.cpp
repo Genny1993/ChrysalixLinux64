@@ -22,7 +22,7 @@ std::vector<Instruction> Parser::parse(std::wstring string) {
         try {
             instructions.emplace_back(this->toInstruction(lexemes[i]));
         } catch (const std::wstring& error_message) {
-            std::wstring str_instr = getInstBlockAsString(lexemes[i]);
+            std::wstring str_instr = this->getInstBlockAsString(lexemes[i]);
             throw std::wstring{  LangLib::getTrans(L"Синтаксическая ошибка в инструкции ") + std::to_wstring(i + 1) + L" (" + str_instr + L")" + LangLib::getTrans(L": ") + error_message };
         }
     }
@@ -611,7 +611,7 @@ Instruction Parser::toInstruction(Lexeme lex) {
             if(parameters[i].type == LEXTYPE::PAR) {
                 inst.as_string += parameters[i].content;
             } else if(parameters[i].type == LEXTYPE::INSTBLOCK) {
-                 inst.as_string += getInstBlockAsString(parameters[i]);
+                 inst.as_string += this->getInstBlockAsString(parameters[i]);
             }
             if(i < size - 1) {
                 inst.as_string += L", ";
@@ -620,7 +620,6 @@ Instruction Parser::toInstruction(Lexeme lex) {
             }
             try {
                 if(parameters[i].type == LEXTYPE::PAR) {
-                    //Сделать инструкцию в строковом виде для вывода ошибок
                     Var parsed = parseVar(parameters[i].content, i);
                     inst.parameters.emplace_back(parsed);
                 } else if(parameters[i].type == LEXTYPE::INSTBLOCK) {
@@ -646,14 +645,14 @@ Instruction Parser::toInstruction(Lexeme lex) {
     }
 }
 
-std::wstring showVar(Var var) {
+std::wstring Parser::showVar(Var var) {
     std::wstring str = L"";
     if(var.arr.size() >0) {
         str += var.str + L": ";
         int sz = var.arr.size();
         for(int i = 0; i < sz; ++i) {
             if(var.arr[i].arr.size() > 0) {
-                str += L"(" + showVar(var.arr[i]) + L"), ";
+                str += L"(" + this->showVar(var.arr[i]) + L"), ";
             } else {
                 str += var.arr[i].toSTR().str + L", ";
             }
@@ -664,7 +663,7 @@ std::wstring showVar(Var var) {
     return str;
 }
 
-std::wstring showLexeme(Lexeme lex) {
+std::wstring Parser::showLexeme(Lexeme lex) {
     if(lex.type ==  LEXTYPE::INSTR) {
         std::wstring str = L"[INSTR]" + lex.content + L": ";
         int size = (int)lex.lex_parameters.size();
@@ -681,7 +680,7 @@ std::wstring showLexeme(Lexeme lex) {
         std::wstring str = L"[INSTBLOCK](";
         int size = (int)lex.lex_parameters.size();
         for(int i = 0; i < size; ++i) {
-            str += showLexeme(lex.lex_parameters[i]);
+            str += this->showLexeme(lex.lex_parameters[i]);
             if(i < size -1) {
                 str += L", ";
             } else {
@@ -696,7 +695,7 @@ std::wstring showLexeme(Lexeme lex) {
     }
 }
 
-std::wstring showInstruction(Instruction inst) {
+std::wstring Parser::showInstruction(Instruction inst) {
     std::wstring str = L"";
     str += std::to_wstring(inst.opCode) + L": ";
     int size = (int)inst.parameters.size();
@@ -705,7 +704,7 @@ std::wstring showInstruction(Instruction inst) {
             str += L"(";
             int size_iblock = (int)inst.parameters[i].instructions.size();
             for(int j = 0; j < size_iblock; ++j) {
-                str += showInstruction(inst.parameters[i].instructions[j]);
+                str += this->showInstruction(inst.parameters[i].instructions[j]);
             }
             str += L")";
             if(i < size - 1) {
@@ -725,12 +724,12 @@ std::wstring showInstruction(Instruction inst) {
     return str;
 }
 
-std::wstring getInstBlockAsString(Lexeme block) {
+std::wstring Parser::getInstBlockAsString(Lexeme block) {
     if(block.type ==  LEXTYPE::INSTR) {
         std::wstring str = block.content + L": ";
         int size = (int)block.lex_parameters.size();
         for(int i = 0; i < size; ++i) {
-            str += getInstBlockAsString(block.lex_parameters[i]);
+            str += this->getInstBlockAsString(block.lex_parameters[i]);
             if(i < size -1) {
                 str += L", ";
             }
@@ -742,7 +741,7 @@ std::wstring getInstBlockAsString(Lexeme block) {
         std::wstring str = L"(";
         int size = (int)block.lex_parameters.size();
         for(int i = 0; i < size; ++i) {
-            str += getInstBlockAsString(block.lex_parameters[i]);
+            str += this->getInstBlockAsString(block.lex_parameters[i]);
             if(i < size -1) {
                 str += L", ";
             }

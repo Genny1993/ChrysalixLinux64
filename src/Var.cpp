@@ -8,6 +8,7 @@
 
 #include "LangLib.h"
 #include "Var.h"
+#include "Parser.h"
 
 const std::wstring MESSAGE1 = L"Не удалось привести строку к типу ";
 const std::wstring MESSAGE2 = L"Невозможно привести массив к типу ";
@@ -18,6 +19,8 @@ const std::wstring MESSAGE6 = L"Индекс словаря не существ�
 const std::wstring MESSAGE7 = L"Инструкция используется только для следующих типов: ";
 const std::wstring MESSAGE8 = L"Массив не поддерживает данной операции\n";
 const std::wstring MESSAGE9 = L"Cловарь не поддерживает данной операции\n";
+const std::wstring MESSAGE10 = L"Невозможно привести блок инструкций к типу ";
+const std::wstring MESSAGE11 = L"Блок инструкций не поддерживает данной операции\n";
 
 Var::Var() {
     this->type = NIL;
@@ -283,6 +286,10 @@ Var Var::toNTG() const {
         std::wstring error = LangLib::getTrans(MESSAGE3);
         error += L"NTG\n";
         throw std::wstring{ error };
+    } else if (this->type == INST) {
+        std::wstring error = LangLib::getTrans(MESSAGE10);
+        error += L"NTG\n";
+        throw std::wstring{ error };
     }
     return Var();
 }
@@ -354,6 +361,10 @@ Var Var::toUNTG() const {
     }
     else if (this->type == MAP) {
         std::wstring error = LangLib::getTrans(MESSAGE3);
+        error += L"UNTG\n";
+        throw std::wstring{ error };
+    } else if (this->type == INST) {
+        std::wstring error = LangLib::getTrans(MESSAGE10);
         error += L"UNTG\n";
         throw std::wstring{ error };
     }
@@ -429,6 +440,10 @@ Var Var::toDBL() const {
         std::wstring error = LangLib::getTrans(MESSAGE3);
         error += L"DBL\n";
         throw std::wstring{ error };
+    } else if (this->type == INST) {
+        std::wstring error = LangLib::getTrans(MESSAGE10);
+        error += L"DBL\n";
+        throw std::wstring{ error };
     }
     return Var();
 }
@@ -501,6 +516,10 @@ Var Var::toCHR() const {
     else if (this->type == MAP) {
         std::wstring error = LangLib::getTrans(MESSAGE3);
         error += L"CHR\n";
+        throw std::wstring{ error };
+    } else if (this->type == CHR) {
+        std::wstring error = LangLib::getTrans(MESSAGE10);
+        error += L"NTG\n";
         throw std::wstring{ error };
     }
 
@@ -575,6 +594,10 @@ Var Var::toUCHR() const {
     }
     else if (this->type == MAP) {
         std::wstring error = LangLib::getTrans(MESSAGE3);
+        error += L"UCHR\n";
+        throw std::wstring{ error };
+    } else if (this->type == INST) {
+        std::wstring error = LangLib::getTrans(MESSAGE10);
         error += L"UCHR\n";
         throw std::wstring{ error };
     }
@@ -664,6 +687,10 @@ Var Var::toBLN() const {
         }
 
         return result;
+    } else if (this->type == INST) {
+        std::wstring error = LangLib::getTrans(MESSAGE10);
+        error += L"BLN\n";
+        throw std::wstring{ error };
     }
     return Var();
 }
@@ -750,10 +777,10 @@ Var Var::toSTR() const {
             }
         }
         if (result == std::wstring_view(L"")) {
-            return L"[]";
+            return Var(L"[]");
         }
         else {
-            return result;
+            return Var(result);
         }
     }
     else if (this->type == MAP) {
@@ -766,7 +793,21 @@ Var Var::toSTR() const {
             str.pop_back();
         }
         str+= L"}";
-        return str;
+        return Var(str);
+    } else if (this->type == INST) {
+        Parser p;
+        std::wstring result = L"";
+        int size_i = (int)this->instructions.size();
+        
+        for( int i = 0; i < size_i; ++i) {
+            result += p.showInstruction(this->instructions[i]);
+            if(i < size_i - 1) {
+                result += L"; ";
+            } else {
+                result += L";";
+            }
+        }
+        return Var(result);
     }
     return Var();
 }
@@ -833,6 +874,33 @@ Var Var::toARR() const {
         std::wstring error = LangLib::getTrans(MESSAGE3);
         error += L"ARR\n";
         throw std::wstring{ error };
+    } else if (this->type == INST) {
+        std::wstring error = LangLib::getTrans(MESSAGE10);
+        error += L"ARR\n";
+        throw std::wstring{ error };
+    }
+    return Var();
+    
+}
+
+Var Var::toINST() const {
+    if (this->type == STR) {
+        std::vector<Instruction> temp;
+        Parser p;
+        temp = p.parse(this->str);
+
+        Var result;
+        result.type = INST;
+        result.instructions.reserve(255);
+        
+        int size_i = (int)temp.size();
+        for(int i = 0; i < size_i; ++i) {
+            result.instructions.emplace_back(temp[i]);
+        }
+
+        return result;
+    } else {
+        std::wstring error = LangLib::getTrans(L"Только тип STR можно привести к типу INST\n");
     }
     return Var();
 }
@@ -879,6 +947,22 @@ void Var::print() {
             std::wcout << "\"" << elem.first << "\":\t " << elem.second << "\t";
         }
         break;
+    case INST: {
+        Parser p;
+        std::wstring result = L"";
+        int size_i = (int)this->instructions.size();
+        
+        for( int i = 0; i < size_i; ++i) {
+            result += p.showInstruction(this->instructions[i]);
+            if(i < size_i - 1) {
+                result += L"; ";
+            } else {
+                result += L";";
+            }
+        }
+        std::wcout << result;
+        break;
+    }
     default:
         std::wcout << L"UNKNOWN";
     }
@@ -925,6 +1009,9 @@ std::wstring Var::typeOf() {
         break;
     case MAP:
         result = L"MAP";
+        return result;
+    case INST:
+        result = L"INST";
         return result;
     default:
         result = L"UNKNOWN";
@@ -2374,6 +2461,11 @@ std::wostream& operator<< (std::wostream& wos, const Var& var)
         return wos << str;
         break;
     }
+    case INST: 
+    {
+        return wos << L"INST" << var.type;
+        break;
+    }
     default:
         return wos << L"UNKNOWN" << var.type;
     }
@@ -2421,6 +2513,9 @@ Var& Var::operator= (const Var& var) {
     }
     if (this->type == MAP) {
         this->mp = var.mp;
+    }
+    if(this->type == INST) {
+        this->instructions = var.instructions;
     }
     return *this; 
 }
@@ -2781,6 +2876,9 @@ Var operator+(const Var& a, const Var& b)
         }
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        } 
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             Var result;
@@ -2826,6 +2924,9 @@ Var operator+(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -2869,6 +2970,9 @@ Var operator+(const Var& a, const Var& b)
         }
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             Var result;
@@ -2914,6 +3018,9 @@ Var operator+(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -2958,6 +3065,9 @@ Var operator+(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -3001,6 +3111,9 @@ Var operator+(const Var& a, const Var& b)
         }
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             Var result;
@@ -3047,6 +3160,9 @@ Var operator+(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -3061,6 +3177,9 @@ Var operator+(const Var& a, const Var& b)
     }
     else if (a.type == MAP) {
         throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+    }
+    else if (a.type == INST) {
+        throw std::wstring{ LangLib::getTrans(MESSAGE11) };
     }
     else {
         Var result;
@@ -3110,6 +3229,9 @@ Var operator-(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -3153,6 +3275,9 @@ Var operator-(const Var& a, const Var& b)
         }
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             Var result;
@@ -3198,6 +3323,9 @@ Var operator-(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -3241,6 +3369,9 @@ Var operator-(const Var& a, const Var& b)
         }
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             Var result;
@@ -3286,6 +3417,9 @@ Var operator-(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -3329,6 +3463,9 @@ Var operator-(const Var& a, const Var& b)
         }
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             Var result;
@@ -3375,6 +3512,9 @@ Var operator-(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -3389,6 +3529,9 @@ Var operator-(const Var& a, const Var& b)
     }
     else if (a.type == MAP) {
         throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+    }
+    else if (a.type == INST) {
+        throw std::wstring{ LangLib::getTrans(MESSAGE11) };
     }
     else {
         Var result;
@@ -3437,6 +3580,9 @@ Var operator*(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -3480,6 +3626,9 @@ Var operator*(const Var& a, const Var& b)
         }
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             Var result;
@@ -3525,6 +3674,9 @@ Var operator*(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -3568,6 +3720,9 @@ Var operator*(const Var& a, const Var& b)
         }
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             Var result;
@@ -3613,6 +3768,9 @@ Var operator*(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -3656,6 +3814,9 @@ Var operator*(const Var& a, const Var& b)
         }
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             Var result;
@@ -3702,7 +3863,10 @@ Var operator*(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
-        else {
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
+        else  {
             Var result;
             return result;
         }
@@ -3717,6 +3881,9 @@ Var operator*(const Var& a, const Var& b)
     else if (a.type == MAP) {
         throw std::wstring{ LangLib::getTrans(MESSAGE9) };
     }
+    else if (a.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
     else {
         Var result;
         return result;
@@ -3764,6 +3931,9 @@ Var operator/(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -3807,6 +3977,9 @@ Var operator/(const Var& a, const Var& b)
         }
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             Var result;
@@ -3852,6 +4025,9 @@ Var operator/(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -3895,6 +4071,9 @@ Var operator/(const Var& a, const Var& b)
         }
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             Var result;
@@ -3940,6 +4119,9 @@ Var operator/(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -3983,6 +4165,9 @@ Var operator/(const Var& a, const Var& b)
         }
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             Var result;
@@ -4029,6 +4214,9 @@ Var operator/(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -4043,6 +4231,9 @@ Var operator/(const Var& a, const Var& b)
     }
     else if (a.type == MAP) {
         throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+    }
+    else if (a.type == INST) {
+        throw std::wstring{ LangLib::getTrans(MESSAGE11) };
     }
     else {
         Var result;
@@ -4091,6 +4282,9 @@ Var operator%(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -4134,6 +4328,9 @@ Var operator%(const Var& a, const Var& b)
         }
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             Var result;
@@ -4179,6 +4376,9 @@ Var operator%(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -4222,6 +4422,9 @@ Var operator%(const Var& a, const Var& b)
         }
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             Var result;
@@ -4267,6 +4470,9 @@ Var operator%(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -4310,6 +4516,9 @@ Var operator%(const Var& a, const Var& b)
         }
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             Var result;
@@ -4356,6 +4565,9 @@ Var operator%(const Var& a, const Var& b)
         else if (b.type == MAP) {
             throw std::wstring{ LangLib::getTrans(MESSAGE9) };
         }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
         else {
             Var result;
             return result;
@@ -4370,6 +4582,9 @@ Var operator%(const Var& a, const Var& b)
     }
     else if (a.type == MAP) {
         throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+    }
+    else if (a.type == INST) {
+        throw std::wstring{ LangLib::getTrans(MESSAGE11) };
     }
     else {
         Var result;
@@ -4444,7 +4659,13 @@ bool operator==(const Var& a, const Var& b) {
             return false;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            if (a.data.ntg == 0 && (int)b.mp.size() == 0) {
+                return true;
+            }
+            return false;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -4486,6 +4707,12 @@ bool operator==(const Var& a, const Var& b) {
         }
         else if (b.type == ARR) {
             if (a.data.untg == 0 && (int)b.arr.size() == 0) {
+                return true;
+            }
+            return false;
+        }
+        else if (b.type == INST) {
+            if (a.data.untg == 0 && (int)b.mp.size() == 0) {
                 return true;
             }
             return false;
@@ -4538,7 +4765,13 @@ bool operator==(const Var& a, const Var& b) {
             return false;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            if (a.data.dbl == (long double)0 && (int)b.mp.size() == 0) {
+                return true;
+            }
+            return false;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -4585,7 +4818,13 @@ bool operator==(const Var& a, const Var& b) {
             return false;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            if (a.data.chr == (char)0 && (int)b.mp.size() == 0) {
+                return true;
+            }
+            return false;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -4627,6 +4866,12 @@ bool operator==(const Var& a, const Var& b) {
         }
         else if (b.type == ARR) {
             if (a.data.uchr == (unsigned char)0 && (int)b.arr.size() == 0) {
+                return true;
+            }
+            return false;
+        }
+        else if (b.type == INST) {
+            if (a.data.uchr == (unsigned char)0 && (int)b.mp.size() == 0) {
                 return true;
             }
             return false;
@@ -4679,7 +4924,13 @@ bool operator==(const Var& a, const Var& b) {
             return false;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            if ((int)a.data.bln == 0 && (int)b.mp.size() == 0) {
+                return true;
+            }
+            return false;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -4756,7 +5007,13 @@ bool operator==(const Var& a, const Var& b) {
             return false;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            if (a.str.size() == 0 && (int)b.mp.size() == 0) {
+                return true;
+            }
+            return false;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -4794,7 +5051,13 @@ bool operator==(const Var& a, const Var& b) {
             return false;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            if (0 == (int)b.mp.size()) {
+                return true;
+            }
+            return false;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -4827,8 +5090,68 @@ bool operator==(const Var& a, const Var& b) {
         }
     }
     else if (a.type == MAP) {
-        throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        if (b.type == MAP) {
+            return a.eq(L"strict", b).data.bln;
+        }
+        else if (b.type == NIL) {
+            if ((int)a.mp.size() == 0) {
+                return true;
+            }
+            return false;
+        }
+        else if (b.type == BLN) {
+            if ((int)a.mp.size() == 0 && b.data.bln == false) {
+                return true;
+            }
+            return false;
+        }
+        else if (b.type == STR) {
+            if ((int)a.mp.size() == 0 && b.str == std::wstring_view(L"")) {
+                return true;
+            }
+            return false;
+        }
+        else {
+            return false;
+        }
     }
+    else if (a.type == INST) {
+            if( b.type == INST) {
+
+                int size_a = (int)a.instructions.size();
+                int size_b = (int)b.instructions.size();
+
+                if(size_a != size_b) {
+                    return false;
+                }
+                Parser p;
+                std::wstring a_str = L"";
+                std::wstring b_str = L"";
+
+                for( int i = 0; i < size_a; ++i) {
+                    a_str += p.showInstruction(a.instructions[i]);
+                    if(i < size_a - 1) {
+                        a_str += L"; ";
+                    } else {
+                        a_str += L";";
+                    }
+                }
+
+                for( int i = 0; i < size_b; ++i) {
+                    b_str += p.showInstruction(b.instructions[i]);
+                    if(i < size_b - 1) {
+                        b_str += L"; ";
+                    } else {
+                        b_str += L";";
+                    }
+                }
+
+                return a_str == b_str;
+            }
+            else {
+                throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+            }
+        }
     else {
         return false;
     }
@@ -4874,7 +5197,10 @@ bool operator>(const Var& a, const Var& b) {
             return false;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return false;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -4915,7 +5241,10 @@ bool operator>(const Var& a, const Var& b) {
             return false;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return false;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -4956,7 +5285,10 @@ bool operator>(const Var& a, const Var& b) {
             return false;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return false;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -4997,7 +5329,10 @@ bool operator>(const Var& a, const Var& b) {
             return false;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return false;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -5038,7 +5373,10 @@ bool operator>(const Var& a, const Var& b) {
             return false;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return false;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -5079,7 +5417,10 @@ bool operator>(const Var& a, const Var& b) {
             return false;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return false;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -5150,7 +5491,10 @@ bool operator>(const Var& a, const Var& b) {
             return false;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return false;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -5185,7 +5529,10 @@ bool operator>(const Var& a, const Var& b) {
             return false;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return false;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -5196,14 +5543,30 @@ bool operator>(const Var& a, const Var& b) {
             return a.getArr().size() > b.getArr().size();
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+           return a.getArr().size() > b.getMap().size();
+        } 
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return true;
         }
     }
     else if (a.type == MAP) {
-        throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        if (b.type == ARR) {
+            return a.getMap().size() > b.getArr().size();
+        }
+        else if (b.type == MAP) {
+           return a.getMap().size() > b.getMap().size();
+        } 
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
+        else {
+            return true;
+        }
+    } else if (a.type == INST) {
+        throw std::wstring{ LangLib::getTrans(MESSAGE11) };
     }
     else {
         return false;
@@ -5250,7 +5613,10 @@ bool operator<(const Var& a, const Var& b) {
             return true;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return true;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -5291,7 +5657,10 @@ bool operator<(const Var& a, const Var& b) {
             return true;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return true;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -5332,7 +5701,10 @@ bool operator<(const Var& a, const Var& b) {
             return true;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return true;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -5373,7 +5745,10 @@ bool operator<(const Var& a, const Var& b) {
             return true;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return true;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -5414,7 +5789,10 @@ bool operator<(const Var& a, const Var& b) {
             return true;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return true;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -5455,7 +5833,10 @@ bool operator<(const Var& a, const Var& b) {
             return true;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return true;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -5526,7 +5907,10 @@ bool operator<(const Var& a, const Var& b) {
             return true;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return true;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -5561,7 +5945,10 @@ bool operator<(const Var& a, const Var& b) {
             return true;
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return true;
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
@@ -5572,14 +5959,31 @@ bool operator<(const Var& a, const Var& b) {
             return a.getArr().size() < b.getArr().size();
         }
         else if (b.type == MAP) {
-            throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+            return a.getArr().size() < b.getMap().size();
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
         }
         else {
             return false;
         }
     }
     else if (a.type == MAP) {
-        throw std::wstring{ LangLib::getTrans(MESSAGE9) };
+        if (b.type == ARR) {
+            return a.getMap().size() < b.getArr().size();
+        }
+        else if (b.type == MAP) {
+            return a.getMap().size() < b.getMap().size();
+        }
+        else if (b.type == INST) {
+            throw std::wstring{ LangLib::getTrans(MESSAGE11) };
+        }
+        else {
+            return false;
+        }
+    }
+    else if (a.type == INST) {
+        throw std::wstring{ LangLib::getTrans(MESSAGE11) };
     }
     else {
         return false;

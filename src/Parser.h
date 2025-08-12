@@ -30,13 +30,12 @@ public:
 	
 	void fileLoad(std::wstring file_name);
 	std::vector<Instruction> parse(std::wstring string);
+	std::wstring showInstruction(Instruction inst);
 private: 
 	Var parseVar(std::wstring val, int instruction);
 	std::vector<Lexeme> parseLex(std::wstring val);
 	Instruction toInstruction(Lexeme lex);
+	std::wstring showVar(Var var);
+	std::wstring showLexeme(Lexeme lex);
+	std::wstring getInstBlockAsString(Lexeme block);
 };
-
-std::wstring showVar(Var var);
-std::wstring showLexeme(Lexeme lex);
-std::wstring showInstruction(Instruction inst);
-std::wstring getInstBlockAsString(Lexeme block);

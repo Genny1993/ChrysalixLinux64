@@ -98,6 +98,7 @@ public:
     Var toBLN() const;
     Var toSTR() const;
     Var toARR() const;
+    Var toINST() const;
 
     //Вывод данных и типа
     void print();
