@@ -8,7 +8,6 @@
 enum OP_CODE {
 	NOP,
 	END,
-	PAUSE,
 	SLEEP,
 	VAR,
 	PRINT,
@@ -82,7 +81,6 @@ struct CTable {
     std::unordered_map<std::wstring, OP_CODE> opCodeMap = {
         {L"NOP", OP_CODE::NOP}, {L"nop", OP_CODE::NOP},
         {L"END", OP_CODE::END}, {L"end", OP_CODE::END},
-        {L"PAUSE", OP_CODE::PAUSE}, {L"pause", OP_CODE::PAUSE},
         {L"SLEEP", OP_CODE::SLEEP}, {L"sleep", OP_CODE::SLEEP},
         {L"VAR", OP_CODE::VAR}, {L"var", OP_CODE::VAR},
         {L"PRINT", OP_CODE::PRINT}, {L"print", OP_CODE::PRINT},

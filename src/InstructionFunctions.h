@@ -14,7 +14,6 @@ typedef void (*func)(Machine* m, Instruction* i, bool prevalidate, bool prego, b
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void nop(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void end(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
-void pause(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void sleepf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void var(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void print(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
@@ -86,7 +85,6 @@ struct InstructionMap {
 	func functions[100] = {
 		&nop,
 		&end,
-		&pause,
 		&sleepf,
 		&var,
 		&print,

@@ -642,7 +642,7 @@ Instruction Parser::toInstruction(Lexeme lex) {
         Instruction inst;
         try {
             inst.opCode = table.opCodeMap.at(lex.content);
-            inst.as_string = lex.content + L":";
+            inst.as_string = lex.content + L": ";
         }
         catch (std::out_of_range& ex) {
             //вывод инструкции
