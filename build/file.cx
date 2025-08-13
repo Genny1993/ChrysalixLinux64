@@ -1,8 +1,4 @@
-	
-	vtomap: $map, 'test', 1, 'test2', 2, 'test3', 3;
-	vtoarr: $arr, 1, 2, 3, 4, 5, 6, 7, $map;
-	change: $arr[(calc: '+', $, 5, 5; calc: '-', $, $arr[2])][(change: $, 'test')], $arr[(calc: '+', $, 1, 0)];
-	print: $arr; 
+##
 	print:	'          ／l、
          （ﾟ､ ｡７
             l、ﾞ~ヽ
@@ -32,24 +28,14 @@ label: &main_loop;
 
 	calc: 'inc', $j;
 jif: (comp: '<', $, $j, $max), &main_loop;	
+##
 
-##
-	print: (calc: '+', $, (calc: '+', $, 3 , (calc: '+', $, 2, 4) ) , 2), ' ', (calc: '+', $, 3, 4; calc: '-', $, $, 1; var: $1, 2), '\n'
-	print: $1, '\n';
-	end: 0
-##
-##
  	var: $i, 0;
- 	var: $max, 100000;
- 	newtemp: 1;
- label: &loop
+ 	var: $max, 1000000;
+label: &loop;
 	calc: 'inc', $i;
-	stddev: $result, $arr;
-	#print: $result, '\n';
-	comp: '<', $0, $i, $max;
-jif: $0, &loop;
+jif: (comp: '<', $, $i, $max), &loop;
 	forget:;
 	free: $i, $max;
-##
 
 end: 0; 

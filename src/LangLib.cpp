@@ -103,6 +103,7 @@ std::unordered_map<std::wstring, std::wstring> ru = {
 	{L"Невозможно привести блок инструкций к типу ", L"Невозможно привести блок инструкций к типу "},
 	{L"Только тип STR можно привести к типу INST\n", L"Только тип STR можно привести к типу INST\n"},
 	{L"Блок инструкций не поддерживает данной операции\n", L"Блок инструкций не поддерживает данной операции\n"},
+	{L": Неверная вложенная инструкция!\n", L": Неверная вложенная инструкция!\n"},
 };
 
 std::unordered_map<std::wstring, std::wstring> en = {
@@ -192,6 +193,7 @@ std::unordered_map<std::wstring, std::wstring> en = {
 	{L"Невозможно привести блок инструкций к типу ", L"Unable to cast instruction block to type "},
 	{L"Только тип STR можно привести к типу INST\n", L"Only STR type can be cast to INST type\n"},
 	{L"Блок инструкций не поддерживает данной операции\n", L"The instruction block does not support this operation\n"},
+	{L": Неверная вложенная инструкция!\n", L": Invalid nested instruction!\n"},
 };
 
 LANGUAGES LangLib::current_lang = RU;
