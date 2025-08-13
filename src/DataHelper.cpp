@@ -3,6 +3,7 @@
 #include "Helpers.h"
 #include "LangLib.h"
 #include "InstructionFunctions.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // getValue 
 // Возвращает значение параметра по имени переменной или литералу
@@ -45,7 +46,11 @@ Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m) 
 						if(value->type == ARR) {
 							int index = 0;
 							try{
-								index = heap->at(val->arr[i].toSTR().str).toNTG().data.ntg;
+								if(val->arr[i].type == Type::INST) {
+									index = heap->at(getValue(&(val->arr[i]), heap, m).toSTR().str).toNTG().data.ntg;
+								} else {
+									index = heap->at(val->arr[i].toSTR().str).toNTG().data.ntg;
+								}
 							}
 							catch (std::out_of_range& ex) {
 								std::string temp = ex.what();
@@ -61,7 +66,11 @@ Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m) 
 						} else if(value->type == MAP) {
 							std::wstring index;
 							try{
-								index = heap->at(val->arr[i].toSTR().str).toSTR().str;
+								if(val->arr[i].type == Type::INST) {
+									index = heap->at(getValue(&(val->arr[i]), heap, m).toSTR().str).toSTR().str;
+								} else {
+									index = heap->at(val->arr[i].toSTR().str).toSTR().str;
+								}
 							}
 							catch (std::out_of_range& ex) {
 								std::string temp = ex.what();
@@ -81,7 +90,11 @@ Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m) 
 				} else {
 					if(value->type == ARR) {
 						try {
-							value = &(value->arr.at(val->arr[i].toNTG().data.ntg));
+							if(val->arr[i].type == Type::INST) {
+								value = &(value->arr.at(getValue(&(val->arr[i]), heap, m).toNTG().data.ntg));
+							} else {
+								value = &(value->arr.at(val->arr[i].toNTG().data.ntg));
+							}
 						}
 						catch (std::out_of_range& ex) {
 							std::string temp = ex.what();
@@ -89,7 +102,11 @@ Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m) 
 						}
 					} else if(value->type == MAP) {
 						try{
-							value = &(value->mp.at(val->arr[i].toSTR().str));
+							if(val->arr[i].type == Type::INST) {
+								value = &(value->mp.at(getValue(&(val->arr[i]), heap, m).toSTR().str));
+							} else {
+								value = &(value->mp.at(val->arr[i].toSTR().str));
+							}
 						}
 						catch (std::out_of_range& ex) {
 							std::string temp = ex.what();
@@ -163,7 +180,11 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 						if(value->type == ARR) {
 							int index = 0;
 							try{
-								index = heap->at(val->arr[i].toSTR().str).toNTG().data.ntg;
+								if(val->arr[i].type == Type::INST) {
+									index = heap->at(getValue(&(val->arr[i]), heap, m).toSTR().str).toNTG().data.ntg;
+								} else {
+									index = heap->at(val->arr[i].toSTR().str).toNTG().data.ntg;
+								}
 							}
 							catch (std::out_of_range& ex) {
 								std::string temp = ex.what();
@@ -178,8 +199,12 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 							}
 						} else if(value->type == MAP) {
 							std::wstring index;
-							try{
-								index = heap->at(val->arr[i].toSTR().str).toSTR().str;
+							try {
+								if(val->arr[i].type == Type::INST) {
+									index = heap->at(getValue(&(val->arr[i]), heap, m).toSTR().str).toSTR().data.ntg;
+								} else {
+									index = heap->at(val->arr[i].toSTR().str).toSTR().str;
+								}
 							}
 							catch (std::out_of_range& ex) {
 								std::string temp = ex.what();
@@ -199,7 +224,11 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 				} else {
 					if(value->type == ARR) {
 						try {
-							value = &(value->arr.at(val->arr[i].toNTG().data.ntg));
+							if(val->arr[i].type == Type::INST) {
+								value = &(value->arr.at(getValue(&(val->arr[i]), heap, m).toNTG().data.ntg));
+							} else {
+								value = &(value->arr.at(val->arr[i].toNTG().data.ntg));
+							}
 						}
 						catch (std::out_of_range& ex) {
 							std::string temp = ex.what();
@@ -207,7 +236,11 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 						}
 					} else if(value->type == MAP) {
 						try{
-							value = &(value->mp.at(val->arr[i].toSTR().str));
+							if(val->arr[i].type == Type::INST) {
+								value = &(value->mp.at(getValue(&(val->arr[i]), heap, m).toSTR().str));
+							} else {
+								value = &(value->mp.at(val->arr[i].toSTR().str));
+							}
 						}
 						catch (std::out_of_range& ex) {
 							std::string temp = ex.what();

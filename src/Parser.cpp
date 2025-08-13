@@ -63,7 +63,7 @@ Var Parser::parseVar(std::wstring val, int instruction) {
                         ++braces_count;
                     } else {
                         name += c;
-                }
+                    }
                 } else {
                     if(braces_count > 0 || (braces_count == 0 && new_brace == true)) {
                         if(c == L'[') {
@@ -114,6 +114,32 @@ Var Parser::parseVar(std::wstring val, int instruction) {
             return parsed; 
         } else {
             return Var(temp);
+        }
+    } else if(temp[0] == L'(') {
+        if(temp[temp.size() - 1] != L')') {
+            throw std::wstring{ temp + LangLib::getTrans(L": Неверная вложенная инструкция!\n") };
+        } else {
+            std::wstring temp_s = temp;
+            temp_s.erase(0, 1);
+            temp_s.erase(temp_s.size() - 1);
+            temp_s.erase(0, temp_s.find_first_not_of(L" \n\r\t"));
+            temp_s.erase(temp_s.find_last_not_of(L" \n\r\t") + 1);
+            temp_s.erase(0, temp_s.find_first_not_of(L" \n\r\t"));
+            temp_s.erase(temp_s.find_last_not_of(L" \n\r\t") + 1);
+
+            if(temp_s.at(temp_s.size() - 1) != L';') {
+                temp_s += L';';
+            }
+            std::vector<Instruction> temp = this->parse(temp_s);
+            
+            Var result;
+            result.type = INST;
+            result.instructions.reserve(255);
+            int size_t = (int)temp.size();
+            for(int i = 0; i < size_t; ++i) {
+                result.instructions.emplace_back(temp[i]);
+            }
+            return result;
         }
     }
     else if(temp[0] == L'&') {
@@ -254,6 +280,9 @@ std::vector<Lexeme> Parser::parseLex(std::wstring val) {
     bool escape = false;
     int parenthesis_count = 0;
     bool is_nested = false;
+    int braces_count = 0;
+    bool braces = false;
+
 
     Lexeme instruction;
     std::vector<Lexeme> lexemes;
@@ -358,7 +387,7 @@ std::vector<Lexeme> Parser::parseLex(std::wstring val) {
                             }
                         }
                         else {
-                            if(is_nested == false) {
+                            if(is_nested == false && braces == false) {
                                 //Если скобка, это вложенная инструкция
                                 if (c == L'(') {
                                     ++parenthesis_count;
@@ -402,11 +431,27 @@ std::vector<Lexeme> Parser::parseLex(std::wstring val) {
                                     instruction.lex_parameters.clear();
                                     instruction.content = L"";
                                     instruction_parameters = false;
+                                } else if (c == L'[') {
+                                    ++braces_count;
+                                    braces = true;
+                                    str += c;
                                 }
                                 else {
                                     str += c;
                                 }
-                            } else {
+                            } else if(braces == true) {
+                                if(c == L'[') {
+                                    ++braces_count;
+                                } else if(c == L']') {
+                                    --braces_count;
+                                }
+                                str += c;
+
+                                if(braces_count == 0) {
+                                    braces = false;
+                                }
+                            }
+                            else {
                                 //если открывающая скобка
                                 if(c == L'(') {
                                     str+=c;
