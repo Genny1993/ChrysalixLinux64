@@ -29,7 +29,7 @@ label: &main_loop;
 	calc: 'inc', $j;
 jif: (comp: '<', $, $j, $max), &main_loop;	
 ##
-
+##
  	var: $i, 0;
  	var: $max, 1000000;
 label: &loop;
@@ -37,5 +37,5 @@ label: &loop;
 jif: (comp: '<', $, $i, $max), &loop;
 	forget:;
 	free: $i, $max;
-
+##
 end: 0; 
