@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
         }
         catch (const std::wstring& error_message) {
             std::wstring temp = error_message;
-            std::wcout << L"😽2.5.0 alpha😽";
+            std::wcout << L"😽2.5.3 alpha😽";
             return 0;
         }
     }

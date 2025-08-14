@@ -1430,7 +1430,9 @@ void arrtomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 		for(int i = 0; i < size; ++i) {
 			map.insert({std::to_wstring(i), arr[i]});
 		}
+		
 		setValue(&(*i).parameters[0], &(*m).heap, m) = Var(map);
+
 		if(iterate){++(*m).instruct_number;}
 	}
 }
@@ -1712,7 +1714,6 @@ void vtomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
 	}
 	else {
-		checkExistValue(&(*i).parameters[0], m);
 	}	
 
 	if (prego) {
@@ -1744,11 +1745,9 @@ void getvals(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		std::wstring name = L"GETVALS";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
 		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
-		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[0], m);
-		checkNotExistValue(&(*i).parameters[1], m);
 	}	
 
 	if (prego) {
@@ -1781,11 +1780,9 @@ void getkeys(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		std::wstring name = L"GETKEYS";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
 		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
-		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[0], m);
-		checkNotExistValue(&(*i).parameters[1], m);
 	}	
 
 	if (prego) {
@@ -1818,11 +1815,9 @@ void getinterform(Machine* m, Instruction* i, bool prevalidate, bool prego, bool
 		std::wstring name = L"GETINTERFORM";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
 		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
-		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[0], m);
-		checkNotExistValue(&(*i).parameters[1], m);
 	}	
 
 	if (prego) {

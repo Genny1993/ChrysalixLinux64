@@ -1,9 +1,41 @@
-var: $x;
-var: $y;
-var: $z;
-vtoarr: $, 1, 2, 3;
-vtoarr: $[0], 1,2,3,4,5;
-print: $, '\n';
-size: $, $[1];
-print: $, ' ', $x, ' ', $y, ' ', '\n';
-end:0;
+##
+	print:	'          ／l、
+         （ﾟ､ ｡７
+            l、ﾞ~ヽ
+            じしf_, )ノ', '\n';
+	print: '♥️ MEOW! I LOVE YOU ALL SO MUCH!♥️', '\n';
+	print: '\'1\'\'';
+#Циклический расчет факториала:
+	var: $n, 20;		#Факториал чего считаем
+	var: $i, 1;			#С какого числа ведем итерацию
+	var: $result, 1;	#Переменная результата
+	var: $j, 1;			#Итератор главного цикла
+	var: $max, 2;  #Максимальне количество итераций главного цикла.
+
+label: &main_loop;
+	print: 'Введите число, по которому будет расчет факториала: ';
+	input: $n;
+
+	label: &cycle_start;
+		calc: '*', $result, $i;
+		calc: 'inc', $i;
+	jif: (comp: '<=', $, $i, $n), &cycle_start;
+
+	print: 'Факториал ', $n, ' равен ', $result, '\n';
+	
+	#Сбрасывем значения переменных перед следующей итерацией
+	change: $i, 1; change: $result, 1;
+
+	calc: 'inc', $j;
+jif: (comp: '<', $, $j, $max), &main_loop;	
+##
+
+ 	var: $i, 0;
+ 	var: $max, 1000000;
+label: &loop;
+	calc: 'inc', $i;
+jif: (comp: '<', $, $i, $max), &loop;
+	forget:;
+	free: $i, $max;
+
+end: 0; 
