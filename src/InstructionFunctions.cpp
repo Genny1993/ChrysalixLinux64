@@ -1123,86 +1123,6 @@ void sizearr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// GETVAL
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void getval(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"GETVAL";
-		checkParameterCount(MINIMAL, (int)(*i).parameters.size(), &name, 0, 3);
-		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
-		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&(*i).parameters[0], m);
-		checkNotExistValue(&(*i).parameters[1], m);
-	}
-
-	if (prego) {
-		if(iterate){++(*m).instruct_number;}
-	}
-	else {
-		int dimensions = (int)(*i).parameters.size() - 2;
-		Var* result = &((*m).heap[(*i).parameters[1].toSTR().getWStr()]);
-
-		for (int iter = 0; iter < dimensions; ++iter) {
-			Var dimension = getValue(&(*i).parameters[(long long int)iter + 2], &(*m).heap, m);
-			Type type = (*result).type;
-
-			if(type == ARR) {
-				result = &(*result)[dimension.toUNTG().getUInt()];
-			} else if( type == MAP ) {
-				result = &(*result)[dimension.toSTR().getWStr()];
-			} else {
-				throw std::wstring{ (*result).toSTR().getWStr() + L": " + LangLib::getTrans(L"Значение не является массивом или словарем\n") };
-			}
-		}
-		setValue(&(*i).parameters[0], &(*m).heap, m) = *result;
-		if(iterate){++(*m).instruct_number;}
-	}
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// SETVAL
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void setval(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"SETVAL";
-		checkParameterCount(MINIMAL, (int)(*i).parameters.size(), &name, 0, 3);
-		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&(*i).parameters[1], m);
-	}
-
-	if (prego) {
-		if(iterate){++(*m).instruct_number;}
-	}
-	else {
-
-		int dimensions = (int)(*i).parameters.size() - 2;
-		
-		Var* result = &setValue(&(*i).parameters[1], &(*m).heap, m);
-
-		for (int iter = 0; iter < dimensions; ++iter) {
-			Var dimension = getValue(&(*i).parameters[(long long int)iter + 2], &(*m).heap, m);
-			Type type = (*result).type;
-			if (iter == dimensions - 1) {
-				(*result)[getValue(&(*i).parameters[(long long int)iter + 2], &(*m).heap, m)] = getValue(&(*i).parameters[0], &(*m).heap, m);
-				break;
-			}
-			if(type == ARR) {
-				result = &(*result)[dimension.toUNTG().getUInt()];
-			} else if( type == MAP ) {
-				result = &(*result)[dimension.toSTR().getWStr()];
-			} else {
-				throw std::wstring{ (*result).toSTR().getWStr() + L": " + LangLib::getTrans(L"Значение не является массивом или словарем\n") };
-			}
-		}
-		if(iterate){++(*m).instruct_number;}
-	}
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SLICE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void slice(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
@@ -1392,37 +1312,6 @@ void equal(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 	}
 	else {
 		setValue(&(*i).parameters[1], &(*m).heap, m) = getValue(&(*i).parameters[2], &(*m).heap, m).eq(getValue(&(*i).parameters[0], &(*m).heap, m).toSTR().getWStr(), getValue(&(*i).parameters[3], &(*m).heap, m));
-		if(iterate){++(*m).instruct_number;}
-	}
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IEXIST
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void iexist(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"IEXIST";
-		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 3);
-		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&(*i).parameters[0], m);
-	}
-
-	if (prego) {
-		if(iterate){++(*m).instruct_number;}
-	}
-	else {
-		if (getValue(&(*i).parameters[1], &(*m).heap, m).type != ARR) {
-			throw std::wstring{ LangLib::getTrans(L"Инструкция IEXIST работает только с типом ARR\n") };
-		}
-		Var size = getValue(&(*i).parameters[1], &(*m).heap, m).csize();
-		if (getValue(&(*i).parameters[2], &(*m).heap, m).toNTG() >= size || getValue(&(*i).parameters[2], &(*m).heap, m).toNTG() < 0) {
-			setValue(&(*i).parameters[0], &(*m).heap, m) = Var(false);
-		}
-		else {
-			setValue(&(*i).parameters[0], &(*m).heap, m) = Var(true);
-		}
 		if(iterate){++(*m).instruct_number;}
 	}
 }
@@ -1837,30 +1726,6 @@ void vtomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 			map.insert({getValue(&(*i).parameters[index], &(*m).heap, m).toSTR().getWStr(), getValue(&(*i).parameters[index + 1], &(*m).heap, m)});
 		}
 		(*m).heap[(*i).parameters[0].toSTR().str] = map;
-		if(iterate){++(*m).instruct_number;}
-	}
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  KEXIST
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void kexist(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"KEXIST";
-		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 3);
-		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
-		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&(*i).parameters[0], m);
-		checkNotExistValue(&(*i).parameters[1], m);
-	}	
-
-	if (prego) {
-		if(iterate){++(*m).instruct_number;}
-	}
-	else {
-		setValue(&(*i).parameters[0], &(*m).heap, m) = getValue(&(*i).parameters[1], &(*m).heap, m).kexist(getValue(&(*i).parameters[2], &(*m).heap, m));
 		if(iterate){++(*m).instruct_number;}
 	}
 }

@@ -45,15 +45,12 @@ void erase(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 void insrt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void clear(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void sizearr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
-void getval(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
-void setval(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void slice(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void merge(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void sort(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void unique(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void reverse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void equal(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
-void iexist(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void in(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void inall(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void rin(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
@@ -72,7 +69,6 @@ void mode(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 void stddev(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void push(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void vtomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
-void kexist(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void getvals(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void getkeys(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void getinterform(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
@@ -116,15 +112,12 @@ struct InstructionMap {
 		&insrt,
 		&clear,
 		&sizearr,
-		&getval,
-		&setval,
 		&slice,
 		&merge,
 		&sort,
 		&unique,
 		&reverse,
 		&equal,
-		&iexist,
 		&in,
 		&inall,
 		&rin,
@@ -143,7 +136,6 @@ struct InstructionMap {
 		&stddev,
 		&push,
 		&vtomap,
-		&kexist,
 		&getvals,
 		&getkeys,
 		&getinterform,
