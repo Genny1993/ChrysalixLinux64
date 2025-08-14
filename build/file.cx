@@ -1,5 +1,7 @@
-vtoarr: $x, 1, 2, 3, 4, 5, 6;
-change: $x, $x;
-input: $x[(calc: '*', $, 1, 2)];
-print: $x, '\n';
+
+vtoarr: $, 1, 2, 3;
+vtoarr: $[(calc: '+', $, 0, 0)], 1, 2, 3;
+pushf: $[0], 666;
+popf: $y, $;
+print: $, ' ', $x, ' ', $y, ' ', '\n';
 end:0;

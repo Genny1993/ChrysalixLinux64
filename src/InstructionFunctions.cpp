@@ -579,10 +579,11 @@ void isset(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 		if(iterate){++(*m).instruct_number;}
 	}
 	else {
-		if ((*m).heap.find((*i).parameters[1].toSTR().getWStr()) != (*m).heap.end()) {
+		try{
+			Var temp = getValue(&(*i).parameters[1], &(*m).heap, m);
 			setValue(&(*i).parameters[0], &(*m).heap, m) = Var(true);
 		}
-		else {
+		catch(const std::wstring& error_message) {
 			setValue(&(*i).parameters[0], &(*m).heap, m) = Var(false);
 		}
 		if(iterate){++(*m).instruct_number;}
@@ -635,6 +636,9 @@ void comp(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 
 		if (type == std::wstring_view(L"==")) {
 			setValue(&(*i).parameters[1], &(*m).heap, m) = getValue(&(*i).parameters[2], &(*m).heap, m) == getValue(&(*i).parameters[3], &(*m).heap, m);
+		} 
+		else if(type == std::wstring_view(L"===")) {
+			setValue(&(*i).parameters[1], &(*m).heap, m) = getValue(&(*i).parameters[2], &(*m).heap, m).eq(L"strict", getValue(&(*i).parameters[3], &(*m).heap, m));
 		}
 		else if (type == std::wstring_view(L"!=")) {
 			setValue(&(*i).parameters[1], &(*m).heap, m) = getValue(&(*i).parameters[2], &(*m).heap, m) != getValue(&(*i).parameters[3], &(*m).heap, m);
@@ -836,7 +840,6 @@ void arr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
 	}
 	else {
-		checkExistValue(&(*i).parameters[0], m);
 	}
 
 	if (prego) {
@@ -855,8 +858,11 @@ void arr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 			}
 			result = arr;
 		}
-
-		(*m).heap[(*i).parameters[0].toSTR().str] = result;
+		if((*m).heap.find((*i).parameters[0].toSTR().str)== (*m).heap.end()) {
+			(*m).heap[(*i).parameters[0].toSTR().str] = result;
+		} else {
+			setValue(&(*i).parameters[0], &(*m).heap, m) = result;
+		}
 		if(iterate){++(*m).instruct_number;}
 	}
 
@@ -872,7 +878,7 @@ void vtoarr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
 	}
 	else {
-		checkExistValue(&(*i).parameters[0], m);
+
 	}
 
 	if (prego) {
@@ -887,7 +893,12 @@ void vtoarr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 			arr.pushb(getValue(&(*i).parameters[iter], &(*m).heap, m));
 		}
 
-		(*m).heap[(*i).parameters[0].toSTR().str] = arr;
+		if((*m).heap.find((*i).parameters[0].toSTR().str)== (*m).heap.end()) {
+			(*m).heap[(*i).parameters[0].toSTR().str] = arr;
+		} else {
+			setValue(&(*i).parameters[0], &(*m).heap, m) = arr;
+		}
+
 		if(iterate){++(*m).instruct_number;}
 	}
 

@@ -98,7 +98,7 @@ Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m) 
 						}
 						catch (std::out_of_range& ex) {
 							std::string temp = ex.what();
-							throw std::wstring{ std::to_wstring(val->arr[i].toNTG().data.ntg) + LangLib::getTrans(L": ") + LangLib::getTrans(L"Индекс находится вне диапазона\n") };
+							throw std::wstring{ val->arr[i].toSTR().str + LangLib::getTrans(L": ") + LangLib::getTrans(L"Индекс находится вне диапазона\n") };
 						}
 					} else if(value->type == MAP) {
 						try{
@@ -232,7 +232,8 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 						}
 						catch (std::out_of_range& ex) {
 							std::string temp = ex.what();
-							throw std::wstring{ std::to_wstring(val->arr[i].toNTG().data.ntg) + LangLib::getTrans(L": ") + LangLib::getTrans(L"Индекс находится вне диапазона\n") };
+							throw std::wstring{ val->arr[i].toSTR().str + LangLib::getTrans(L": ") + LangLib::getTrans(L"Индекс находится вне диапазона\n") };
+
 						}
 					} else if(value->type == MAP) {
 						try{
