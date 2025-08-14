@@ -1117,7 +1117,7 @@ void sizearr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		if(iterate){++(*m).instruct_number;}
 	}
 	else {
-		setValue(&(*i).parameters[0], &(*m).heap, m) = getValue(&(*i).parameters[0], &(*m).heap, m).len();
+		setValue(&(*i).parameters[0], &(*m).heap, m) = getValue(&(*i).parameters[1], &(*m).heap, m).len();
 		if(iterate){++(*m).instruct_number;}
 	}
 }
@@ -1725,7 +1725,13 @@ void vtomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 		for(int index = 1; index < size; index+=2) {
 			map.insert({getValue(&(*i).parameters[index], &(*m).heap, m).toSTR().getWStr(), getValue(&(*i).parameters[index + 1], &(*m).heap, m)});
 		}
-		(*m).heap[(*i).parameters[0].toSTR().str] = map;
+
+		if((*m).heap.find((*i).parameters[0].toSTR().str)== (*m).heap.end()) {
+			(*m).heap[(*i).parameters[0].toSTR().str] = map;
+		} else {
+			setValue(&(*i).parameters[0], &(*m).heap, m) = map;
+		}
+
 		if(iterate){++(*m).instruct_number;}
 	}
 }
