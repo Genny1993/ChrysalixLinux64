@@ -104,6 +104,8 @@ std::unordered_map<std::wstring, std::wstring> ru = {
 	{L"Только тип STR можно привести к типу INST\n", L"Только тип STR можно привести к типу INST\n"},
 	{L"Блок инструкций не поддерживает данной операции\n", L"Блок инструкций не поддерживает данной операции\n"},
 	{L": Неверная вложенная инструкция!\n", L": Неверная вложенная инструкция!\n"},
+	{L"Некорректный массив\n", L"Некорректный массив\n"},
+	{L"Массивы дожны быть одинакового размера\n", L"Массивы дожны быть одинакового размера\n"},
 };
 
 std::unordered_map<std::wstring, std::wstring> en = {
@@ -194,6 +196,8 @@ std::unordered_map<std::wstring, std::wstring> en = {
 	{L"Только тип STR можно привести к типу INST\n", L"Only STR type can be cast to INST type\n"},
 	{L"Блок инструкций не поддерживает данной операции\n", L"The instruction block does not support this operation\n"},
 	{L": Неверная вложенная инструкция!\n", L": Invalid nested instruction!\n"},
+	{L"Некорректный массив\n", L"Incorrect array\n"},
+	{L"Массивы дожны быть одинакового размера\n", L"Arrays must be the same size\n"},
 };
 
 LANGUAGES LangLib::current_lang = RU;

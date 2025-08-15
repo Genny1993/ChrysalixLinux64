@@ -14,6 +14,8 @@ Machine::Machine(std::unordered_map<std::wstring, Var> in, bool dbg) {
 	this->sub_machines.reserve(1000);
 	this->in_data.reserve(100);
 	this->heap[L"$"] = Var();
+	unsigned long long int timestamp = static_cast<unsigned long long int>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count());
+	this->mersenne_twister = std::mt19937 { static_cast<std::mt19937::result_type>(timestamp) };
 }
 
 void Machine::prepare() {

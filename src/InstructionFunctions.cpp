@@ -1,4 +1,8 @@
-﻿#include "InstructionFunctions.h"
+﻿#include <random>
+#include <ctime>
+#include <chrono>
+
+#include "InstructionFunctions.h"
 #include "LangLib.h"
 
 const std::wstring PAR1 = L"Первый";
@@ -1918,6 +1922,7 @@ void tointerf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 	if (prevalidate) {
 		std::wstring name = L"TOINTERF";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 3);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
 	}
 	else {
 		//Ничего
@@ -1956,6 +1961,7 @@ void uninterf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 	if (prevalidate) {
 		std::wstring name = L"UNINTERF";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 3);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
 	}
 	else {
 		//Ничего
@@ -1974,7 +1980,7 @@ void uninterf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 		int size = (int)interform.size();
 		for (int i = 0; i < size; ++i) {
 			if((int)interform[i].toARR().arr.size() != 2) {
-				throw std::wstring{ LangLib::getTrans(L"Некорректный массив.\n")};
+				throw std::wstring{ LangLib::getTrans(L"Некорректный массив\n")};
 			}
 			keyarr.emplace_back(interform[i].arr[0].toSTR());
 			valarr.emplace_back(interform[i].arr[1]);
@@ -1992,6 +1998,7 @@ void interftomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool 
 	if (prevalidate) {
 		std::wstring name = L"INTERFTOMAP";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
 	}
 	else {
 		//Ничего
@@ -2009,13 +2016,42 @@ void interftomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool 
 		int size = (int)interform.size();
 		for (int i = 0; i < size; ++i) {
 			if((int)interform[i].toARR().arr.size() != 2) {
-				throw std::wstring{ LangLib::getTrans(L"Некорректный массив.\n")};
+				throw std::wstring{ LangLib::getTrans(L"Некорректный массив\n")};
 			}
 			Var a = interform[i].arr[0];
 			Var b = interform[i].arr[1];
 			result.insert({getValue(&a, &(*m).heap, m).toSTR().getWStr(), getValue(&b, &(*m).heap, m)});
 		}
 		setValue(&(*i).parameters[0], &(*m).heap, m) = Var(result);
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// RAND
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void rand(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"rand";
+		int v[2]{ 1, 3 };
+		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), &name, 0, 0, nullptr, v, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		//Ничего
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		if((int)i->parameters.size() == 1) {
+			std::uniform_int_distribution randomizer{ 1ULL, 18446744073709551615ULL };
+			setValue(&(*i).parameters[0], &(*m).heap, m) = Var(1.0 / randomizer(m->mersenne_twister));
+		} else {
+			std::uniform_int_distribution randomizer{ getValue(&(*i).parameters[1], &(*m).heap, m).toUNTG().data.untg, getValue(&(*i).parameters[2], &(*m).heap, m).toUNTG().data.untg };
+			setValue(&(*i).parameters[0], &(*m).heap, m) = Var(randomizer(m->mersenne_twister));
+		}
 		if(iterate){++(*m).instruct_number;}
 	}
 }

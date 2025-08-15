@@ -78,6 +78,7 @@ void clearc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 void tointerf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void uninterf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void interftomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void rand(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -149,5 +150,6 @@ struct InstructionMap {
 		&tointerf,
 		&uninterf,
 		&interftomap,
+		&rand,
 	};
 };

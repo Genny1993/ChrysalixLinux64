@@ -72,6 +72,7 @@ enum OP_CODE {
     TOINTERF,
     UNINTERF,
     INTERFTOMAP,
+    RAND,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -145,5 +146,6 @@ struct CTable {
         {L"TOINTERF", OP_CODE::TOINTERF}, {L"tointerf", OP_CODE::TOINTERF},
         {L"UNINTERF", OP_CODE::UNINTERF}, {L"uninterf", OP_CODE::UNINTERF},
         {L"INTERFTOMAP", OP_CODE::INTERFTOMAP}, {L"interftomap", OP_CODE::INTERFTOMAP},
+        {L"RAND", OP_CODE::RAND}, {L"rand", OP_CODE::RAND},
     };
 };

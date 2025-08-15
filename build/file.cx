@@ -1,13 +1,8 @@
-	vtoarr: $arr1, 'key1', 'key2', 123, 'key4';
-	vtoarr: $arr2, 1, 2, (vtoarr: $, 1, 5, (vtoarr: $, 9, 8, 7)), 4;
-	var: $interf;
-	tointerf: $interf, $arr1, $arr2;
-	print: $interf, '\n';
-
-	var: $map; var: $vals;
-	interftomap: $map, $interf;
-
-	print: $map, '\n';
+var: $i, 0; label: &loop;
+	rand: $;
+	print: $, ' ';
+jif: (calc: 'inc', $i; comp: '<', $, $i, 100), &loop; free: $i;
+print: '\n';
 ##
 	print:	'          ／l、
          （ﾟ､ ｡７

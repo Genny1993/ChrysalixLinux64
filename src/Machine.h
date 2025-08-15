@@ -1,5 +1,9 @@
 ﻿#pragma once
 
+#include <random>
+#include <ctime>
+#include <chrono>
+
 #include "Instruction.h"
 
 class Machine {
@@ -17,6 +21,7 @@ public:
 	std::unordered_map<std::wstring, int> jmp_pointers;
 
 	std::unordered_map<std::wstring, Machine> sub_machines;
+	std::mt19937 mersenne_twister;
 	
 	Machine(std::unordered_map<std::wstring, Var> in, bool dbg = false);
 
