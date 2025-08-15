@@ -1438,11 +1438,11 @@ void arrtomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// INTERSECT
+// INTERS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void intersect(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+void inters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	if (prevalidate) {
-		std::wstring name = L"INTERSECT";
+		std::wstring name = L"INTERS";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 4);
 		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
 	}
@@ -1460,11 +1460,11 @@ void intersect(Machine* m, Instruction* i, bool prevalidate, bool prego, bool it
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// NOTINTERSECT
+// NOTINTERS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void notintersect(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+void notinters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	if (prevalidate) {
-		std::wstring name = L"NOTINTERSECT";
+		std::wstring name = L"NOTINTERS";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 4);
 		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
 	}
@@ -1808,11 +1808,11 @@ void getkeys(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  GETINTERFORM
+//  GETINTERF
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void getinterform(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+void getinterf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	if (prevalidate) {
-		std::wstring name = L"GETINTERFORM";
+		std::wstring name = L"GETINTERF";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
 		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
 	}
@@ -1847,11 +1847,11 @@ void getinterform(Machine* m, Instruction* i, bool prevalidate, bool prego, bool
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// KVINTERSECT
+// KVINTERS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void kvintersect(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+void kvinters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	if (prevalidate) {
-		std::wstring name = L"KVINTERSECT";
+		std::wstring name = L"KVINTERS";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 4);
 		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
 	}
@@ -1869,11 +1869,11 @@ void kvintersect(Machine* m, Instruction* i, bool prevalidate, bool prego, bool 
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// KVNOTINTERSECT
+// KVNOTINTERS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void kvnotintersect(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+void kvnotinters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	if (prevalidate) {
-		std::wstring name = L"KVNOTINTERSECT";
+		std::wstring name = L"KVNOTINTERS";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 4);
 		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
 	}

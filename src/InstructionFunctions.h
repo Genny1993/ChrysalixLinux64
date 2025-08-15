@@ -56,8 +56,8 @@ void inall(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 void rin(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void rinall(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void arrtomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
-void intersect(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
-void notintersect(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void inters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void notinters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void arrtostr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void sum(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void avg(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
@@ -71,9 +71,9 @@ void push(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 void vtomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void getvals(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void getkeys(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
-void getinterform(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
-void kvintersect(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
-void kvnotintersect(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void getinterf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void kvinters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void kvnotinters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -123,8 +123,8 @@ struct InstructionMap {
 		&rin,
 		&rinall,
 		&arrtomap,
-		&intersect,
-		&notintersect,
+		&inters,
+		&notinters,
 		&arrtostr,
 		&sum,
 		&avg,
@@ -138,8 +138,8 @@ struct InstructionMap {
 		&vtomap,
 		&getvals,
 		&getkeys,
-		&getinterform,
-		&kvintersect,
-		&kvnotintersect,
+		&getinterf,
+		&kvinters,
+		&kvnotinters,
 	};
 };

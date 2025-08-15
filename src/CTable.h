@@ -50,8 +50,8 @@ enum OP_CODE {
     RINNER,
     RINALL,
     ARRTOMAP,
-    INTERSECT,
-    NOTINTERSECT,
+    INTERS,
+    NOTINTERS,
     ARRTOSTR,
     SUM,
     AVG,
@@ -65,9 +65,9 @@ enum OP_CODE {
     VTOMAP,
     GETVALS,
     GETKEYS,
-    GETINTERFORM,
-    KVINTERSECT,
-    KVNOTINTERSECT,
+    GETINTERF,
+    KVINTERS,
+    KVNOTINTERS,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,8 +119,8 @@ struct CTable {
         {L"RIN", OP_CODE::RINNER}, {L"rin", OP_CODE::RINNER},
         {L"RINALL", OP_CODE::RINALL}, {L"rinall", OP_CODE::RINALL},
         {L"ARRTOMAP", OP_CODE::ARRTOMAP}, {L"arrtomap", OP_CODE::ARRTOMAP},
-        {L"INTERSECT", OP_CODE::INTERSECT}, {L"intersect", OP_CODE::INTERSECT},
-        {L"NOTINTERSECT", OP_CODE::NOTINTERSECT}, {L"notintersect", OP_CODE::NOTINTERSECT},
+        {L"INTERS", OP_CODE::INTERS}, {L"inters", OP_CODE::INTERS},
+        {L"NOTINTERS", OP_CODE::NOTINTERS}, {L"notinters", OP_CODE::NOTINTERS},
         {L"ARRTOSTR", OP_CODE::ARRTOSTR}, {L"arrtostr", OP_CODE::ARRTOSTR},
         {L"SUM", OP_CODE::SUM}, {L"sum", OP_CODE::SUM},
         {L"AVG", OP_CODE::AVG}, {L"avg", OP_CODE::AVG},
@@ -134,8 +134,8 @@ struct CTable {
         {L"VTOMAP", OP_CODE::VTOMAP}, {L"vtomap", OP_CODE::VTOMAP},
         {L"GETVALS", OP_CODE::GETVALS}, {L"getvals", OP_CODE::GETVALS},
         {L"GETKEYS", OP_CODE::GETKEYS}, {L"getkeys", OP_CODE::GETKEYS},
-        {L"GETINTERFORM", OP_CODE::GETINTERFORM}, {L"getinterform", OP_CODE::GETINTERFORM},
-        {L"KVINTERSECT", OP_CODE::KVINTERSECT}, {L"kvintersect", OP_CODE::KVINTERSECT},
-        {L"KVNOTINTERSECT", OP_CODE::KVNOTINTERSECT}, {L"kvnotintersect", OP_CODE::KVNOTINTERSECT},
+        {L"GETINTERF", OP_CODE::GETINTERF}, {L"getinterf", OP_CODE::GETINTERF},
+        {L"KVINTERS", OP_CODE::KVINTERS}, {L"kvinters", OP_CODE::KVINTERS},
+        {L"KVNOTINTERS", OP_CODE::KVNOTINTERS}, {L"kvnotinters", OP_CODE::KVNOTINTERS},
     };
 };
