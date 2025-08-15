@@ -1,6 +1,7 @@
 ﻿#include <random>
 #include <ctime>
 #include <chrono>
+#include <cmath>
 
 #include "InstructionFunctions.h"
 #include "LangLib.h"
@@ -362,12 +363,20 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 			&& type != std::wstring_view(L"LN")
 			&& type != std::wstring_view(L"FACT")
 			&& type != std::wstring_view(L"ROOT")
+			&& type != std::wstring_view(L"ABS")
+			&& type != std::wstring_view(L"ROUND")
+			&& type != std::wstring_view(L"FLOOR")
+			&& type != std::wstring_view(L"CEIL")
 			&& type != std::wstring_view(L"inc")
 			&& type != std::wstring_view(L"dec")
 			&& type != std::wstring_view(L"log")
 			&& type != std::wstring_view(L"ln")
 			&& type != std::wstring_view(L"fact")
-			&& type != std::wstring_view(L"root")) {
+			&& type != std::wstring_view(L"root")
+			&& type != std::wstring_view(L"abs")
+			&& type != std::wstring_view(L"round")
+			&& type != std::wstring_view(L"floor")
+			&& type != std::wstring_view(L"ceil")) {
 			throw std::wstring{ type + LangLib::getTrans(L": Математическая операция неизвестна\n") };
 		}
 		if ((*i).parameters.size() == 2) {
@@ -378,7 +387,7 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 				setValue(&(*i).parameters[1], &(*m).heap, m) -= Var(1);
 			}
 			else if (type == std::wstring_view(L"FACT") || type == std::wstring_view(L"fact")) {
-				int fact = (int)(*m).heap[(*i).parameters[1].getWStr()].toUNTG().getUInt();
+				int fact = getValue(&(*i).parameters[1], &(*m).heap, m).toUNTG().getUInt();
 				unsigned long long int result = 1;
 				for (int i = 1; i <= fact; ++i) {
 					result *= i;
@@ -386,7 +395,25 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 				setValue(&(*i).parameters[1], &(*m).heap, m) = Var(result);
 			}
 			else if (type == std::wstring_view(L"LN") || type == std::wstring_view(L"ln")) {
-				setValue(&(*i).parameters[1], &(*m).heap, m) = Var(log((*m).heap[(*i).parameters[1].getWStr()].toDBL().getDouble()));
+				setValue(&(*i).parameters[1], &(*m).heap, m) = Var(log(getValue(&(*i).parameters[1], &(*m).heap, m).toDBL().getDouble()));
+			} else if (type == std::wstring_view(L"ABS") || type == std::wstring_view(L"abs")) {
+				Var temp;
+				temp = getValue(&(*i).parameters[1], &(*m).heap, m);
+				if(temp.type == UCHR || temp.type == UNTG) {
+					setValue(&(*i).parameters[1], &(*m).heap, m) = temp;
+				} else if(temp.type == STR) {
+					setValue(&(*i).parameters[1], &(*m).heap, m) = temp.toDBL() < 0.0 ? temp.toDBL() * -1.0 : temp.toDBL();
+				} else if(temp.type == DBL) {
+					setValue(&(*i).parameters[1], &(*m).heap, m) = temp < 0.0 ? temp * -1.0 : temp;
+				} else {
+					setValue(&(*i).parameters[1], &(*m).heap, m) = Var(std::llabs(temp.toNTG().data.ntg));
+				}
+			} else if (type == std::wstring_view(L"ROUND") || type == std::wstring_view(L"round")) {
+				setValue(&(*i).parameters[1], &(*m).heap, m) = Var(std::round(getValue(&(*i).parameters[1], &(*m).heap, m).toDBL().data.dbl));
+			} else if (type == std::wstring_view(L"CEIL") || type == std::wstring_view(L"ceil")) {
+				setValue(&(*i).parameters[1], &(*m).heap, m) = Var(std::ceil(getValue(&(*i).parameters[1], &(*m).heap, m).toDBL().data.dbl));
+			} else if (type == std::wstring_view(L"FLOOR") || type == std::wstring_view(L"floor")) {
+				setValue(&(*i).parameters[1], &(*m).heap, m) = Var(std::floor(getValue(&(*i).parameters[1], &(*m).heap, m).toDBL().data.dbl));
 			}
 			else {
 				throw std::wstring{ type + LangLib::getTrans(L"Математическая операция принимает 2 и больше параметров\n") };
@@ -442,6 +469,24 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 			else if (type == std::wstring_view(L"LOG") || type == std::wstring_view(L"log")) {
 				setValue(&(*i).parameters[1], &(*m).heap, m) = log(getValue(&(*i).parameters[1], &(*m).heap, m).toDBL().getDouble()) / log(getValue(&(*i).parameters[2], &(*m).heap, m).toDBL().getDouble());
 
+			} else if (type == std::wstring_view(L"ABS") || type == std::wstring_view(L"abs")) {
+				Var temp;
+				temp = getValue(&(*i).parameters[2], &(*m).heap, m);
+				if(temp.type == UCHR || temp.type == UNTG) {
+					setValue(&(*i).parameters[1], &(*m).heap, m) = temp;
+				} else if(temp.type == STR) {
+					setValue(&(*i).parameters[1], &(*m).heap, m) = temp.toDBL() < 0.0 ? temp.toDBL() * -1.0 : temp.toDBL();
+				} else if(temp.type == DBL) {
+					setValue(&(*i).parameters[1], &(*m).heap, m) = temp < 0.0 ? temp * -1.0 : temp;
+				} else {
+					setValue(&(*i).parameters[1], &(*m).heap, m) = Var(std::llabs(temp.toNTG().data.ntg));
+				}
+			} else if (type == std::wstring_view(L"ROUND") || type == std::wstring_view(L"round")) {
+				setValue(&(*i).parameters[1], &(*m).heap, m) = Var(std::round(getValue(&(*i).parameters[2], &(*m).heap, m).toDBL().data.dbl));
+			} else if (type == std::wstring_view(L"CEIL") || type == std::wstring_view(L"ceil")) {
+				setValue(&(*i).parameters[1], &(*m).heap, m) = Var(std::ceil(getValue(&(*i).parameters[2], &(*m).heap, m).toDBL().data.dbl));
+			} else if (type == std::wstring_view(L"FLOOR") || type == std::wstring_view(L"floor")) {
+				setValue(&(*i).parameters[1], &(*m).heap, m) = Var(std::floor(getValue(&(*i).parameters[2], &(*m).heap, m).toDBL().data.dbl));
 			}
 		}
 		if ((*i).parameters.size() == 4) {
