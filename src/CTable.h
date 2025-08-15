@@ -73,6 +73,8 @@ enum OP_CODE {
     UNINTERF,
     INTERFTOMAP,
     RAND,
+    TIME,
+    HRT,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -147,5 +149,7 @@ struct CTable {
         {L"UNINTERF", OP_CODE::UNINTERF}, {L"uninterf", OP_CODE::UNINTERF},
         {L"INTERFTOMAP", OP_CODE::INTERFTOMAP}, {L"interftomap", OP_CODE::INTERFTOMAP},
         {L"RAND", OP_CODE::RAND}, {L"rand", OP_CODE::RAND},
+        {L"TIME", OP_CODE::TIME}, {L"time", OP_CODE::TIME},
+        {L"HRT", OP_CODE::HRT}, {L"hrt", OP_CODE::HRT},
     };
 };

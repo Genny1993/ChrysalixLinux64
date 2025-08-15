@@ -1,8 +1,4 @@
-var: $i, 0; label: &loop;
-	rand: $;
-	print: $, ' ';
-jif: (calc: 'inc', $i; comp: '<', $, $i, 100), &loop; free: $i;
-print: '\n';
+
 ##
 	print:	'          ／l、
          （ﾟ､ ｡７
@@ -55,5 +51,16 @@ label: &first_input;
 label: &input;
 	input: $x;
 jifnot: (castable: 'ntg', $, $x), &repeat_input;
+##
+
+##
+#Замер времени выполнения
+var: $time; hrt: $time;
+
+var: $i, 0; label: &loop;
+	calc: '*', $, 3, 3;
+jif: (calc: 'inc', $i; comp: '<', $, $i, 1000000), &loop; free: $i;
+
+print: (calc: '/', $, (to: 'dbl', $, (calc: '-', $, (hrt: $), $time)), 1000000000.0), '\n';
 ##
 end: 0; 

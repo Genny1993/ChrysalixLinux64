@@ -2032,7 +2032,7 @@ void interftomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void rand(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	if (prevalidate) {
-		std::wstring name = L"rand";
+		std::wstring name = L"RAND";
 		int v[2]{ 1, 3 };
 		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), &name, 0, 0, nullptr, v, 2);
 		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
@@ -2052,6 +2052,50 @@ void rand(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 			std::uniform_int_distribution randomizer{ getValue(&(*i).parameters[1], &(*m).heap, m).toUNTG().data.untg, getValue(&(*i).parameters[2], &(*m).heap, m).toUNTG().data.untg };
 			setValue(&(*i).parameters[0], &(*m).heap, m) = Var(randomizer(m->mersenne_twister));
 		}
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TIME
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void time(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"TIME";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 1);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		//Ничего
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		setValue(&(*i).parameters[0], &(*m).heap, m) = Var((unsigned long long int)std::time(nullptr));
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// HRT
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void hrt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"HRT";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 1);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		//Ничего
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		setValue(&(*i).parameters[0], &(*m).heap, m) = Var(static_cast<unsigned long long int>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count()));
 		if(iterate){++(*m).instruct_number;}
 	}
 }
