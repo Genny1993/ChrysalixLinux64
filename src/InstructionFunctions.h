@@ -74,6 +74,10 @@ void getkeys(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 void getinterf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void kvinters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void kvnotinters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void clearc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void tointerf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void uninterf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void interftomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,5 +145,9 @@ struct InstructionMap {
 		&getinterf,
 		&kvinters,
 		&kvnotinters,
+		&clearc,
+		&tointerf,
+		&uninterf,
+		&interftomap,
 	};
 };

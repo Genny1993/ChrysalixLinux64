@@ -1889,3 +1889,133 @@ void kvnotinters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool 
 		if(iterate){++(*m).instruct_number;}
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// CLEARC
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void clearc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"CLEARC";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 0);
+	}
+	else {
+		//Ничего
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		system("clear");
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TOINTERF
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void tointerf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"TOINTERF";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 3);
+	}
+	else {
+		//Ничего
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		std::vector<Var> keyarr = getValue(&(*i).parameters[1], &(*m).heap, m).toARR().arr;
+		std::vector<Var> valarr = getValue(&(*i).parameters[2], &(*m).heap, m).toARR().arr;
+		std::vector<Var> result;
+		result.reserve(1000);
+
+		if(keyarr.size() != valarr.size()) {
+			throw std::wstring{ LangLib::getTrans(L"Массивы дожны быть одинакового размера\n")};
+		}
+		int size = (int)keyarr.size();
+		std::vector<Var> pair;
+		pair.reserve(2);
+		for(int i = 0; i < size; ++i) {
+			pair.emplace_back(getValue(&keyarr[i], &(*m).heap, m).toSTR().str);
+			pair.emplace_back(getValue(&valarr[i], &(*m).heap, m));
+			result.emplace_back(pair);
+			pair.clear();
+		}
+		setValue(&(*i).parameters[0], &(*m).heap, m) = Var(result);
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// UNINTERF
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void uninterf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"UNINTERF";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 3);
+	}
+	else {
+		//Ничего
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		std::vector<Var> keyarr;
+		std::vector<Var> valarr;
+		keyarr.reserve(1000);
+		valarr.reserve(1000);
+		const std::vector<Var> &interform = getValue(&(*i).parameters[2], &(*m).heap, m).toARR().arr;
+
+		int size = (int)interform.size();
+		for (int i = 0; i < size; ++i) {
+			if((int)interform[i].toARR().arr.size() != 2) {
+				throw std::wstring{ LangLib::getTrans(L"Некорректный массив.\n")};
+			}
+			keyarr.emplace_back(interform[i].arr[0].toSTR());
+			valarr.emplace_back(interform[i].arr[1]);
+		}
+		setValue(&(*i).parameters[0], &(*m).heap, m) = Var(keyarr);
+		setValue(&(*i).parameters[1], &(*m).heap, m) = Var(valarr);
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// INTERFTOMAP
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void interftomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"INTERFTOMAP";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+	}
+	else {
+		//Ничего
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		std::unordered_map<std::wstring, Var> result;
+		result.reserve(1000);
+
+		std::vector<Var> interform = getValue(&(*i).parameters[1], &(*m).heap, m).toARR().arr;
+
+		int size = (int)interform.size();
+		for (int i = 0; i < size; ++i) {
+			if((int)interform[i].toARR().arr.size() != 2) {
+				throw std::wstring{ LangLib::getTrans(L"Некорректный массив.\n")};
+			}
+			Var a = interform[i].arr[0];
+			Var b = interform[i].arr[1];
+			result.insert({getValue(&a, &(*m).heap, m).toSTR().getWStr(), getValue(&b, &(*m).heap, m)});
+		}
+		setValue(&(*i).parameters[0], &(*m).heap, m) = Var(result);
+		if(iterate){++(*m).instruct_number;}
+	}
+}

@@ -68,6 +68,10 @@ enum OP_CODE {
     GETINTERF,
     KVINTERS,
     KVNOTINTERS,
+    CLEARC,
+    TOINTERF,
+    UNINTERF,
+    INTERFTOMAP,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -137,5 +141,9 @@ struct CTable {
         {L"GETINTERF", OP_CODE::GETINTERF}, {L"getinterf", OP_CODE::GETINTERF},
         {L"KVINTERS", OP_CODE::KVINTERS}, {L"kvinters", OP_CODE::KVINTERS},
         {L"KVNOTINTERS", OP_CODE::KVNOTINTERS}, {L"kvnotinters", OP_CODE::KVNOTINTERS},
+        {L"CLEARC", OP_CODE::CLEARC}, {L"clearc", OP_CODE::CLEARC},
+        {L"TOINTERF", OP_CODE::TOINTERF}, {L"tointerf", OP_CODE::TOINTERF},
+        {L"UNINTERF", OP_CODE::UNINTERF}, {L"uninterf", OP_CODE::UNINTERF},
+        {L"INTERFTOMAP", OP_CODE::INTERFTOMAP}, {L"interftomap", OP_CODE::INTERFTOMAP},
     };
 };

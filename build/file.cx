@@ -1,3 +1,13 @@
+	vtoarr: $arr1, 'key1', 'key2', 123, 'key4';
+	vtoarr: $arr2, 1, 2, (vtoarr: $, 1, 5, (vtoarr: $, 9, 8, 7)), 4;
+	var: $interf;
+	tointerf: $interf, $arr1, $arr2;
+	print: $interf, '\n';
+
+	var: $map; var: $vals;
+	interftomap: $map, $interf;
+
+	print: $map, '\n';
 ##
 	print:	'          ／l、
          （ﾟ､ ｡７
@@ -29,13 +39,26 @@ label: &main_loop;
 	calc: 'inc', $j;
 jif: (comp: '<', $, $j, $max), &main_loop;	
 ##
+
 ##
- 	var: $i, 0;
- 	var: $max, 1000000;
-label: &loop;
-	calc: 'inc', $i;
-jif: (comp: '<', $, $i, $max), &loop;
-	forget:;
-	free: $i, $max;
+var: $i, 0; label: &loop;
+
+jif: (calc: 'inc', $i; comp: '<', $, $i, 1000000), &loop; free: $i;
+##
+
+##
+#Ввод числа пользователем
+
+
+var: $x;
+jump: &first_input;
+label: &repeat_input;
+	print: 'Вы ввели не число, введите число еще раз: ';
+jump: &input;
+label: &first_input;
+	print: 'Введите число: ';
+label: &input;
+	input: $x;
+jifnot: (castable: 'ntg', $, $x), &repeat_input;
 ##
 end: 0; 
