@@ -107,6 +107,8 @@ std::unordered_map<std::wstring, std::wstring> ru = {
 	{L"Некорректный массив\n", L"Некорректный массив\n"},
 	{L"Массивы дожны быть одинакового размера\n", L"Массивы дожны быть одинакового размера\n"},
 	{L"Инструкция принимает четное количество параметров!\n", L"Инструкция принимает четное количество параметров!\n"},
+	{L": Неизвестное представление числа\n", L": Неизвестное представление числа\n"},
+	{L": Неизвестный тип выравнивания\n", L": Неизвестный тип выравнивания\n"},
 };
 
 std::unordered_map<std::wstring, std::wstring> en = {
@@ -200,6 +202,8 @@ std::unordered_map<std::wstring, std::wstring> en = {
 	{L"Некорректный массив\n", L"Incorrect array\n"},
 	{L"Массивы дожны быть одинакового размера\n", L"Arrays must be the same size\n"},
 	{L"Инструкция принимает четное количество параметров!\n", L"Instruction takes an even number of parameters!\n"},
+	{L": Неизвестное представление числа\n", L": Unknown representation of a number\n"},
+	{L": Неизвестный тип выравнивания\n", L": Unknown alignment type\n"},
 };
 
 LANGUAGES LangLib::current_lang = RU;

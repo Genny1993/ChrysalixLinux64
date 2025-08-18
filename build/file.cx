@@ -1,4 +1,4 @@
-format: $, chr 99, 'bin', 10, -1, 'left', '';
+format: $, chr 2, 'bin', 10, -1, 'left', '';
 print: $, '\n';
 ##
 var: $0, 13.9;

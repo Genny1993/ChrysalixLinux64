@@ -2300,6 +2300,7 @@ void fmt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 			} else if(parameter.type == DBL || parameter.type == STR) {
 				woss << std::bitset<64>(parameter.toDBL().data.dbl);
 			}
+			
 		}
 
 		if(type != std::wstring_view(L"BIN") && type != std::wstring_view(L"bin")) {
@@ -2313,6 +2314,27 @@ void fmt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 		}
 
 		Var result = woss.str();
+		if(type == L"BIN" || type == L"bin") {
+			std::wstring str = result.str;
+			std::wstring newstr = L"";
+
+			bool lz_end = false;
+			int size = str.size();
+			for(int iter = 0; iter < size; ++iter) {
+				if(lz_end) {
+					newstr += str[iter];
+				} else {
+					if(str[iter] != L'0') {
+						lz_end = true;
+						newstr += str[iter];
+					}
+				}
+			}
+			if(newstr == L"") {
+				newstr = L"0";
+			}
+			result = newstr;
+		}
 		setValue(&(*i).parameters[0], &(*m).heap, m) = result;
 
 		if(iterate){++(*m).instruct_number;}
