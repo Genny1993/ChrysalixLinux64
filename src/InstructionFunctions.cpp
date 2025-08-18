@@ -2100,9 +2100,9 @@ void rand(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// TIME
+// T
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void time(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+void t(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	if (prevalidate) {
 		std::wstring name = L"TIME";
 		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 1);

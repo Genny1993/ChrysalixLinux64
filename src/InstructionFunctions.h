@@ -79,7 +79,7 @@ void tointerf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 void uninterf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void interftomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void rand(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
-void time(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void t(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void hrt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void between(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void jifelse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
@@ -156,7 +156,7 @@ struct InstructionMap {
 		&uninterf,
 		&interftomap,
 		&rand,
-		&time,
+		&t,
 		&hrt,
 		&between,
 		&jifelse,
