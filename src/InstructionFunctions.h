@@ -88,6 +88,9 @@ void fmt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 void trigon(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void degtorad(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void radtodeg(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void variance(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void castchk(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void finalize(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -169,5 +172,8 @@ struct InstructionMap {
 		&trigon,
 		&degtorad,
 		&radtodeg,
+		&variance,
+		&castchk,
+		&finalize,
 	};
 };

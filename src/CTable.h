@@ -82,6 +82,9 @@ enum OP_CODE {
     TRIGON,
     DEGTORAD,
     RADTODEG,
+    VARIANCE,
+    CASTCHK,
+    FINALIZE,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -165,5 +168,8 @@ struct CTable {
         {L"TRIGON", OP_CODE::TRIGON}, {L"trigon", OP_CODE::TRIGON},
         {L"DEGTORAD", OP_CODE::DEGTORAD}, {L"degtorad", OP_CODE::DEGTORAD},
         {L"RADTODEG", OP_CODE::RADTODEG}, {L"radtodeg", OP_CODE::RADTODEG},
+        {L"VARIANCE", OP_CODE::VARIANCE}, {L"variance", OP_CODE::VARIANCE},
+        {L"CASTCHK", OP_CODE::CASTCHK}, {L"castchk", OP_CODE::CASTCHK},
+        {L"FINALIZE", OP_CODE::FINALIZE}, {L"finalize", OP_CODE::FINALIZE},
     };
 };

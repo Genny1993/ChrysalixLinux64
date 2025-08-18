@@ -109,6 +109,9 @@ std::unordered_map<std::wstring, std::wstring> ru = {
 	{L"Инструкция принимает четное количество параметров!\n", L"Инструкция принимает четное количество параметров!\n"},
 	{L": Неизвестное представление числа\n", L": Неизвестное представление числа\n"},
 	{L": Неизвестный тип выравнивания\n", L": Неизвестный тип выравнивания\n"},
+	{L": Неизвестная тригонометрическая функция\n", L": Неизвестная тригонометрическая функция\n"},
+	{L": Константу нельзя изменить\n", L": Константу нельзя изменить\n"},
+	{L"Нулевой регистр невозможно сделать константой!\n", L"Нулевой регистр невозможно сделать константой!\n"},
 };
 
 std::unordered_map<std::wstring, std::wstring> en = {
@@ -204,6 +207,9 @@ std::unordered_map<std::wstring, std::wstring> en = {
 	{L"Инструкция принимает четное количество параметров!\n", L"Instruction takes an even number of parameters!\n"},
 	{L": Неизвестное представление числа\n", L": Unknown representation of a number\n"},
 	{L": Неизвестный тип выравнивания\n", L": Unknown alignment type\n"},
+	{L": Неизвестная тригонометрическая функция\n", L": Unknown trigonometric function\n"},
+	{L": Константу нельзя изменить\n", L": Constant cannot be changed\n"},
+	{L"Нулевой регистр невозможно сделать константой!\n", L"Zero register cannot be made a constant!\n"},
 };
 
 LANGUAGES LangLib::current_lang = RU;

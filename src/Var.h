@@ -49,6 +49,7 @@ public:
     std::wstring str = L"";
     Type type = NIL;
     std::vector<Instruction> instructions;
+    bool is_const = false;
     //Конструкторы для обычны типов данных
     Var(const Var&) = default;
     Var();
