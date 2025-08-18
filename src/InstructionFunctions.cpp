@@ -2,6 +2,10 @@
 #include <ctime>
 #include <chrono>
 #include <cmath>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <bitset>
 
 #include "InstructionFunctions.h"
 #include "LangLib.h"
@@ -2214,6 +2218,104 @@ void jswitch(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 			}
 		}
 		(*m).instruct_number = (int)getLabel(&(*i).parameters[i->parameters.size() - 1], &(*m).jmp_pointers).toUNTG().getUInt();
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// FORMAT
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void fmt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"FORMAT";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 7);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+
+		std::wstring type = getValue( &(*i).parameters[2], &(*m).heap, m).toSTR().str;
+		Var parameter = getValue( &(*i).parameters[1], &(*m).heap, m);
+		Var width = getValue( &(*i).parameters[3], &(*m).heap, m).toNTG();
+		Var precision = getValue( &(*i).parameters[4], &(*m).heap, m).toNTG();
+		Var align = getValue( &(*i).parameters[5], &(*m).heap, m).toSTR();
+		Var lead = getValue( &(*i).parameters[6], &(*m).heap, m).toSTR();
+
+		if(parameter.type != CHR && parameter.type != UCHR &&
+			parameter.type != NTG && parameter.type != UNTG &&
+			parameter.type != BLN && parameter.type != DBL && parameter.type != STR
+		) {
+			std::wstring error = type + LangLib::getTrans(L"Инструкция используется только для следующих типов: ");
+			error += L"CHR, UCHR, NTG, UNTG, BLN, DBL, STR";
+			throw std::wstring{ type + error };
+		}
+
+		if(type != std::wstring_view(L"DEC") && type != std::wstring_view(L"dec") &&
+			type != std::wstring_view(L"OCT") && type != std::wstring_view(L"oct") &&
+			type != std::wstring_view(L"HEX") && type != std::wstring_view(L"hex") &&
+			type != std::wstring_view(L"BIN") && type != std::wstring_view(L"bin")) {
+			throw std::wstring{ type + LangLib::getTrans( L": Неизвестное представление числа\n") };
+		}
+
+		if(align.str != std::wstring_view(L"LEFT") && align.str != std::wstring_view(L"left") &&
+		align.str != std::wstring_view(L"RIGHT") && align.str != std::wstring_view(L"right") && 
+		align.str != std::wstring_view(L"DEFAULT") && align.str != std::wstring_view(L"default")
+		) {
+			throw std::wstring{ align.str + LangLib::getTrans(L": Неизвестный тип выравнивания\n") };
+		}
+		
+		std::wostringstream woss;
+
+		if(align.str == std::wstring_view(L"LEFT") || align.str != std::wstring_view(L"left")) {
+			woss << std::left;
+		}
+
+		if(align.str == std::wstring_view(L"RIGHT") || align.str != std::wstring_view(L"right")) {
+			woss << std::right;
+		}
+		if(width.data.ntg > 0) {
+			woss << std::setw(width.data.ntg);
+			if(lead.str == L"") {
+				lead.str = L" ";
+			}
+			woss << std::setfill(lead.str.at(0));
+		}
+
+
+		if(precision.data.ntg > -1) {
+			woss << std::fixed << std::setprecision(precision.data.ntg);
+		}
+	
+		if(type == std::wstring_view(L"OCT") || type == std::wstring_view(L"oct") ) {
+			woss << std::oct;
+		} else if (type == std::wstring_view(L"HEX") || type == std::wstring_view(L"hex") ) {
+			woss << std::hex;
+		} else if (type == std::wstring_view(L"BIN") || type == std::wstring_view(L"bin") ) {
+			if(parameter.type == NTG ||  parameter.type == CHR) {
+				woss << std::bitset<64>(parameter.toNTG().data.ntg);
+			} else if(parameter.type == UCHR || parameter.type == UNTG || parameter.type == BLN) {
+				woss << std::bitset<64>(parameter.toNTG().data.untg);
+			} else if(parameter.type == DBL || parameter.type == STR) {
+				woss << std::bitset<64>(parameter.toDBL().data.dbl);
+			}
+		}
+
+		if(type != std::wstring_view(L"BIN") && type != std::wstring_view(L"bin")) {
+			if(parameter.type == NTG ||  parameter.type == CHR) {
+				woss << parameter.toNTG().data.ntg;
+			} else if(parameter.type == UCHR || parameter.type == UNTG || parameter.type == BLN) {
+				woss << parameter.toUNTG().data.untg;
+			} else if(parameter.type == DBL || parameter.type == STR) {
+				woss << parameter.toDBL().data.dbl;
+			}
+		}
+
+		Var result = woss.str();
+		setValue(&(*i).parameters[0], &(*m).heap, m) = result;
+
+		if(iterate){++(*m).instruct_number;}
 	}
 }
 

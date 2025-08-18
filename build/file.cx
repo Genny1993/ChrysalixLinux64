@@ -1,3 +1,5 @@
+format: $, chr 99, 'bin', 10, -1, 'left', '';
+print: $, '\n';
 ##
 var: $0, 13.9;
 var: $1, 6;

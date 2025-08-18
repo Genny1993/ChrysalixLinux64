@@ -78,6 +78,7 @@ enum OP_CODE {
     BETWEEN,
     JIFELSE,
     JSWITCH,
+    FORMAT,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -157,5 +158,6 @@ struct CTable {
         {L"BETWEEN", OP_CODE::BETWEEN}, {L"between", OP_CODE::BETWEEN},
         {L"JIFELSE", OP_CODE::JIFELSE}, {L"jifelse", OP_CODE::JIFELSE},
         {L"JSWITCH", OP_CODE::JSWITCH}, {L"jswitch", OP_CODE::JSWITCH},
+        {L"FORMAT", OP_CODE::FORMAT}, {L"format", OP_CODE::FORMAT},
     };
 };

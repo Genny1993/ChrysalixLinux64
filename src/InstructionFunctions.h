@@ -84,6 +84,7 @@ void hrt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 void between(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void jifelse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void jswitch(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void fmt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -161,5 +162,6 @@ struct InstructionMap {
 		&between,
 		&jifelse,
 		&jswitch,
+		&fmt,
 	};
 };
