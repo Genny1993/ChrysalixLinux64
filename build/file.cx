@@ -1,3 +1,16 @@
+##
+var: $0, 13.9;
+var: $1, 6;
+var: $2, 13;
+jifelse: (between: $, $0, $1, $2), &if, &else;
+label: &if;
+	print: 'Число ', $0, ' находится в промежутке ', $1, ', ', $2, '\n';
+jump: &endif;
+
+label: &else;
+	print: 'Число ', $0, ' не находится в промежутке ', $1, ', ', $2, '\n';
+label: &endif;
+##
 
 ##
 	print:	'          ／l、
@@ -41,13 +54,11 @@ jif: (calc: 'inc', $i; comp: '<', $, $i, 1000000), &loop; free: $i;
 #Ввод числа пользователем
 
 
-var: $x;
-jump: &first_input;
+	var: $x;
+	print: 'Введите число: ';
+jump: &input;
 label: &repeat_input;
 	print: 'Вы ввели не число, введите число еще раз: ';
-jump: &input;
-label: &first_input;
-	print: 'Введите число: ';
 label: &input;
 	input: $x;
 jifnot: (castable: 'ntg', $, $x), &repeat_input;
@@ -57,8 +68,31 @@ jifnot: (castable: 'ntg', $, $x), &repeat_input;
 #Замер времени выполнения
 var: $time; hrt: $time;
 
+var: $val, 5;
 var: $i, 0; label: &loop;
-	calc: 'ceil', $, -6.9;
+
+	jswitch: $val, 1, &la, 2, &lb, 3, &lc, 4, &ld, &default;
+
+	label: &la;
+		#print: 'Вы ввели 1', '\n';
+	jump: &endswitch;
+
+	label: &lb;
+		#print: 'Вы ввели 2', '\n';
+	jump: &endswitch;
+
+	label: &lc;
+		#print: 'Вы ввели 3', '\n';
+	jump: &endswitch;
+
+	label: &ld;
+		#print: 'Вы ввели 4', '\n';
+	jump: &endswitch;
+
+	label: &default;
+		#print: 'Вы ввели другую букву', '\n';
+
+	label: &endswitch;
 jif: (calc: 'inc', $i; comp: '<', $, $i, 1000000), &loop; free: $i;
 
 print: (calc: '/', $, (to: 'dbl', $, (calc: '-', $, (hrt: $), $time)), 1000000000.0), '\n';

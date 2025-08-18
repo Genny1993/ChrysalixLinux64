@@ -789,8 +789,7 @@ void logic(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 void jif(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	if (prevalidate) {
 		std::wstring name = L"JIF";
-		int v[2]{ 1, 2 };
-		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), &name, 1, 2, nullptr, v, 2);
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
 	}
 
 	if (prego) {
@@ -813,8 +812,7 @@ void jif(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 void jifnot(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	if (prevalidate) {
 		std::wstring name = L"JIFNOT";
-		int v[2]{ 1, 2 };
-		checkParameterCount(VARIANTS, (int)(*i).parameters.size(), &name, 1, 2, nullptr, v, 2);
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
 	}
 
 	if (prego) {
@@ -2144,3 +2142,78 @@ void hrt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 		if(iterate){++(*m).instruct_number;}
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// BETWEEN
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void between(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"BETWEEN";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 4);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		//Ничего
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		Var result = getValue(&(*i).parameters[1], &(*m).heap, m) >= getValue(&(*i).parameters[2], &(*m).heap, m) && getValue(&(*i).parameters[1], &(*m).heap, m) <= getValue(&(*i).parameters[3], &(*m).heap, m);
+		setValue(&(*i).parameters[0], &(*m).heap, m) = result;
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// JIFELSE
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void jifelse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"JIFELSE";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 3);
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		bool swtch = getValue(&(*i).parameters[0], &(*m).heap, m).toBLN().getBool();
+		if (swtch) {
+			(*m).instruct_number = (int)getLabel(&(*i).parameters[1], &(*m).jmp_pointers).toUNTG().getUInt();
+		}
+		else {
+			(*m).instruct_number = (int)getLabel(&(*i).parameters[2], &(*m).jmp_pointers).toUNTG().getUInt();
+		}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// JSWITCH
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void jswitch(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"JSWITCH";
+		checkParameterCount(MINIMAL, (int)(*i).parameters.size(), &name, 0, 4);
+		if(i->parameters.size() % 2) {
+			throw std::wstring{ LangLib::getTrans(L"Инструкция принимает четное количество параметров!\n") };
+		}
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		Var swtch = getValue(&(*i).parameters[0], &(*m).heap, m);
+		int size = i->parameters.size();
+		for(int is = 1; is < size - 2; is+=2) {
+			if(swtch.eq(L"strict", getValue( &(*i).parameters[is], &(*m).heap, m)).data.bln) {
+				(*m).instruct_number = (int)getLabel(&(*i).parameters[is+1], &(*m).jmp_pointers).toUNTG().getUInt();
+				return;
+			}
+		}
+		(*m).instruct_number = (int)getLabel(&(*i).parameters[i->parameters.size() - 1], &(*m).jmp_pointers).toUNTG().getUInt();
+	}
+}
+

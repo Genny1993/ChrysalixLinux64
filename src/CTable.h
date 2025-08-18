@@ -75,6 +75,9 @@ enum OP_CODE {
     RAND,
     TIME,
     HRT,
+    BETWEEN,
+    JIFELSE,
+    JSWITCH,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -151,5 +154,8 @@ struct CTable {
         {L"RAND", OP_CODE::RAND}, {L"rand", OP_CODE::RAND},
         {L"TIME", OP_CODE::TIME}, {L"time", OP_CODE::TIME},
         {L"HRT", OP_CODE::HRT}, {L"hrt", OP_CODE::HRT},
+        {L"BETWEEN", OP_CODE::BETWEEN}, {L"between", OP_CODE::BETWEEN},
+        {L"JIFELSE", OP_CODE::JIFELSE}, {L"jifelse", OP_CODE::JIFELSE},
+        {L"JSWITCH", OP_CODE::JSWITCH}, {L"jswitch", OP_CODE::JSWITCH},
     };
 };

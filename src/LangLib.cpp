@@ -106,6 +106,7 @@ std::unordered_map<std::wstring, std::wstring> ru = {
 	{L": Неверная вложенная инструкция!\n", L": Неверная вложенная инструкция!\n"},
 	{L"Некорректный массив\n", L"Некорректный массив\n"},
 	{L"Массивы дожны быть одинакового размера\n", L"Массивы дожны быть одинакового размера\n"},
+	{L"Инструкция принимает четное количество параметров!\n", L"Инструкция принимает четное количество параметров!\n"},
 };
 
 std::unordered_map<std::wstring, std::wstring> en = {
@@ -198,6 +199,7 @@ std::unordered_map<std::wstring, std::wstring> en = {
 	{L": Неверная вложенная инструкция!\n", L": Invalid nested instruction!\n"},
 	{L"Некорректный массив\n", L"Incorrect array\n"},
 	{L"Массивы дожны быть одинакового размера\n", L"Arrays must be the same size\n"},
+	{L"Инструкция принимает четное количество параметров!\n", L"Instruction takes an even number of parameters!\n"},
 };
 
 LANGUAGES LangLib::current_lang = RU;
