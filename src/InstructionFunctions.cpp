@@ -2341,3 +2341,122 @@ void fmt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TRIGON
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void trigon(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"TRIGON";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 3);
+		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR2));
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+
+		std::wstring type = getValue( &(*i).parameters[0], &(*m).heap, m).toSTR().str;
+
+		if(type != std::wstring_view(L"SIN") && type != std::wstring_view(L"sin") &&
+			type != std::wstring_view(L"COS") && type != std::wstring_view(L"cos") &&
+			type != std::wstring_view(L"TAN") && type != std::wstring_view(L"tan") &&
+			type != std::wstring_view(L"CTG") && type != std::wstring_view(L"ctg") &&
+			type != std::wstring_view(L"ASIN") && type != std::wstring_view(L"asin") &&
+			type != std::wstring_view(L"ACOS") && type != std::wstring_view(L"acos") &&
+			type != std::wstring_view(L"ATAN") && type != std::wstring_view(L"atan") &&
+			type != std::wstring_view(L"ACTG") && type != std::wstring_view(L"actg") &&
+			type != std::wstring_view(L"SEC") && type != std::wstring_view(L"sec") &&
+			type != std::wstring_view(L"CSC") && type != std::wstring_view(L"csc") &&
+			type != std::wstring_view(L"ASEC") && type != std::wstring_view(L"asec") &&
+			type != std::wstring_view(L"ACSC") && type != std::wstring_view(L"acsc")) {
+			throw std::wstring{ type + LangLib::getTrans( L": Неизвестная тригонометрическая функция\n") };
+		}
+
+		if(type == std::wstring_view(L"SIN") || type == std::wstring_view(L"sin")) {
+			setValue(&(*i).parameters[1], &(*m).heap, m) = std::sinl(getValue( &(*i).parameters[2], &(*m).heap, m).toDBL().data.dbl);
+		} else if(type == std::wstring_view(L"COS") || type == std::wstring_view(L"cos")) {
+			setValue(&(*i).parameters[1], &(*m).heap, m) = std::cosl(getValue( &(*i).parameters[2], &(*m).heap, m).toDBL().data.dbl);
+		} else if(type == std::wstring_view(L"TAN") || type == std::wstring_view(L"tan")) {
+			setValue(&(*i).parameters[1], &(*m).heap, m) = std::tanl(getValue( &(*i).parameters[2], &(*m).heap, m).toDBL().data.dbl);
+		} else if(type == std::wstring_view(L"CTG") || type == std::wstring_view(L"ctg")) {
+			long double val = std::tan(getValue( &(*i).parameters[2], &(*m).heap, m).toDBL().data.dbl);
+			if(val == 0.0 ){
+				val = 0.0000000000000000000000000001L;
+			}
+			setValue(&(*i).parameters[1], &(*m).heap, m) = 1.0 / val;
+		} else if(type == std::wstring_view(L"ASIN") || type == std::wstring_view(L"asin")) {
+			setValue(&(*i).parameters[1], &(*m).heap, m) = std::asinl(getValue( &(*i).parameters[2], &(*m).heap, m).toDBL().data.dbl);
+		} else if(type == std::wstring_view(L"ACOS") || type == std::wstring_view(L"acos")) {
+			setValue(&(*i).parameters[1], &(*m).heap, m) = std::acosl(getValue( &(*i).parameters[2], &(*m).heap, m).toDBL().data.dbl);
+		} else if(type == std::wstring_view(L"ATAN") || type == std::wstring_view(L"atan")) {
+			setValue(&(*i).parameters[1], &(*m).heap, m) = std::atanl(getValue( &(*i).parameters[2], &(*m).heap, m).toDBL().data.dbl);
+		} else if(type == std::wstring_view(L"ACTG") || type == std::wstring_view(L"actg")) {
+			setValue(&(*i).parameters[1], &(*m).heap, m) = (M_PI / 2.0) - std::atanl(getValue( &(*i).parameters[2], &(*m).heap, m).toDBL().data.dbl);
+		} else if(type == std::wstring_view(L"SEC") || type == std::wstring_view(L"sec")) {
+			long double val = std::cos(getValue( &(*i).parameters[2], &(*m).heap, m).toDBL().data.dbl);
+			if(val == 0.0 ){
+				val = 0.0000000000000000000000000001L;
+			}
+			setValue(&(*i).parameters[1], &(*m).heap, m) = 1.0 /  val;
+		} else if(type == std::wstring_view(L"CSC") || type == std::wstring_view(L"csc")) {
+			long double val = std::sin(getValue( &(*i).parameters[2], &(*m).heap, m).toDBL().data.dbl);
+			if(val == 0.0 ){
+				val = 0.0000000000000000000000000001L;
+			}
+			setValue(&(*i).parameters[1], &(*m).heap, m) = 1.0 / val;
+		} else if(type == std::wstring_view(L"ASEC") || type == std::wstring_view(L"asec")) {
+			long double val = getValue( &(*i).parameters[2], &(*m).heap, m).toDBL().data.dbl;
+			if(val == 0.0 ){
+				val = 0.0000000000000000000000000001L;
+			}
+			setValue(&(*i).parameters[1], &(*m).heap, m) = std::acosl(1.0 / val);
+		} else if(type == std::wstring_view(L"ACSC") || type == std::wstring_view(L"acsc")) {
+			long double val = getValue( &(*i).parameters[2], &(*m).heap, m).toDBL().data.dbl;
+			if(val == 0.0 ){
+				val = 0.0000000000000000000000000001L;
+			}
+			setValue(&(*i).parameters[1], &(*m).heap, m) = std::asinl(1.0 / val);
+		}
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// DEGTORAD
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void degtorad(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"DEGTORAD";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		setValue(&(*i).parameters[0], &(*m).heap, m) = Var(getValue( &(*i).parameters[1], &(*m).heap, m).toDBL().data.dbl * M_PI / 180.0);
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// RADTODEG
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void radtodeg(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"RADTODEG";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		setValue(&(*i).parameters[0], &(*m).heap, m) = Var(getValue( &(*i).parameters[1], &(*m).heap, m).toDBL().data.dbl * 180.0 / M_PI);
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+

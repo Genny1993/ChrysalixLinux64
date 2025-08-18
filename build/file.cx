@@ -1,5 +1,5 @@
-format: $, chr 2, 'bin', 10, -1, 'left', '';
-print: $, '\n';
+print: (format: $, (trigon: 'csc', $, (degtorad: $, 45)), 'dec', 0, 20, 'default', ''), '\n';
+print: (format: $, (radtodeg: $, (trigon: 'acsc', $, 1)), 'dec', 0, 20, 'default', ''), '\n';
 ##
 var: $0, 13.9;
 var: $1, 6;
@@ -72,8 +72,8 @@ var: $time; hrt: $time;
 
 var: $val, 5;
 var: $i, 0; label: &loop;
-
-	jswitch: $val, 1, &la, 2, &lb, 3, &lc, 4, &ld, &default;
+	trigon: 'csc', $, (degtorad: $, 45);
+	##jswitch: $val, 1, &la, 2, &lb, 3, &lc, 4, &ld, &default;
 
 	label: &la;
 		#print: 'Вы ввели 1', '\n';
@@ -94,7 +94,7 @@ var: $i, 0; label: &loop;
 	label: &default;
 		#print: 'Вы ввели другую букву', '\n';
 
-	label: &endswitch;
+	label: &endswitch;##
 jif: (calc: 'inc', $i; comp: '<', $, $i, 1000000), &loop; free: $i;
 
 print: (calc: '/', $, (to: 'dbl', $, (calc: '-', $, (hrt: $), $time)), 1000000000.0), '\n';

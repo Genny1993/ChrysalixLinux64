@@ -85,6 +85,9 @@ void between(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 void jifelse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void jswitch(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void fmt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void trigon(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void degtorad(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void radtodeg(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -163,5 +166,8 @@ struct InstructionMap {
 		&jifelse,
 		&jswitch,
 		&fmt,
+		&trigon,
+		&degtorad,
+		&radtodeg,
 	};
 };

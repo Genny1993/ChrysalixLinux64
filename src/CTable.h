@@ -79,6 +79,9 @@ enum OP_CODE {
     JIFELSE,
     JSWITCH,
     FORMAT,
+    TRIGON,
+    DEGTORAD,
+    RADTODEG,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -159,5 +162,8 @@ struct CTable {
         {L"JIFELSE", OP_CODE::JIFELSE}, {L"jifelse", OP_CODE::JIFELSE},
         {L"JSWITCH", OP_CODE::JSWITCH}, {L"jswitch", OP_CODE::JSWITCH},
         {L"FORMAT", OP_CODE::FORMAT}, {L"format", OP_CODE::FORMAT},
+        {L"TRIGON", OP_CODE::TRIGON}, {L"trigon", OP_CODE::TRIGON},
+        {L"DEGTORAD", OP_CODE::DEGTORAD}, {L"degtorad", OP_CODE::DEGTORAD},
+        {L"RADTODEG", OP_CODE::RADTODEG}, {L"radtodeg", OP_CODE::RADTODEG},
     };
 };
