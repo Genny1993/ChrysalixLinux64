@@ -798,13 +798,10 @@ Var Var::toSTR() const {
         Parser p;
         std::wstring result = L"";
         int size_i = (int)this->instructions.size();
-        
         for( int i = 0; i < size_i; ++i) {
-            result += p.showInstruction(this->instructions[i]);
+            result += this->instructions[i].as_string;
             if(i < size_i - 1) {
                 result += L"; ";
-            } else {
-                result += L";";
             }
         }
         return Var(result);
@@ -951,13 +948,10 @@ void Var::print() {
         Parser p;
         std::wstring result = L"";
         int size_i = (int)this->instructions.size();
-        
         for( int i = 0; i < size_i; ++i) {
-            result += p.showInstruction(this->instructions[i]);
+            result += this->instructions[i].as_string;
             if(i < size_i - 1) {
                 result += L"; ";
-            } else {
-                result += L";";
             }
         }
         std::wcout << result;
@@ -2463,11 +2457,20 @@ std::wostream& operator<< (std::wostream& wos, const Var& var)
     }
     case INST: 
     {
-        return wos << L"INST" << var.type;
+        Parser p;
+        std::wstring result = L"";
+        int size_i = (int)var.instructions.size();
+        for( int i = 0; i < size_i; ++i) {
+            result += var.instructions[i].as_string;
+            if(i < size_i - 1) {
+                result += L"; ";
+            }
+        }
+        return wos << result;
         break;
     }
     default:
-        return wos << L"UNKNOWN" << var.type;
+        return wos << L"UNKNOWN";
     }
 }
 
@@ -2517,6 +2520,8 @@ Var& Var::operator= (const Var& var) {
     if(this->type == INST) {
         this->instructions = var.instructions;
     }
+    //this->is_const = var.is_const;
+    this->deactivate = var.deactivate;
     return *this; 
 }
 

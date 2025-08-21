@@ -1,7 +1,7 @@
-vtoarr: $x, 1, 2, 3, 4, 5, 6, 7;
-finalize: $x[0];
-change: $x[(calc: '-', $, 1, 1)], 3;
-print: $x, '\n';
+inst: $x, (calc: '*', $, (input: $), (input: $));
+vtoarr: $arr, 0, 1, 2, $x;
+change: $arr[0], $arr[3];
+print: $arr[(e: $, $arr[0])];
 ##
 var: $0, 13.9;
 var: $1, 6;
@@ -68,14 +68,14 @@ label: &input;
 jifnot: (castable: 'ntg', $, $x), &repeat_input;
 ##
 
-
+##
 #Замер времени выполнения
 var: $time; hrt: $time;
 
 var: $val, 5;
 var: $i, 0; label: &loop;
 	trigon: 'csc', $, (degtorad: $, 45);
-	##jswitch: $val, 1, &la, 2, &lb, 3, &lc, 4, &ld, &default;
+	jswitch: $val, 1, &la, 2, &lb, 3, &lc, 4, &ld, &default;
 
 	label: &la;
 		#print: 'Вы ввели 1', '\n';
@@ -96,9 +96,9 @@ var: $i, 0; label: &loop;
 	label: &default;
 		#print: 'Вы ввели другую букву', '\n';
 
-	label: &endswitch;##
+	label: &endswitch;
 jif: (calc: 'inc', $i; comp: '<', $, $i, 1000000), &loop; free: $i;
 
 print: (calc: '/', $, (to: 'dbl', $, (calc: '-', $, (hrt: $), $time)), 1000000000.0), '\n';
-
+##
 end: 0; 

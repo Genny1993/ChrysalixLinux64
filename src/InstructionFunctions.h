@@ -91,6 +91,10 @@ void radtodeg(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 void variance(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void castchk(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void finalize(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void constv(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void isconst(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void inst(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void e(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -175,5 +179,9 @@ struct InstructionMap {
 		&variance,
 		&castchk,
 		&finalize,
+		&constv,
+		&isconst,
+		&inst,
+		&e,
 	};
 };

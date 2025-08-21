@@ -120,7 +120,12 @@ Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m) 
 			return *value;
 		} else {
 			try {
-				return (*heap).at(val->getWStr());
+				const Var &temp = (*heap).at(val->getWStr());
+				if(temp.deactivate == true && temp.type == INST) {
+					return temp;
+				} else {
+					return getValue(&(*heap).at(val->getWStr()), heap, m);
+				}
 			}
 			catch (std::out_of_range& ex) {
 				std::string temp = ex.what();
@@ -129,14 +134,18 @@ Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m) 
 		}
 	}
 	else if((*val).type == Type::INST) {
-		InstructionMap inst;
-		int size = (int)(*val).instructions.size();
-		Var result;
-		for(int i = 0; i < size; ++i) {		
-			inst.functions[(*val).instructions[i].opCode](m, &(*val).instructions[i], false, false, false);
-			result = (*heap)[L"$"];
+		if((*val).deactivate == true) {
+			return *val;
+		} else {
+			InstructionMap inst;
+			int size = (int)(*val).instructions.size();
+			Var result;
+			for(int i = 0; i < size; ++i) {		
+				inst.functions[(*val).instructions[i].opCode](m, &(*val).instructions[i], false, false, false);
+				result = (*heap)[L"$"];
+			}
+			return result;
 		}
-		return result;
 	}
 	
 	return *val;
@@ -282,6 +291,7 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 					}
 				}
 			}
+
 			return *value;
 		}
 		else {

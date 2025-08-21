@@ -85,6 +85,10 @@ enum OP_CODE {
     VARIANCE,
     CASTCHK,
     FINALIZE,
+    CONST,
+    ISCONST,
+    INSTRUCT,
+    E,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -171,5 +175,9 @@ struct CTable {
         {L"VARIANCE", OP_CODE::VARIANCE}, {L"variance", OP_CODE::VARIANCE},
         {L"CASTCHK", OP_CODE::CASTCHK}, {L"castchk", OP_CODE::CASTCHK},
         {L"FINALIZE", OP_CODE::FINALIZE}, {L"finalize", OP_CODE::FINALIZE},
+        {L"CONST", OP_CODE::CONST}, {L"const", OP_CODE::CONST},
+        {L"ISCONST", OP_CODE::ISCONST}, {L"isconst", OP_CODE::ISCONST},
+        {L"INST", OP_CODE::INSTRUCT}, {L"inst", OP_CODE::INSTRUCT},
+        {L"E", OP_CODE::E}, {L"e", OP_CODE::E},
     };
 };

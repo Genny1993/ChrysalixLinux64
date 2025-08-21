@@ -50,6 +50,7 @@ public:
     Type type = NIL;
     std::vector<Instruction> instructions;
     bool is_const = false;
+    bool deactivate = false;
     //Конструкторы для обычны типов данных
     Var(const Var&) = default;
     Var();

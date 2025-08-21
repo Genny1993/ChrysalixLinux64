@@ -2571,3 +2571,98 @@ void finalize(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 		if(iterate){++(*m).instruct_number;}
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// CONST
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void constv(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"CONST";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkExistValue(&(*i).parameters[0], m);
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap, m);
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()].is_const = true;
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ISCONST
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void isconst(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"ISCONST";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var(getValue(&(*i).parameters[1], &(*m).heap, m).is_const);
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// INST
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void inst(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"INST";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkExistValue(&(*i).parameters[0], m);
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		if((*i).parameters[1].type != Type::INST) {
+			throw std::wstring{ LangLib::getTrans(L"INST: Инструкция принимает только блок инструкций\n") };
+		}
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = (*i).parameters[1];
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()].deactivate = true;
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// E
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void e(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"E";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		Var temp = getValue(&(*i).parameters[1], &(*m).heap, m);
+		temp.deactivate = false;
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&temp, &(*m).heap, m);
+		if(iterate){++(*m).instruct_number;}
+	}
+}
