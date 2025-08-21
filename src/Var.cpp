@@ -795,7 +795,6 @@ Var Var::toSTR() const {
         str+= L"}";
         return Var(str);
     } else if (this->type == INST) {
-        Parser p;
         std::wstring result = L"";
         int size_i = (int)this->instructions.size();
         for( int i = 0; i < size_i; ++i) {
@@ -896,6 +895,8 @@ Var Var::toINST() const {
         }
 
         return result;
+    } else if (this->type == INST) {
+        return *this;
     } else {
         std::wstring error = LangLib::getTrans(L"Только тип STR можно привести к типу INST\n");
     }
@@ -945,7 +946,6 @@ void Var::print() {
         }
         break;
     case INST: {
-        Parser p;
         std::wstring result = L"";
         int size_i = (int)this->instructions.size();
         for( int i = 0; i < size_i; ++i) {
@@ -2457,7 +2457,6 @@ std::wostream& operator<< (std::wostream& wos, const Var& var)
     }
     case INST: 
     {
-        Parser p;
         std::wstring result = L"";
         int size_i = (int)var.instructions.size();
         for( int i = 0; i < size_i; ++i) {

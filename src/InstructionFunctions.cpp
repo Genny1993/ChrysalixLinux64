@@ -52,7 +52,7 @@ void end(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 	}
 	else {
 		(*m).ret_data = getValue(&(*i).parameters[0], &(*m).heap, m);
-		(*m).instruct_number = -1;
+		(*m).instruct_number = -2147483648;
 	}
 }
 
@@ -2662,7 +2662,100 @@ void e(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	else {
 		Var temp = getValue(&(*i).parameters[1], &(*m).heap, m);
 		temp.deactivate = false;
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&temp, &(*m).heap, m);
+		setValue(&(*i).parameters[0], &(*m).heap, m) = getValue(&temp, &(*m).heap, m);
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PARSE
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void parse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"PARSE";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		Var temp = getValue(&(*i).parameters[1], &(*m).heap, m);
+		temp = temp.toSTR().toINST();
+		temp.deactivate = true;
+
+		int size = temp.instructions.size();
+		for( int i = 0; i < size; ++i) {
+			validateInstruction(temp.instructions[i], m, true);	
+		}
+
+		if((*m).heap.find((*i).parameters[0].toSTR().str)== (*m).heap.end()) {
+			(*m).heap[(*i).parameters[0].toSTR().str] = temp;
+		} else {
+			setValue(&(*i).parameters[0], &(*m).heap, m) = temp;
+		}
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// UNPARSE
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void unparse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"UNPARSE";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		Var temp = getValue(&(*i).parameters[1], &(*m).heap, m).toINST();
+		std::wstring result = L"";
+        int size_i = (int)temp.instructions.size();
+        for( int i = 0; i < size_i; ++i) {
+            result += temp.instructions[i].as_string;
+            if(i < size_i - 1) {
+                result += L"; ";
+            }
+        }
+		setValue(&(*i).parameters[0], &(*m).heap, m)  = Var(result);
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PE
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void pe(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"PE";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		Var temp = getValue(&(*i).parameters[1], &(*m).heap, m);
+		temp = temp.toSTR().toINST();
+
+		int size = temp.instructions.size();
+		for( int i = 0; i < size; ++i) {
+			validateInstruction(temp.instructions[i], m, true);	
+		}
+		setValue(&(*i).parameters[0], &(*m).heap, m) = getValue(&temp, &(*m).heap, m);
 		if(iterate){++(*m).instruct_number;}
 	}
 }

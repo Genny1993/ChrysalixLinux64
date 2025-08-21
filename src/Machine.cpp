@@ -34,7 +34,7 @@ void Machine::prepare() {
 
 Var Machine::go() {
 	InstructionMap inst;
-	while (this->instruct_number != -1) {
+	while (this->instruct_number > -1) {
 		if (this->instruct_number >= this->instruct_count) {
 			throw std::wstring{ LangLib::getTrans(L"Ошибка после выполнения инструкции ") + std::to_wstring(this->instruct_number) + L" (" + this->instructions[(long long int)this->instruct_number - 1].as_string + LangLib::getTrans(L"): Неожиданный конец программы. Пропущена инструкция END\n") };
 		}

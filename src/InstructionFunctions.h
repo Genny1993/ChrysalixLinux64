@@ -95,6 +95,9 @@ void constv(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 void isconst(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void inst(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void e(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void parse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void unparse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void pe(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -183,5 +186,8 @@ struct InstructionMap {
 		&isconst,
 		&inst,
 		&e,
+		&parse,
+		&unparse,
+		&pe,
 	};
 };

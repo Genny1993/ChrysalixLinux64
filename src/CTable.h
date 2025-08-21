@@ -89,6 +89,9 @@ enum OP_CODE {
     ISCONST,
     INSTRUCT,
     E,
+    PARSE,
+    UNPARSE,
+    PE,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -179,5 +182,8 @@ struct CTable {
         {L"ISCONST", OP_CODE::ISCONST}, {L"isconst", OP_CODE::ISCONST},
         {L"INST", OP_CODE::INSTRUCT}, {L"inst", OP_CODE::INSTRUCT},
         {L"E", OP_CODE::E}, {L"e", OP_CODE::E},
+        {L"PARSE", OP_CODE::PARSE}, {L"parse", OP_CODE::PARSE},
+        {L"UNPARSE", OP_CODE::UNPARSE}, {L"unparse", OP_CODE::UNPARSE},
+        {L"PE", OP_CODE::PE}, {L"pe", OP_CODE::PE},
     };
 };

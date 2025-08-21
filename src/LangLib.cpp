@@ -112,6 +112,7 @@ std::unordered_map<std::wstring, std::wstring> ru = {
 	{L": Неизвестная тригонометрическая функция\n", L": Неизвестная тригонометрическая функция\n"},
 	{L": Константу нельзя изменить\n", L": Константу нельзя изменить\n"},
 	{L"Нулевой регистр невозможно сделать константой!\n", L"Нулевой регистр невозможно сделать константой!\n"},
+	{L"INST: Инструкция принимает только блок инструкций\n", L"INST: Инструкция принимает только блок инструкций\n"},
 };
 
 std::unordered_map<std::wstring, std::wstring> en = {
@@ -210,6 +211,7 @@ std::unordered_map<std::wstring, std::wstring> en = {
 	{L": Неизвестная тригонометрическая функция\n", L": Unknown trigonometric function\n"},
 	{L": Константу нельзя изменить\n", L": Constant cannot be changed\n"},
 	{L"Нулевой регистр невозможно сделать константой!\n", L"Zero register cannot be made a constant!\n"},
+	{L"INST: Инструкция принимает только блок инструкций\n", L"INST: Instruction includes only block instructions\n"},
 };
 
 LANGUAGES LangLib::current_lang = RU;
