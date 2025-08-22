@@ -114,7 +114,7 @@ std::unordered_map<std::wstring, std::wstring> ru = {
 	{L"Нулевой регистр невозможно сделать константой!\n", L"Нулевой регистр невозможно сделать константой!\n"},
 	{L"INST: Инструкция принимает только блок инструкций\n", L"INST: Инструкция принимает только блок инструкций\n"},
 	{L"IF: Второй и третий параметр должны быть блоками инструкций\n", L"IF: Второй и третий параметр должны быть блоками инструкций\n"},
-	{L"FOR: все параметры должны быть блоками инструкций\n", L"FOR: все параметры должны быть блоками инструкций\n"},
+	{L"Все параметры должны быть блоками инструкций\n", L"Все параметры должны быть блоками инструкций\n"},
 };
 
 std::unordered_map<std::wstring, std::wstring> en = {
@@ -215,7 +215,7 @@ std::unordered_map<std::wstring, std::wstring> en = {
 	{L"Нулевой регистр невозможно сделать константой!\n", L"Zero register cannot be made a constant!\n"},
 	{L"INST: Инструкция принимает только блок инструкций\n", L"INST: Instruction includes only block instructions\n"},
 	{L"IF: Второй и третий параметр должны быть блоками инструкций\n", L"IF: Second and third parameters must be instruction blocks\n"},
-	{L"FOR: все параметры должны быть блоками инструкций\n", L"FOR: all parameters must be instruction blocks\n"},
+	{L"Все параметры должны быть блоками инструкций\n", L"All parameters must be instruction blocks\n"},
 };
 
 LANGUAGES LangLib::current_lang = RU;

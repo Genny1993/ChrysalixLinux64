@@ -96,6 +96,8 @@ enum OP_CODE {
     FOR,
     BREAK,
     CONTINUE,
+    WHILE,
+    DOWHILE,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -193,5 +195,7 @@ struct CTable {
         {L"FOR", OP_CODE::FOR}, {L"for", OP_CODE::FOR},
         {L"BREAK", OP_CODE::BREAK}, {L"break", OP_CODE::BREAK},
         {L"CONTINUE", OP_CODE::CONTINUE}, {L"continue", OP_CODE::CONTINUE},
+        {L"WHILE", OP_CODE::WHILE}, {L"while", OP_CODE::WHILE},
+        {L"DOWHILE", OP_CODE::DOWHILE}, {L"dowhile", OP_CODE::DOWHILE},
     };
 };

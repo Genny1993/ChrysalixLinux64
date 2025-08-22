@@ -53,6 +53,7 @@ void end(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 	else {
 		(*m).ret_data = getValue(&(*i).parameters[0], &(*m).heap, m);
 		(*m).instruct_number = -2147483648;
+		throw Var(L"END");
 	}
 }
 
@@ -2822,7 +2823,7 @@ void fori(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 		Var body = (*i).parameters[4];
 
 		if(init.type != INST || condition.type != INST || increment.type != INST || postcycle.type != INST || body.type != INST) {
-			throw std::wstring{ LangLib::getTrans(L"FOR: все параметры должны быть блоками инструкций\n") };
+			throw std::wstring{ L"FOR: " + LangLib::getTrans(L"Все параметры должны быть блоками инструкций\n") };
 		}
 
 		getValue(&init, &(*m).heap, m);
@@ -2916,6 +2917,114 @@ void continuei(Machine* m, Instruction* i, bool prevalidate, bool prego, bool it
 			cstruct.emplace_back(1);
 		}
 		throw cstruct;
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// WHILE
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void whilei(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"WHILE";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+	}
+	else {
+
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		Var condition = (*i).parameters[0];
+		Var body = (*i).parameters[1];
+
+		if(condition.type != INST || body.type != INST) {
+			throw std::wstring{ L"WHILE: " + LangLib::getTrans(L"Все параметры должны быть блоками инструкций\n") };
+		}
+
+		while(true) {
+			if(!getValue(&condition, &(*m).heap, m).toBLN().data.bln) {
+				break;
+			}
+			try{
+				getValue(&body, &(*m).heap, m);
+			}
+			catch(std::vector<int>& e) {
+				if(e[0] == 0) {
+					if(e[1] <= 1) {
+						break;
+					} else {
+						e[1] -= 1;
+						throw e;
+					}
+				}
+				if(e[0] == 1) {
+					if(e[1] <= 1) {
+						continue;
+					}  else {
+						e[1] -= 1;
+						throw e;
+					}
+				}
+			}				
+		}
+
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// DOWHILE
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void dowhile(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"DOWHILE";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+	}
+	else {
+
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		Var condition = (*i).parameters[0];
+		Var body = (*i).parameters[1];
+
+		if(condition.type != INST || body.type != INST) {
+			throw std::wstring{ L"DOWHILE: " + LangLib::getTrans(L"Все параметры должны быть блоками инструкций\n") };
+		}
+
+		while(true) {
+			try{
+				getValue(&body, &(*m).heap, m);
+			}
+			catch(std::vector<int>& e) {
+				if(e[0] == 0) {
+					if(e[1] <= 1) {
+						break;
+					} else {
+						e[1] -= 1;
+						throw e;
+					}
+				}
+				if(e[0] == 1) {
+					if(e[1] <= 1) {
+						continue;
+					}  else {
+						e[1] -= 1;
+						throw e;
+					}
+				}
+			}		
+			if(!getValue(&condition, &(*m).heap, m).toBLN().data.bln) {
+				break;
+			}		
+		}
+
 		if(iterate){++(*m).instruct_number;}
 	}
 }
