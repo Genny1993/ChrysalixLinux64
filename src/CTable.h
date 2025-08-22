@@ -98,6 +98,10 @@ enum OP_CODE {
     CONTINUE,
     WHILE,
     DOWHILE,
+    SWITCH,
+    ISCODE,
+    SCONST,
+    SFINALIZE,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -197,5 +201,9 @@ struct CTable {
         {L"CONTINUE", OP_CODE::CONTINUE}, {L"continue", OP_CODE::CONTINUE},
         {L"WHILE", OP_CODE::WHILE}, {L"while", OP_CODE::WHILE},
         {L"DOWHILE", OP_CODE::DOWHILE}, {L"dowhile", OP_CODE::DOWHILE},
+        {L"SWITCH", OP_CODE::SWITCH}, {L"switch", OP_CODE::SWITCH},
+        {L"ISCODE", OP_CODE::ISCODE}, {L"iscode", OP_CODE::ISCODE},
+        {L"SCONST", OP_CODE::SCONST}, {L"sconst", OP_CODE::SCONST},
+        {L"SFINALIZE", OP_CODE::SFINALIZE}, {L"sfinalize", OP_CODE::SFINALIZE},
     };
 };

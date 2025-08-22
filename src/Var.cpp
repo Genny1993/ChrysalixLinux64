@@ -2519,7 +2519,9 @@ Var& Var::operator= (const Var& var) {
     if(this->type == INST) {
         this->instructions = var.instructions;
     }
+    //Обычная константность не наследуется
     //this->is_const = var.is_const;
+    this->is_superconst = var.is_superconst;
     this->deactivate = var.deactivate;
     return *this; 
 }

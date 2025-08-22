@@ -115,7 +115,11 @@ std::unordered_map<std::wstring, std::wstring> ru = {
 	{L"INST: Инструкция принимает только блок инструкций\n", L"INST: Инструкция принимает только блок инструкций\n"},
 	{L"IF: Второй и третий параметр должны быть блоками инструкций\n", L"IF: Второй и третий параметр должны быть блоками инструкций\n"},
 	{L"Все параметры должны быть блоками инструкций\n", L"Все параметры должны быть блоками инструкций\n"},
+	{L"Каждый нечетный параметр кроме первого должны быть блоком инструкций\n", L"Каждый нечетный параметр кроме первого должны быть блоком инструкций\n"},
+	{L"Последний параметр должен быть блоком инструкций\n", L"Последний параметр должен быть блоком инструкций\n"},
+	{L"Неизвестный тип константы\n", L"Неизвестный тип константы\n"},
 };
+
 
 std::unordered_map<std::wstring, std::wstring> en = {
 	{L"", L""},
@@ -216,6 +220,9 @@ std::unordered_map<std::wstring, std::wstring> en = {
 	{L"INST: Инструкция принимает только блок инструкций\n", L"INST: Instruction includes only block instructions\n"},
 	{L"IF: Второй и третий параметр должны быть блоками инструкций\n", L"IF: Second and third parameters must be instruction blocks\n"},
 	{L"Все параметры должны быть блоками инструкций\n", L"All parameters must be instruction blocks\n"},
+	{L"Каждый нечетный параметр кроме первого должны быть блоком инструкций\n", L"Every odd parameter except the first must be a block of instructions\n"},
+	{L"Последний параметр должен быть блоком инструкций\n", L"The last parameter must be a block of instructions\n"},
+	{L"Неизвестный тип константы\n", L"Unknown constant type\n"},
 };
 
 LANGUAGES LangLib::current_lang = RU;

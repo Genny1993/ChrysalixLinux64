@@ -2565,7 +2565,7 @@ void finalize(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 		if(iterate){++(*m).instruct_number;}
 	}
 	else {
-		if((*i).parameters[0].toSTR().str == L"$") {
+		if((*i).parameters[0].toSTR().str == std::wstring_view(L"$")) {
 			throw std::wstring{ LangLib::getTrans(L"Нулевой регистр невозможно сделать константой!\n") };
 		}
 		setValue(&(*i).parameters[0], &(*m).heap, m).is_const = true;
@@ -2602,8 +2602,8 @@ void constv(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 void isconst(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	if (prevalidate) {
 		std::wstring name = L"ISCONST";
-		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
-		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 3);
+		requiredVar(&(*i).parameters[1], &name, LangLib::getTrans(PAR1));
 	}
 	else {
 		checkNotExistValue(&(*i).parameters[0], m);
@@ -2613,7 +2613,14 @@ void isconst(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		if(iterate){++(*m).instruct_number;}
 	}
 	else {
-		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = Var(getValue(&(*i).parameters[1], &(*m).heap, m).is_const);
+		std::wstring type = getValue(&(*i).parameters[0], &(*m).heap, m).toSTR().str;
+		if(type == std::wstring_view(L"CONST") || type == std::wstring_view(L"const")) {
+			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = Var(getValue(&(*i).parameters[2], &(*m).heap, m).is_const);
+		} else if(type == std::wstring_view(L"SCONST") || type == std::wstring_view(L"sconst")) {
+			(*m).heap[(*i).parameters[1].toSTR().getWStr()] = Var(getValue(&(*i).parameters[2], &(*m).heap, m).is_superconst);
+		} else {
+			throw std::wstring{ type + L": " + LangLib::getTrans(L"Неизвестный тип константы\n") };
+		}
 		if(iterate){++(*m).instruct_number;}
 	}
 }
@@ -3025,6 +3032,126 @@ void dowhile(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 			}		
 		}
 
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SWITCH
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void switchi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"SWITCH";
+		checkParameterCount(MINIMAL, (int)(*i).parameters.size(), &name, 0, 4);
+		if(i->parameters.size() % 2) {
+			throw std::wstring{ LangLib::getTrans(L"Инструкция принимает четное количество параметров!\n") };
+		}
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		Var swtch = getValue(&(*i).parameters[0], &(*m).heap, m);
+		int size = i->parameters.size();
+		for(int is = 1; is < size - 2; is+=2) {
+			if(swtch.eq(L"strict", getValue( &(*i).parameters[is], &(*m).heap, m)).data.bln) {
+				Var temp = (*i).parameters[is+1];
+				if(temp.type != INST) {
+					throw std::wstring{ L"SWITCH: " + LangLib::getTrans(L"Каждый нечетный параметр кроме первого должны быть блоком инструкций\n") };
+				}
+				getValue(&temp, &(*m).heap, m);
+				if(iterate){++(*m).instruct_number;}
+				return;
+			}
+		}
+		Var tempdefault = (*i).parameters[i->parameters.size() - 1];
+		if(tempdefault.type != INST) {
+			throw std::wstring{ L"SWITCH: " + LangLib::getTrans(L"Последний параметр должен быть блоком инструкций\n") };
+		}
+		getValue( &tempdefault, &(*m).heap, m);
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ISCODE
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void iscode(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"ISCODE";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		try{	
+			Var temp = getValue(&(*i).parameters[1], &(*m).heap, m);
+			temp = temp.toSTR().toINST();
+			temp.deactivate = true;
+
+			int size = temp.instructions.size();
+			for( int i = 0; i < size; ++i) {
+				validateInstruction(temp.instructions[i], m, true);	
+			}
+			setValue(&(*i).parameters[0], &(*m).heap, m) = Var(true);
+		}
+		catch(const std::wstring& e) {
+			setValue(&(*i).parameters[0], &(*m).heap, m) = Var(false);
+		}
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SCONST
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void sconst(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"SCONST";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkExistValue(&(*i).parameters[0], m);
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()] = getValue(&(*i).parameters[1], &(*m).heap, m);
+		(*m).heap[(*i).parameters[0].toSTR().getWStr()].is_superconst = true;
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SFINALIZE
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void sfinalize(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"SFINALIZE";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 1);
+		requiredVar(&(*i).parameters[0], &name, LangLib::getTrans(PAR2));
+	}
+	else {
+		checkNotExistValue(&(*i).parameters[0], m);
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		if((*i).parameters[0].toSTR().str == L"$") {
+			throw std::wstring{ LangLib::getTrans(L"Нулевой регистр невозможно сделать константой!\n") };
+		}
+		setValue(&(*i).parameters[0], &(*m).heap, m).is_superconst = true;
 		if(iterate){++(*m).instruct_number;}
 	}
 }

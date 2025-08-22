@@ -1,45 +1,9 @@
 var: $time; hrt: $time;
-var: $x, 1;
-dowhile: (comp: '<', $, $x, 10), 
-(
-	print: 'выполнилось хотя бы 1 раз\n';
-	calc: 'inc', $x;
-);
-free: $x;
-
-##
-for: (var: $i, 0; var: $x), (comp: '<', $, $i, 100), (calc: 'inc', $i), (free: $i, $x),
-(
-	input: $x;
-	if: (comp: '<', $, $x, 10), (
-		nop:;
-	),
-	(
-		break:;
-	);
-	print: 'Вы ввели число меньше 10, продолжение цикла', '\n';
-);
-##
-##
-for: (var: $i, 0), (comp: '<', $, $i, 3), (calc: 'inc', $i), (free: $i),
-(
-	for: (var: $j, 0), (comp: '<', $, $j, 3), (calc: 'inc', $j), (free: $j),
-	(
-		print: $i, ':', $j, '\n';
-		print: 'Выйти из всех вложенных циклов? ';
-		input: $;
-		if: (comp: '===', $, $, 'Y'), 
-		(
-			print: 'Выходим из циклов\n';
-			break: 2;
-		), 
-		(
-			print: 'Продолжаем циклы\n';
-		);
-	);
-	print: 'Внешний цикл\n';
-);
-##
+print:	'          ／l、
+         （ﾟ､ ｡７
+            l、ﾞ~ヽ
+            じしf_, )ノ', '\n';
+	print: '♥️ MEOW! I LOVE YOU ALL SO MUCH!♥️', '\n';
 print: '=======================================\n';
 print: 'Добро пожаловать в игру "Угадай число"!\n';
 print: '=======================================\n';
@@ -106,125 +70,7 @@ while: (change: $, true), (
 	);
 );
 
-end: 0;
-
 print: (calc: '/', $, (to: 'dbl', $, (calc: '-', $, (hrt: $), $time)), 1000000000.0), '\n';
 free: $time;
-##
-var: $time; hrt: $time;
-var: $i, 0; label: &loop;
-	nop:;
-jif: (calc: 'inc', $i; comp: '<', $, $i, 1000000), &loop; free: $i;
-print: (calc: '/', $, (to: 'dbl', $, (calc: '-', $, (hrt: $), $time)), 1000000000.0), '\n';
-free: $time;
-##
-##
-if: (comp: '>', $, (input: $), 10),
-(
-	print: 'Вы ввели число больше 10', '\n';
-),
-(
-	print: 'Вы ввели число меньше 10 или 10', '\n';
-);
-##
-##
-var: $0, 13.9;
-var: $1, 6;
-var: $2, 13;
-jifelse: (between: $, $0, $1, $2), &if, &else;
-label: &if;
-	print: 'Число ', $0, ' находится в промежутке ', $1, ', ', $2, '\n';
-jump: &endif;
-
-label: &else;
-	print: 'Число ', $0, ' не находится в промежутке ', $1, ', ', $2, '\n';
-label: &endif;
-##
-
-##
-	print:	'          ／l、
-         （ﾟ､ ｡７
-            l、ﾞ~ヽ
-            じしf_, )ノ', '\n';
-	print: '♥️ MEOW! I LOVE YOU ALL SO MUCH!♥️', '\n';
-	print: '\'1\'\'';
-#Циклический расчет факториала:
-	var: $n, 20;		#Факториал чего считаем
-	var: $i, 1;			#С какого числа ведем итерацию
-	var: $result, 1;	#Переменная результата
-	var: $j, 1;			#Итератор главного цикла
-	var: $max, 2;  #Максимальне количество итераций главного цикла.
-
-label: &main_loop;
-	print: 'Введите число, по которому будет расчет факториала: ';
-	input: $n;
-
-	label: &cycle_start;
-		calc: '*', $result, $i;
-		calc: 'inc', $i;
-	jif: (comp: '<=', $, $i, $n), &cycle_start;
-
-	print: 'Факториал ', $n, ' равен ', $result, '\n';
-	
-	#Сбрасывем значения переменных перед следующей итерацией
-	change: $i, 1; change: $result, 1;
-
-	calc: 'inc', $j;
-jif: (comp: '<', $, $j, $max), &main_loop;	
-##
-
-##
-var: $i, 0; label: &loop;
-
-jif: (calc: 'inc', $i; comp: '<', $, $i, 1000000), &loop; free: $i;
-##
-
-##
-#Ввод числа пользователем
-
-
-	var: $x;
-	print: 'Введите число: ';
-jump: &input;
-label: &repeat_input;
-	print: 'Вы ввели не число, введите число еще раз: ';
-label: &input;
-	input: $x;
-jifnot: (castable: 'ntg', $, $x), &repeat_input;
-##
-
-
-#Замер времени выполнения
-##
-var: $time; hrt: $time;
-var: $i, 0; label: &loop;
-	#parse: $, 'calc: '*', $, 1, 1;';
-	#trigon: 'csc', $, (degtorad: $, 45);
-	jswitch: $val, 1, &la, 2, &lb, 3, &lc, 4, &ld, &default;
-
-	label: &la;
-		#print: 'Вы ввели 1', '\n';
-	jump: &endswitch;
-
-	label: &lb;
-		#print: 'Вы ввели 2', '\n';
-	jump: &endswitch;
-
-	label: &lc;
-		#print: 'Вы ввели 3', '\n';
-	jump: &endswitch;
-
-	label: &ld;
-		#print: 'Вы ввели 4', '\n';
-	jump: &endswitch;
-
-	label: &default;
-		#print: 'Вы ввели другую букву', '\n';
-
-	label: &endswitch;
-jif: (calc: 'inc', $i; comp: '<', $, $i, 10000), &loop; free: $i;
-
-print: (calc: '/', $, (to: 'dbl', $, (calc: '-', $, (hrt: $), $time)), 1000000000.0), '\n';
-##
 
 end: 0;

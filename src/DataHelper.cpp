@@ -152,7 +152,7 @@ Var getValue( Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 }
 
 Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m) {
-	if(val->is_const) {
+	if(val->is_const || val->is_superconst) {
 		throw std::wstring{ val->toSTR().str + LangLib::getTrans(L": Константу нельзя изменить\n") };
 	}
 	if(val->type == STR && (*val).getWStr()[0] == L'$') {
@@ -161,7 +161,7 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 			Var *value;
 			try{
 				value = &(heap->at(val->str));
-				if(value->is_const) {
+				if(value->is_const || value->is_superconst) {
 					throw std::wstring{ val->toSTR().str + LangLib::getTrans(L": Константу нельзя изменить\n") };
 				}
 			}
@@ -176,7 +176,7 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 						if(value->type == ARR) {
 							try {
 								value = &(value->arr.at(index.toNTG().data.ntg));
-								if(value->is_const) {
+								if(value->is_const || value->is_superconst) {
 									throw std::wstring{ val->toSTR().str + LangLib::getTrans(L": Константу нельзя изменить\n") };
 								}
 							} catch (std::out_of_range& ex) {
@@ -186,7 +186,7 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 						} else if(value->type == MAP) {
 							try {
 								value = &(value->mp.at(index.toSTR().str));
-								if(value->is_const) {
+								if(value->is_const || value->is_superconst) {
 									throw std::wstring{ val->toSTR().str + LangLib::getTrans(L": Константу нельзя изменить\n") };
 								}
 							} catch (std::out_of_range& ex) {
@@ -213,7 +213,7 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 							}
 							try {
 								value = &(value->arr.at(index));
-								if(value->is_const) {
+								if(value->is_const || value->is_superconst) {
 									throw std::wstring{ val->toSTR().str + LangLib::getTrans(L": Константу нельзя изменить\n") };
 								}
 							} 
@@ -236,7 +236,7 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 							}
 							try {
 								value = &(value->mp.at(index));
-								if(value->is_const) {
+								if(value->is_const || value->is_superconst) {
 									throw std::wstring{ val->toSTR().str + LangLib::getTrans(L": Константу нельзя изменить\n") };
 								}
 							} 
@@ -253,12 +253,12 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 						try {
 							if(val->arr[i].type == Type::INST) {
 								value = &(value->arr.at(getValue(&(val->arr[i]), heap, m).toNTG().data.ntg));
-								if(value->is_const) {
+								if(value->is_const || value->is_superconst) {
 									throw std::wstring{ val->toSTR().str + LangLib::getTrans(L": Константу нельзя изменить\n") };
 								}
 							} else {
 								value = &(value->arr.at(val->arr[i].toNTG().data.ntg));
-								if(value->is_const) {
+								if(value->is_const || value->is_superconst) {
 									throw std::wstring{ val->toSTR().str + LangLib::getTrans(L": Константу нельзя изменить\n") };
 								}
 							}
@@ -272,12 +272,12 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 						try{
 							if(val->arr[i].type == Type::INST) {
 								value = &(value->mp.at(getValue(&(val->arr[i]), heap, m).toSTR().str));
-								if(value->is_const) {
+								if(value->is_const || value->is_superconst) {
 									throw std::wstring{ val->toSTR().str + LangLib::getTrans(L": Константу нельзя изменить\n") };
 								}
 							} else {
 								value = &(value->mp.at(val->arr[i].toSTR().str));
-								if(value->is_const) {
+								if(value->is_const || value->is_superconst) {
 									throw std::wstring{ val->toSTR().str + LangLib::getTrans(L": Константу нельзя изменить\n") };
 								}
 							}
@@ -297,7 +297,7 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 		else {
 			try {
 				Var &ret = (*heap).at(val->str);
-				if(ret.is_const) {
+				if(ret.is_const || ret.is_superconst) {
 					throw std::wstring{ val->toSTR().str + LangLib::getTrans(L": Константу нельзя изменить\n") };
 				}
 				return ret;
