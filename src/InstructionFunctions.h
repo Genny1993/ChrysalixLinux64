@@ -98,6 +98,10 @@ void e(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void parse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void unparse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void pe(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void ifi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void fori(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void breaki(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void continuei(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -189,5 +193,9 @@ struct InstructionMap {
 		&parse,
 		&unparse,
 		&pe,
+		&ifi,
+		&fori,
+		&breaki,
+		&continuei,
 	};
 };

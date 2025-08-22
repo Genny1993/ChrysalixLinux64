@@ -8,7 +8,7 @@
 // getValue 
 // Возвращает значение параметра по имени переменной или литералу
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Var getValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m) {
+Var getValue( Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m) {
 	if ((*val).type == STR && (*val).getWStr()[0] == L'$') {
 		if((int)val->arr.size() > 0) {
 			int size = (int)val->arr.size();

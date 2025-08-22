@@ -28,6 +28,9 @@ void Machine::prepare() {
 		catch (const std::wstring& error_message) {
 			throw std::wstring{ LangLib::getTrans(L"Ошибка выполнения инструкции ") + std::to_wstring(this->instruct_number + 1) + L" (" + this->instructions[i].as_string + L"): " + error_message };
 		}
+		catch (const std::vector<int> & e) {
+			throw std::wstring{ LangLib::getTrans(L"Ошибка выполнения инструкции ") + std::to_wstring(this->instruct_number + 1) + L" (" + this->instructions[i].as_string + L"): " + std::to_wstring(e[0]) + L":" + std::to_wstring(e[1]) };
+		}
 	}
 	this->instruct_number = 0;
 }
@@ -44,6 +47,9 @@ Var Machine::go() {
 		}
 		catch (const std::wstring& error_message) {
 				throw std::wstring{ LangLib::getTrans(L"Ошибка выполнения инструкции ") + std::to_wstring(this->instruct_number + 1) + L" (" + this->instructions[this->instruct_number].as_string + L"): " + error_message };
+		}
+		catch (const std::vector<int>& e) {
+			throw std::wstring{ LangLib::getTrans(L"Ошибка выполнения инструкции ") + std::to_wstring(this->instruct_number + 1) + L" (" + this->instructions[this->instruct_number].as_string + L"): " + std::to_wstring(e[0]) + L":" + std::to_wstring(e[1]) };
 		}
 	}
 	return this->ret_data;

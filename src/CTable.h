@@ -92,6 +92,10 @@ enum OP_CODE {
     PARSE,
     UNPARSE,
     PE,
+    IF,
+    FOR,
+    BREAK,
+    CONTINUE,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -185,5 +189,9 @@ struct CTable {
         {L"PARSE", OP_CODE::PARSE}, {L"parse", OP_CODE::PARSE},
         {L"UNPARSE", OP_CODE::UNPARSE}, {L"unparse", OP_CODE::UNPARSE},
         {L"PE", OP_CODE::PE}, {L"pe", OP_CODE::PE},
+        {L"IF", OP_CODE::IF}, {L"if", OP_CODE::IF},
+        {L"FOR", OP_CODE::FOR}, {L"for", OP_CODE::FOR},
+        {L"BREAK", OP_CODE::BREAK}, {L"break", OP_CODE::BREAK},
+        {L"CONTINUE", OP_CODE::CONTINUE}, {L"continue", OP_CODE::CONTINUE},
     };
 };
