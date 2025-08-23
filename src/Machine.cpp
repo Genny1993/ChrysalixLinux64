@@ -3,11 +3,12 @@
 #include "LangLib.h"
 #include "Helpers.h"
 
-Machine::Machine(std::unordered_map<std::wstring, Var> in, bool dbg, bool soft) {
+Machine::Machine(std::unordered_map<std::wstring, Var> in, bool dbg, bool soft, bool silence) {
 	this->in_data = in;
 	this->debug = dbg;
 	this->instruct_number = 0;
 	this->softerrors = soft;
+	this->silence = silence;
 	this->tmp_count = 0;
 	this->instructions.reserve(10000);
 	this->heap.reserve(1000);
@@ -63,18 +64,30 @@ Var Machine::go() {
 		}
 		catch (const std::wstring& error_message) {
 			if(this->softerrors) {
-				std::wcout << error_message;
+				if(!this->silence) {
+					std::wcout << error_message;
+				}
 				++this->instruct_number;
 			} else {
-				throw std::wstring{ LangLib::getTrans(L"Ошибка выполнения инструкции ") + std::to_wstring(this->instruct_number + 1) + L" (" + this->instructions[this->instruct_number].as_string + L"): " + error_message };
+				if(!this->silence) {
+					throw std::wstring{ LangLib::getTrans(L"Ошибка выполнения инструкции ") + std::to_wstring(this->instruct_number + 1) + L" (" + this->instructions[this->instruct_number].as_string + L"): " + error_message };
+				} else {
+					throw std::wstring{ L"" };
+				}
 			}
 		}
 		catch (const std::vector<int>& e) {
 			if(this->softerrors) {
-				std::wcout << std::to_wstring(e[0]) + L":" + std::to_wstring(e[1]);
+				if(!this->silence) {
+					std::wcout << std::to_wstring(e[0]) + L":" + std::to_wstring(e[1]);
+				}
 				++this->instruct_number;
 			} else {
-				throw std::wstring{ LangLib::getTrans(L"Ошибка выполнения инструкции ") + std::to_wstring(this->instruct_number + 1) + L" (" + this->instructions[this->instruct_number].as_string + L"): " + std::to_wstring(e[0]) + L":" + std::to_wstring(e[1]) };
+				if(!this->silence) {
+					throw std::wstring{ LangLib::getTrans(L"Ошибка выполнения инструкции ") + std::to_wstring(this->instruct_number + 1) + L" (" + this->instructions[this->instruct_number].as_string + L"): " + std::to_wstring(e[0]) + L":" + std::to_wstring(e[1]) };
+				} else {
+					throw std::wstring{ L"" };
+				}
 			}
 		}
 		catch (const Var& e) {

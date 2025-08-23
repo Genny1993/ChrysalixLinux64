@@ -103,6 +103,9 @@ enum OP_CODE {
     SCONST,
     SFINALIZE,
     PLZDONTCRASH,
+    PLZSHUTUP,
+    TRY,
+    THROW,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -207,5 +210,8 @@ struct CTable {
         {L"SCONST", OP_CODE::SCONST}, {L"sconst", OP_CODE::SCONST},
         {L"SFINALIZE", OP_CODE::SFINALIZE}, {L"sfinalize", OP_CODE::SFINALIZE},
         {L"PLZDONTCRASH", OP_CODE::PLZDONTCRASH}, {L"plzdontcrash", OP_CODE::PLZDONTCRASH},
+        {L"PLZSHUTUP", OP_CODE::PLZSHUTUP}, {L"plzshutup", OP_CODE::PLZSHUTUP},
+        {L"TRY", OP_CODE::TRY}, {L"try", OP_CODE::TRY},
+        {L"THROW", OP_CODE::THROW}, {L"throw", OP_CODE::THROW},
     };
 };

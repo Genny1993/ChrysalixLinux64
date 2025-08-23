@@ -3180,4 +3180,92 @@ void plzdontcrash(Machine* m, Instruction* i, bool prevalidate, bool prego, bool
 		if(iterate){++(*m).instruct_number;}
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PLZSHUTUP
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void plzshutup(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"PLZSHUTUP";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 1);
+	}
+	else {
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		bool mode = getValue(&(*i).parameters[0], &(*m).heap, m).toBLN().data.bln;
+		if(mode) {
+			m->silence = true;
+		} else {
+			m->silence = false;
+		}
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TRY
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void tryi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"TRY";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 2);
+	}
+	else {
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		Var temp = (*i).parameters[0];
+		Var catchblock = (*i).parameters[1];
+		if(temp.type != INST || catchblock.type != INST) {
+			throw std::wstring{ L"TRY: " + LangLib::getTrans(L"Все параметры должны быть блоками инструкций\n") };
+		}
+		try{
+			getValue(&temp, &(*m).heap, m);
+		} 
+		catch(const std::wstring error) {
+			Var zerobuff = L"$";
+			setValue(&zerobuff, &(*m).heap, m) = Var(error);
+			getValue(&catchblock, &(*m).heap, m);
+		} 
+		catch (const std::vector<int>& error) {
+			Var zerobuff = L"$";
+			setValue(&zerobuff, &(*m).heap, m) = Var(std::to_wstring(error[0]) + L":" + std::to_wstring(error[1]));
+			getValue(&catchblock, &(*m).heap, m);
+		}
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// THROW
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void throwi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"THROW";
+		checkParameterCount(MINIMAL, (int)(*i).parameters.size(), &name, 0, 1);
+	}
+	else {
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		Var temp = (*i).parameters[0];
+		std::wstring str = L"";
+		for (Var& v : (*i).parameters)
+		{
+			str += getValue(&v, &(*m).heap, m).toSTR().str;
+		}
+		throw str;
+		if(iterate){++(*m).instruct_number;}
+	}
+}
 	

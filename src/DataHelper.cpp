@@ -140,8 +140,16 @@ Var getValue( Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 			InstructionMap inst;
 			int size = (int)(*val).instructions.size();
 			Var result;
-			for(int i = 0; i < size; ++i) {		
-				inst.functions[(*val).instructions[i].opCode](m, &(*val).instructions[i], false, false, false);
+			for(int i = 0; i < size; ++i) {
+				if(m->softerrors) {
+					try {	
+						inst.functions[(*val).instructions[i].opCode](m, &(*val).instructions[i], false, false, false);
+					} catch (const std::wstring& error) {
+						if(!m->silence) { std:: wcout << error; }
+					}
+				} else {
+					inst.functions[(*val).instructions[i].opCode](m, &(*val).instructions[i], false, false, false);
+				}
 				result = (*heap)[L"$"];
 			}
 			return result;

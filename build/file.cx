@@ -1,3 +1,23 @@
+
+	var: $x, 'abc';
+	input: $x;
+	try: (to: 'ntg', $x),
+	(
+		print: 'Поймана ошибка: ', $;
+		print: 'Продолжаю работу\n';
+	);
+	print: $x, '\n';
+
+	try: (var: $x, 'abc'), (nop:;);
+	input: $x;
+	try: (to: 'ntg', $x;),
+	(
+		throw: 'ой, какая-то ошибка! ', $, '\n';
+	);
+	print: $x, '\n';
+
+end: 0;
+
 var: $time; hrt: $time;
 print:	'          ／l、
          （ﾟ､ ｡７
