@@ -40,7 +40,27 @@ int main(int argc, char* argv[])
         }
         catch (const std::wstring& error_message) {
             std::wstring temp = error_message;
-            std::wcout << L"😽3.0.0 alpha😽";
+            std::wstring repl_code = L"#REPL\n plzdontcrash: true; print: '♥️ =====================================================♥️ \\n'; print: '|CHRYSALIX REPL STARTED                                  |\\n';  print: '♥️ =====================================================♥️ \\n'; var:  $instruction__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; var: $result__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; var: $resulttmp__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; label: &loop__34567uhgfdqsde34567ujhgfdwt546yhgtfcds;         print: '|$ = ', $result__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; 	change: $result__34567uhgfdqsde34567ujhgfdwt546yhgtfcds, nil; 	print: '|>'; 	input:  $instruction__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; 	pe: $result__34567uhgfdqsde34567ujhgfdwt546yhgtfcds,  $instruction__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; 	jump: &loop__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; jump: &loop__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; end: 0;";
+            std::unordered_map<std::wstring, Var> map;
+            map.reserve(100);
+        
+            try {
+                Machine mchn(map, false);
+                Parser p = Parser();
+                std::vector<Instruction> instructions = p.parse(repl_code);
+                
+                int size = (int)instructions.size();
+                for(int i = 0; i < size; ++i) {
+                    mchn.instructions.emplace_back(instructions[i]);
+                }
+
+                mchn.prepare();
+                mchn.go();
+            }
+            catch (const std::wstring& error_message) {
+                std::wcout << std::endl << error_message;
+            }
+
             return 0;
         }
     }
@@ -55,7 +75,7 @@ int main(int argc, char* argv[])
         std::unordered_map<std::wstring, Var> map;
         map.reserve(100);
         
-        Machine mchn(map, false);
+        Machine mchn(map, false, false);
 
         //Загружаем и парсим исходный код
         auto begin = std::chrono::high_resolution_clock::now();

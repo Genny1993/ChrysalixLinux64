@@ -102,6 +102,7 @@ enum OP_CODE {
     ISCODE,
     SCONST,
     SFINALIZE,
+    PLZDONTCRASH,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -205,5 +206,6 @@ struct CTable {
         {L"ISCODE", OP_CODE::ISCODE}, {L"iscode", OP_CODE::ISCODE},
         {L"SCONST", OP_CODE::SCONST}, {L"sconst", OP_CODE::SCONST},
         {L"SFINALIZE", OP_CODE::SFINALIZE}, {L"sfinalize", OP_CODE::SFINALIZE},
+        {L"PLZDONTCRASH", OP_CODE::PLZDONTCRASH}, {L"plzdontcrash", OP_CODE::PLZDONTCRASH},
     };
 };

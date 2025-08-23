@@ -3155,3 +3155,29 @@ void sfinalize(Machine* m, Instruction* i, bool prevalidate, bool prego, bool it
 		if(iterate){++(*m).instruct_number;}
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PLZDONTCRASH
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void plzdontcrash(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"PLZDONTCRASH";
+		checkParameterCount(STRICTED, (int)(*i).parameters.size(), &name, 1);
+	}
+	else {
+	}
+
+	if (prego) {
+		if(iterate){++(*m).instruct_number;}
+	}
+	else {
+		bool mode = getValue(&(*i).parameters[0], &(*m).heap, m).toBLN().data.bln;
+		if(mode) {
+			m->softerrors = true;
+		} else {
+			m->softerrors = false;
+		}
+		if(iterate){++(*m).instruct_number;}
+	}
+}
+	

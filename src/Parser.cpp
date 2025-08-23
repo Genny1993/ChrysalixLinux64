@@ -11,7 +11,7 @@ void Parser::fileLoad(std::wstring file_name) {
     this->file_content = loadFile(this->file);
 }
 
-std::vector<Instruction> Parser::parse(std::wstring string) {
+std::vector<Instruction> Parser::parse(const std::wstring& string) {
 
     std::vector<Lexeme> lexemes = this->parseLex(string);
 
@@ -30,7 +30,7 @@ std::vector<Instruction> Parser::parse(std::wstring string) {
     return instructions;
 }
 
-Var Parser::parseVar(std::wstring val, int instruction) {
+Var Parser::parseVar(const std::wstring& val, const int& instruction) {
     std::wstring temp = val;
     temp.erase(0, temp.find_first_not_of(L" \n\r\t"));
     temp.erase(temp.find_last_not_of(L" \n\r\t") + 1);
@@ -269,7 +269,7 @@ Var Parser::parseVar(std::wstring val, int instruction) {
     return Var();
 }
 
-std::vector<Lexeme> Parser::parseLex(std::wstring val) {
+std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
     //Перебираем каждый символ в строке
     std::wstring str = L"";
     bool instruction_parameters = false;
@@ -636,7 +636,7 @@ std::vector<Lexeme> Parser::parseLex(std::wstring val) {
     return lexemes;
 }
 
-Instruction Parser::toInstruction(Lexeme lex) {
+Instruction Parser::toInstruction(const Lexeme& lex) {
     CTable table;
     if(lex.type ==  LEXTYPE::INSTR) {
         Instruction inst;
@@ -690,7 +690,7 @@ Instruction Parser::toInstruction(Lexeme lex) {
     }
 }
 
-std::wstring Parser::showVar(Var var) {
+std::wstring Parser::showVar(const Var& var) {
     std::wstring str = L"";
     if(var.arr.size() >0) {
         str += var.str + L": ";
@@ -708,7 +708,7 @@ std::wstring Parser::showVar(Var var) {
     return str;
 }
 
-std::wstring Parser::showLexeme(Lexeme lex) {
+std::wstring Parser::showLexeme(const Lexeme& lex) {
     if(lex.type ==  LEXTYPE::INSTR) {
         std::wstring str = L"[INSTR]" + lex.content + L": ";
         int size = (int)lex.lex_parameters.size();
@@ -740,7 +740,7 @@ std::wstring Parser::showLexeme(Lexeme lex) {
     }
 }
 
-std::wstring Parser::showInstruction(Instruction inst) {
+std::wstring Parser::showInstruction(const Instruction& inst) {
     std::wstring str = L"";
     str += std::to_wstring(inst.opCode) + L": ";
     int size = (int)inst.parameters.size();
@@ -769,7 +769,7 @@ std::wstring Parser::showInstruction(Instruction inst) {
     return str;
 }
 
-std::wstring Parser::getInstBlockAsString(Lexeme block) {
+std::wstring Parser::getInstBlockAsString(const Lexeme& block) {
     if(block.type ==  LEXTYPE::INSTR) {
         std::wstring str = block.content + L": ";
         int size = (int)block.lex_parameters.size();

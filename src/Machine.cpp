@@ -3,10 +3,11 @@
 #include "LangLib.h"
 #include "Helpers.h"
 
-Machine::Machine(std::unordered_map<std::wstring, Var> in, bool dbg) {
+Machine::Machine(std::unordered_map<std::wstring, Var> in, bool dbg, bool soft) {
 	this->in_data = in;
 	this->debug = dbg;
 	this->instruct_number = 0;
+	this->softerrors = soft;
 	this->tmp_count = 0;
 	this->instructions.reserve(10000);
 	this->heap.reserve(1000);
@@ -26,10 +27,20 @@ void Machine::prepare() {
 			validateInstruction(this->instructions[i], this);
 		}
 		catch (const std::wstring& error_message) {
-			throw std::wstring{ LangLib::getTrans(L"Ошибка выполнения инструкции ") + std::to_wstring(this->instruct_number + 1) + L" (" + this->instructions[i].as_string + L"): " + error_message };
+			if(this->softerrors) {
+				std::wcout << error_message;
+				++this->instruct_number;
+			} else {
+				throw std::wstring{ LangLib::getTrans(L"Ошибка выполнения инструкции ") + std::to_wstring(this->instruct_number + 1) + L" (" + this->instructions[i].as_string + L"): " + error_message };
+			}
 		}
 		catch (const std::vector<int> & e) {
-			throw std::wstring{ LangLib::getTrans(L"Ошибка выполнения инструкции ") + std::to_wstring(this->instruct_number + 1) + L" (" + this->instructions[i].as_string + L"): " + std::to_wstring(e[0]) + L":" + std::to_wstring(e[1]) };
+			if(this->softerrors) {
+				std::wcout << std::to_wstring(e[0]) + L":" + std::to_wstring(e[1]);
+				++this->instruct_number;
+			} else {
+				throw std::wstring{ LangLib::getTrans(L"Ошибка выполнения инструкции ") + std::to_wstring(this->instruct_number + 1) + L" (" + this->instructions[i].as_string + L"): " + std::to_wstring(e[0]) + L":" + std::to_wstring(e[1]) };
+			}
 		} 
 		catch (const Var& e) {
 			if(e.str == L"END") {
@@ -51,10 +62,20 @@ Var Machine::go() {
 			inst.functions[this->instructions[this->instruct_number].opCode](this, &instructions[this->instruct_number], false, false, true);
 		}
 		catch (const std::wstring& error_message) {
+			if(this->softerrors) {
+				std::wcout << error_message;
+				++this->instruct_number;
+			} else {
 				throw std::wstring{ LangLib::getTrans(L"Ошибка выполнения инструкции ") + std::to_wstring(this->instruct_number + 1) + L" (" + this->instructions[this->instruct_number].as_string + L"): " + error_message };
+			}
 		}
 		catch (const std::vector<int>& e) {
-			throw std::wstring{ LangLib::getTrans(L"Ошибка выполнения инструкции ") + std::to_wstring(this->instruct_number + 1) + L" (" + this->instructions[this->instruct_number].as_string + L"): " + std::to_wstring(e[0]) + L":" + std::to_wstring(e[1]) };
+			if(this->softerrors) {
+				std::wcout << std::to_wstring(e[0]) + L":" + std::to_wstring(e[1]);
+				++this->instruct_number;
+			} else {
+				throw std::wstring{ LangLib::getTrans(L"Ошибка выполнения инструкции ") + std::to_wstring(this->instruct_number + 1) + L" (" + this->instructions[this->instruct_number].as_string + L"): " + std::to_wstring(e[0]) + L":" + std::to_wstring(e[1]) };
+			}
 		}
 		catch (const Var& e) {
 			if(e.str == L"END") {
