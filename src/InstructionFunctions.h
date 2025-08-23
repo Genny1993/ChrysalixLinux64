@@ -112,11 +112,12 @@ void plzdontcrash(Machine* m, Instruction* i, bool prevalidate, bool prego, bool
 void plzshutup(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void tryi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void throwi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void parallel(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct InstructionMap {
-	func functions[100] = {
+	func functions[200] = {
 		&nop,
 		&end,
 		&sleepf,
@@ -217,5 +218,6 @@ struct InstructionMap {
 		&plzshutup,
 		&tryi,
 		&throwi,
+		&parallel,
 	};
 };

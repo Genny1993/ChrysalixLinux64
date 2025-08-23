@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iomanip>
 #include <bitset>
+#include <thread>
 
 #include "InstructionFunctions.h"
 #include "LangLib.h"
@@ -2827,7 +2828,7 @@ void fori(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 		Var postcycle = i->parameters[3];
 		Var body = i->parameters[4];
 
-		if(init.type != INST || condition.type != INST || increment.type != INST || postcycle.type != INST || body.type != INST) {
+		if(init.type != INST || increment.type != INST || postcycle.type != INST || body.type != INST) {
 			throw std::wstring{ L"FOR: " + LangLib::getTrans(L"Все параметры должны быть блоками инструкций\n") };
 		}
 
@@ -3262,6 +3263,40 @@ void throwi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 			str += getValue(&v, &m->heap, m).toSTR().str;
 		}
 		throw str;
+		if(iterate){++m->instruct_number;}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PARALLEL
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void parallel(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"PARALLEL";
+		checkParameterCount(MINIMAL, (int)i->parameters.size(), &name, 0, 1);
+	}
+	else {
+	}
+
+	if (prego) {
+		if(iterate){++m->instruct_number;}
+	}
+	else {
+		std::vector<std::thread> threads;
+		int size = i->parameters.size();
+		Var result;
+		for(int indx = 0; indx < size; ++indx) {
+			Var* inst = &i->parameters[indx];
+			threads.emplace_back(
+				[inst, m]() {
+				getValue(inst,  &m->heap, m);
+			});
+		}
+
+		for(std::thread &t : threads) {
+			t.join();
+		}
+		
 		if(iterate){++m->instruct_number;}
 	}
 }

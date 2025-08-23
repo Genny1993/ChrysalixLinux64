@@ -106,6 +106,7 @@ enum OP_CODE {
     PLZSHUTUP,
     TRY,
     THROW,
+    PARALLEL,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -213,5 +214,6 @@ struct CTable {
         {L"PLZSHUTUP", OP_CODE::PLZSHUTUP}, {L"plzshutup", OP_CODE::PLZSHUTUP},
         {L"TRY", OP_CODE::TRY}, {L"try", OP_CODE::TRY},
         {L"THROW", OP_CODE::THROW}, {L"throw", OP_CODE::THROW},
+        {L"PARALLEL", OP_CODE::PARALLEL}, {L"parallel", OP_CODE::PARALLEL},
     };
 };
