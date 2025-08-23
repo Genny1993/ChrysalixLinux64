@@ -8,7 +8,7 @@
 	);
 	print: $x, '\n';
 
-	try: (var: $x, 'abc'), (nop:;);
+	try: (var: $x, 'abc'), (nop:);
 	input: $x;
 	try: (to: 'ntg', $x;),
 	(

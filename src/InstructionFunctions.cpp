@@ -694,6 +694,9 @@ void comp(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 		else if(type == std::wstring_view(L"===")) {
 			setValue(&(*i).parameters[1], &(*m).heap, m) = getValue(&(*i).parameters[2], &(*m).heap, m).eq(L"strict", getValue(&(*i).parameters[3], &(*m).heap, m));
 		}
+		else if(type == std::wstring_view(L"!==")) {
+			setValue(&(*i).parameters[1], &(*m).heap, m) = !getValue(&(*i).parameters[2], &(*m).heap, m).eq(L"strict", getValue(&(*i).parameters[3], &(*m).heap, m));
+		}
 		else if (type == std::wstring_view(L"!=")) {
 			setValue(&(*i).parameters[1], &(*m).heap, m) = getValue(&(*i).parameters[2], &(*m).heap, m) != getValue(&(*i).parameters[3], &(*m).heap, m);
 		}
