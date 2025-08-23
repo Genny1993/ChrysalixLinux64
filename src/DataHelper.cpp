@@ -120,7 +120,7 @@ Var getValue( Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 			return *value;
 		} else {
 			try {
-				const Var &temp = heap->at(val->getWStr());
+				Var &temp = heap->at(val->getWStr());
 				if(temp.deactivate == true && temp.type == INST) {
 					return temp;
 				} else {

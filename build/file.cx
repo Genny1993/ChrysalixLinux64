@@ -1,23 +1,11 @@
-
-	var: $x, 'abc';
-	input: $x;
-	try: (to: 'ntg', $x),
-	(
-		print: 'Поймана ошибка: ', $;
-		print: 'Продолжаю работу\n';
-	);
-	print: $x, '\n';
-
-	try: (var: $x, 'abc'), (nop:);
-	input: $x;
-	try: (to: 'ntg', $x;),
-	(
-		throw: 'ой, какая-то ошибка! ', $, '\n';
-	);
-	print: $x, '\n';
-	free: $x;
-
 var: $time; hrt: $time;
+for: (var: $i, 0), (comp: '<', $, $i, 1000000), (calc: 'inc', $i), (free: $i), 
+(
+	calc: '/', $, 10, 15;
+);
+print: (calc: '/', $, (to: 'dbl', $, (calc: '-', $, (hrt: $), $time)), 1000000000.0), '\n';
+end:0;
+
 print:	'          ／l、
          （ﾟ､ ｡７
             l、ﾞ~ヽ

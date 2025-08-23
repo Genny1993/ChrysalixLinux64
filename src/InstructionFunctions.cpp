@@ -402,8 +402,7 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 			else if (type == std::wstring_view(L"LN") || type == std::wstring_view(L"ln")) {
 				setValue(&i->parameters[1], &m->heap, m) = Var(log(getValue(&i->parameters[1], &m->heap, m).toDBL().getDouble()));
 			} else if (type == std::wstring_view(L"ABS") || type == std::wstring_view(L"abs")) {
-				Var temp;
-				temp = getValue(&i->parameters[1], &m->heap, m);
+				const Var &temp = getValue(&i->parameters[1], &m->heap, m);
 				if(temp.type == UCHR || temp.type == UNTG) {
 					setValue(&i->parameters[1], &m->heap, m) = temp;
 				} else if(temp.type == STR) {
@@ -452,18 +451,18 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 				setValue(&i->parameters[1], &m->heap, m) *= getValue(&i->parameters[2], &m->heap, m);
 			}
 			else if (type == std::wstring_view(L"/")) {
-				Var param = getValue(&i->parameters[2], &m->heap, m);
+				const Var& param = getValue(&i->parameters[2], &m->heap, m);
 				if (param == Var(0)) {
 					throw std::wstring{ i->parameters[2].toSTR().getWStr() + LangLib::getTrans(L"Деление на 0. Параметр равен нулю\n") };
 				}
-				setValue(&i->parameters[1], &m->heap, m) /= getValue(&i->parameters[2], &m->heap, m);
+				setValue(&i->parameters[1], &m->heap, m) /= param;
 			}
 			else if (type == std::wstring_view(L"%")) {
-				Var param = getValue(&i->parameters[2], &m->heap, m);
+				const Var& param = getValue(&i->parameters[2], &m->heap, m);
 				if (param == Var(0)) {
 					throw std::wstring{ i->parameters[2].toSTR().getWStr() + LangLib::getTrans(L"Деление на 0. Параметр равен нулю\n") };
 				}
-				setValue(&i->parameters[1], &m->heap, m) %= getValue(&i->parameters[2], &m->heap, m);
+				setValue(&i->parameters[1], &m->heap, m) %= param;
 			}
 			else if (type == std::wstring_view(L"^")) {
 				setValue(&i->parameters[1], &m->heap, m) = Var(pow(getValue(&i->parameters[1], &m->heap, m).toDBL().getDouble(), getValue(&i->parameters[2], &m->heap, m).toDBL().getDouble()));
@@ -475,8 +474,7 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 				setValue(&i->parameters[1], &m->heap, m) = log(getValue(&i->parameters[1], &m->heap, m).toDBL().getDouble()) / log(getValue(&i->parameters[2], &m->heap, m).toDBL().getDouble());
 
 			} else if (type == std::wstring_view(L"ABS") || type == std::wstring_view(L"abs")) {
-				Var temp;
-				temp = getValue(&i->parameters[2], &m->heap, m);
+				const Var& temp = getValue(&i->parameters[2], &m->heap, m);
 				if(temp.type == UCHR || temp.type == UNTG) {
 					setValue(&i->parameters[1], &m->heap, m) = temp;
 				} else if(temp.type == STR) {
@@ -505,18 +503,18 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 				setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m) * getValue(&i->parameters[3], &m->heap, m);
 			}
 			else if (type == std::wstring_view(L"/")) {
-				Var param = getValue(&i->parameters[3], &m->heap, m);
+				const Var& param = getValue(&i->parameters[3], &m->heap, m);
 				if (param == Var(0)) {
 					throw std::wstring{ i->parameters[3].toSTR().getWStr() + LangLib::getTrans(L"Деление на 0. Параметр равен нулю\n") };
 				}
-				setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m) / getValue(&i->parameters[3], &m->heap, m);
+				setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m) / param;
 			}
 			else if (type == std::wstring_view(L"%")) {
-				Var param = getValue(&i->parameters[3], &m->heap, m);
+				const Var& param = getValue(&i->parameters[3], &m->heap, m);
 				if (param == Var(0)) {
 					throw std::wstring{ i->parameters[3].toSTR().getWStr() + LangLib::getTrans(L"Деление на 0. Параметр равен нулю\n") };
 				}
-				setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m) % getValue(&i->parameters[3], &m->heap, m);
+				setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m) % param;
 			}
 			else if (type == std::wstring_view(L"^")) {
 				setValue(&i->parameters[1], &m->heap, m) = Var(pow(getValue(&i->parameters[2], &m->heap, m).toDBL().getDouble(), getValue(&i->parameters[3], &m->heap, m).toDBL().getDouble()));
@@ -634,7 +632,7 @@ void isset(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 	}
 	else {
 		try{
-			Var temp = getValue(&i->parameters[1], &m->heap, m);
+			getValue(&i->parameters[1], &m->heap, m);
 			setValue(&i->parameters[0], &m->heap, m) = Var(true);
 		}
 		catch(const std::wstring& error_message) {
@@ -1195,8 +1193,8 @@ void slice(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 		if(iterate){++m->instruct_number;}
 	}
 	else {
-		Var x = getValue(&i->parameters[2], &m->heap, m);
-		Var y = getValue(&i->parameters[3], &m->heap, m);
+		const Var& x = getValue(&i->parameters[2], &m->heap, m);
+		const Var& y = getValue(&i->parameters[3], &m->heap, m);
 
 		if (x < 0) {
 			throw std::wstring{ i->parameters[2].toSTR().getWStr() + LangLib::getTrans(L": Параметр меньше нуля\n") };
@@ -2168,7 +2166,7 @@ void between(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		if(iterate){++m->instruct_number;}
 	}
 	else {
-		Var result = getValue(&i->parameters[1], &m->heap, m) >= getValue(&i->parameters[2], &m->heap, m) && getValue(&i->parameters[1], &m->heap, m) <= getValue(&i->parameters[3], &m->heap, m);
+		const Var& result = getValue(&i->parameters[1], &m->heap, m) >= getValue(&i->parameters[2], &m->heap, m) && getValue(&i->parameters[1], &m->heap, m) <= getValue(&i->parameters[3], &m->heap, m);
 		setValue(&i->parameters[0], &m->heap, m) = result;
 		if(iterate){++m->instruct_number;}
 	}
@@ -2213,7 +2211,7 @@ void jswitch(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		if(iterate){++m->instruct_number;}
 	}
 	else {
-		Var swtch = getValue(&i->parameters[0], &m->heap, m);
+		const Var& swtch = getValue(&i->parameters[0], &m->heap, m);
 		int size = i->parameters.size();
 		for(int is = 1; is < size - 2; is+=2) {
 			if(swtch.eq(L"strict", getValue( &i->parameters[is], &m->heap, m)).data.bln) {
@@ -2243,10 +2241,10 @@ void fmt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 	else {
 
 		std::wstring type = getValue( &i->parameters[2], &m->heap, m).toSTR().str;
-		Var parameter = getValue( &i->parameters[1], &m->heap, m);
-		Var width = getValue( &i->parameters[3], &m->heap, m).toNTG();
-		Var precision = getValue( &i->parameters[4], &m->heap, m).toNTG();
-		Var align = getValue( &i->parameters[5], &m->heap, m).toSTR();
+		const Var& parameter = getValue( &i->parameters[1], &m->heap, m);
+		const Var& width = getValue( &i->parameters[3], &m->heap, m).toNTG();
+		const Var& precision = getValue( &i->parameters[4], &m->heap, m).toNTG();
+		const Var& align = getValue( &i->parameters[5], &m->heap, m).toSTR();
 		Var lead = getValue( &i->parameters[6], &m->heap, m).toSTR();
 
 		if(parameter.type != CHR && parameter.type != UCHR &&
@@ -2515,29 +2513,28 @@ void castchk(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		std::wstring type = getValue(&i->parameters[0], &m->heap, m).toSTR().getWStr();
 		try {
 			if (type == std::wstring_view(L"NTG") || type == std::wstring_view(L"ntg")) {
-				Var temp = getValue(&i->parameters[2], &m->heap, m).toNTG();
-				
+				getValue(&i->parameters[2], &m->heap, m).toNTG();
 			}
 			else if (type == std::wstring_view(L"UNTG") || type == std::wstring_view(L"untg")) {
-				Var temp = getValue(&i->parameters[2], &m->heap, m).toUNTG();
+				getValue(&i->parameters[2], &m->heap, m).toUNTG();
 			}
 			else if (type == std::wstring_view(L"DBL") || type == std::wstring_view(L"dbl")) {
-				Var temp = getValue(&i->parameters[2], &m->heap, m).toDBL();
+				getValue(&i->parameters[2], &m->heap, m).toDBL();
 			}
 			else if (type == std::wstring_view(L"CHR") || type == std::wstring_view(L"chr")) {
-				Var temp = getValue(&i->parameters[2], &m->heap, m).toCHR();
+				getValue(&i->parameters[2], &m->heap, m).toCHR();
 			}
 			else if (type == std::wstring_view(L"UCHR") || type == std::wstring_view(L"uchr")) {
-				Var temp = getValue(&i->parameters[2], &m->heap, m).toUCHR();
+				getValue(&i->parameters[2], &m->heap, m).toUCHR();
 			}
 			else if (type == std::wstring_view(L"BLN") || type == std::wstring_view(L"bln")) {
-				Var temp = getValue(&i->parameters[2], &m->heap, m).toBLN();
+				getValue(&i->parameters[2], &m->heap, m).toBLN();
 			}
 			else if (type == std::wstring_view(L"STR") || type == std::wstring_view(L"str")) {
-				Var temp = getValue(&i->parameters[2], &m->heap, m).toSTR();
+				getValue(&i->parameters[2], &m->heap, m).toSTR();
 			}
 			else if (type == std::wstring_view(L"ARR") || type == std::wstring_view(L"arr")) {
-				Var temp = getValue(&i->parameters[2], &m->heap, m).toARR();
+				getValue(&i->parameters[2], &m->heap, m).toARR();
 			}
 			else {
 				throw std::wstring{ type + LangLib::getTrans(L": Тип данных неизвестен\n") };
@@ -2694,8 +2691,7 @@ void parse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 		if(iterate){++m->instruct_number;}
 	}
 	else {
-		Var temp = getValue(&i->parameters[1], &m->heap, m);
-		temp = temp.toSTR().toINST();
+		Var temp = getValue(&i->parameters[1], &m->heap, m).toSTR().toINST();
 		temp.deactivate = true;
 
 		int size = temp.instructions.size();
@@ -2729,7 +2725,7 @@ void unparse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		if(iterate){++m->instruct_number;}
 	}
 	else {
-		Var temp = getValue(&i->parameters[1], &m->heap, m).toINST();
+		const Var& temp = getValue(&i->parameters[1], &m->heap, m).toINST();
 		std::wstring result = L"";
         int size_i = (int)temp.instructions.size();
         for( int i = 0; i < size_i; ++i) {
@@ -2759,8 +2755,7 @@ void pe(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) 
 		if(iterate){++m->instruct_number;}
 	}
 	else {
-		Var temp = getValue(&i->parameters[1], &m->heap, m);
-		temp = temp.toSTR().toINST();
+		Var temp = getValue(&i->parameters[1], &m->heap, m).toSTR().toINST();
 
 		int size = temp.instructions.size();
 		for( int i = 0; i < size; ++i) {
@@ -3055,7 +3050,7 @@ void switchi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		if(iterate){++m->instruct_number;}
 	}
 	else {
-		Var swtch = getValue(&i->parameters[0], &m->heap, m);
+		const Var& swtch = getValue(&i->parameters[0], &m->heap, m);
 		int size = i->parameters.size();
 		for(int is = 1; is < size - 2; is+=2) {
 			if(swtch.eq(L"strict", getValue( &i->parameters[is], &m->heap, m)).data.bln) {
@@ -3094,8 +3089,7 @@ void iscode(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 	}
 	else {
 		try{	
-			Var temp = getValue(&i->parameters[1], &m->heap, m);
-			temp = temp.toSTR().toINST();
+			Var temp = getValue(&i->parameters[1], &m->heap, m).toSTR().toINST();
 			temp.deactivate = true;
 
 			int size = temp.instructions.size();
