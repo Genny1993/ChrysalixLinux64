@@ -15,8 +15,7 @@
 		throw: 'ой, какая-то ошибка! ', $, '\n';
 	);
 	print: $x, '\n';
-
-end: 0;
+	free: $x;
 
 var: $time; hrt: $time;
 print:	'          ／l、

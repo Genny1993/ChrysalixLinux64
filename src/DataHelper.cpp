@@ -9,7 +9,7 @@
 // Возвращает значение параметра по имени переменной или литералу
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Var getValue( Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m) {
-	if ((*val).type == STR && (*val).getWStr()[0] == L'$') {
+	if (val->type == STR && val->getWStr()[0] == L'$') {
 		if((int)val->arr.size() > 0) {
 			int size = (int)val->arr.size();
 			Var *value;
@@ -120,11 +120,11 @@ Var getValue( Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 			return *value;
 		} else {
 			try {
-				const Var &temp = (*heap).at(val->getWStr());
+				const Var &temp = heap->at(val->getWStr());
 				if(temp.deactivate == true && temp.type == INST) {
 					return temp;
 				} else {
-					return getValue(&(*heap).at(val->getWStr()), heap, m);
+					return getValue(&heap->at(val->getWStr()), heap, m);
 				}
 			}
 			catch (std::out_of_range& ex) {
@@ -133,22 +133,22 @@ Var getValue( Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 			}
 		}
 	}
-	else if((*val).type == Type::INST) {
-		if((*val).deactivate == true) {
+	else if(val->type == Type::INST) {
+		if(val->deactivate == true) {
 			return *val;
 		} else {
 			InstructionMap inst;
-			int size = (int)(*val).instructions.size();
+			int size = (int)val->instructions.size();
 			Var result;
 			for(int i = 0; i < size; ++i) {
 				if(m->softerrors) {
 					try {	
-						inst.functions[(*val).instructions[i].opCode](m, &(*val).instructions[i], false, false, false);
+						inst.functions[val->instructions[i].opCode](m, &val->instructions[i], false, false, false);
 					} catch (const std::wstring& error) {
 						if(!m->silence) { std:: wcout << error; }
 					}
 				} else {
-					inst.functions[(*val).instructions[i].opCode](m, &(*val).instructions[i], false, false, false);
+					inst.functions[val->instructions[i].opCode](m, &val->instructions[i], false, false, false);
 				}
 				result = (*heap)[L"$"];
 			}
@@ -163,7 +163,7 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 	if(val->is_const || val->is_superconst) {
 		throw std::wstring{ val->toSTR().str + LangLib::getTrans(L": Константу нельзя изменить\n") };
 	}
-	if(val->type == STR && (*val).getWStr()[0] == L'$') {
+	if(val->type == STR && val->getWStr()[0] == L'$') {
 		if((int)val->arr.size() > 0) {
 			int size = (int)val->arr.size();
 			Var *value;
@@ -304,7 +304,7 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 		}
 		else {
 			try {
-				Var &ret = (*heap).at(val->str);
+				Var &ret = heap->at(val->str);
 				if(ret.is_const || ret.is_superconst) {
 					throw std::wstring{ val->toSTR().str + LangLib::getTrans(L": Константу нельзя изменить\n") };
 				}
@@ -325,13 +325,13 @@ Var& setValue(Var* val, std::unordered_map<std::wstring, Var>* heap, Machine* m)
 // Возвращает значение параметра по имени переменной или литералу
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Var getLabel(Var* val,std::unordered_map<std::wstring, int>* pointers) {
-	if ((*val).type == STR && (*val).getWStr()[0] == L'&') {
+	if (val->type == STR && val->getWStr()[0] == L'&') {
 		try {
-			return (*pointers).at((*val).getWStr());
+			return pointers->at(val->getWStr());
 		}
 		catch (std::out_of_range& ex) {
 			std::string temp = ex.what();
-			throw std::wstring{ (*val).getWStr() + LangLib::getTrans(L": Метка не определена\n") };
+			throw std::wstring{ val->getWStr() + LangLib::getTrans(L": Метка не определена\n") };
 		}
 	}
 	else {

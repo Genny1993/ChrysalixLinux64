@@ -1560,7 +1560,7 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
                     result.emplace_back(Var(i));
                     result.emplace_back(Var(true));
                     Var res = Var(result);
-                    (*all_results).emplace_back(res);
+                    all_results->emplace_back(res);
                     result.pop_back();
                     result.pop_back();
                 }
@@ -1570,7 +1570,7 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
                     int size = (int)result.size();
                     if (result[(long long int)size - 1].type == BLN && result[(long long int)size - 1].data.bln == true) {
                         Var res = Var(result);
-                        (*all_results).emplace_back(res);
+                        all_results->emplace_back(res);
                     }
                     else {
                         result.pop_back();
@@ -1582,7 +1582,7 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
                     result.emplace_back(Var(i));
                     result.emplace_back(Var(true));
                     Var res = Var(result);
-                    (*all_results).emplace_back(res);
+                    all_results->emplace_back(res);
                     result.pop_back();
                     result.pop_back();
                 }
@@ -1599,7 +1599,7 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
                     result.emplace_back(Var(key));
                     result.emplace_back(Var(true));
                     Var res = Var(result);
-                    (*all_results).emplace_back(res);
+                    all_results->emplace_back(res);
                     result.pop_back();
                     result.pop_back();
                 }
@@ -1609,7 +1609,7 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
                     int size = (int)result.size();
                     if (result[(long long int)size - 1].type == BLN && result[(long long int)size - 1].data.bln == true) {
                         Var res = Var(result);
-                        (*all_results).emplace_back(res);
+                        all_results->emplace_back(res);
                     }
                     else {
                         result.pop_back();
@@ -1621,7 +1621,7 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
                     result.emplace_back(Var(key));
                     result.emplace_back(Var(true));
                     Var res = Var(result);
-                    (*all_results).emplace_back(res);
+                    all_results->emplace_back(res);
                     result.pop_back();
                     result.pop_back();
                 }

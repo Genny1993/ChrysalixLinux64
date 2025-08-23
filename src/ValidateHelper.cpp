@@ -9,12 +9,12 @@
 // Проверяет существование переменной
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void checkExistValue(Var* val, Machine* m) {
-	if ((*val).type == STR && (*val).getWStr()[0] == L'$') {
+	if (val->type == STR && val->getWStr()[0] == L'$') {
 		if ((int)val->arr.size() > 0) {
-			throw std::wstring{ (*val).getWStr() + LangLib::getTrans(L":  Переменная не должна иметь индексов доступа\n") };
+			throw std::wstring{ val->getWStr() + LangLib::getTrans(L":  Переменная не должна иметь индексов доступа\n") };
 		}
-		if ((*m).heap.find((*val).getWStr()) != (*m).heap.end()) {
-			throw std::wstring{ (*val).getWStr() + LangLib::getTrans(L": Переменная уже определена\n") };
+		if (m->heap.find(val->getWStr()) != m->heap.end()) {
+			throw std::wstring{ val->getWStr() + LangLib::getTrans(L": Переменная уже определена\n") };
 		}
 	}
 }
@@ -24,9 +24,9 @@ void checkExistValue(Var* val, Machine* m) {
 // Проверяет отсутствие существования переменной
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void checkNotExistValue(Var* val, Machine* m) {
-	if ((*val).type == STR && (*val).getWStr()[0] == L'$') {
-		if ((*m).heap.find((*val).getWStr()) == (*m).heap.end()) {
-			throw std::wstring{ (*val).getWStr() + LangLib::getTrans(L": Переменная не определена\n") };
+	if (val->type == STR && val->getWStr()[0] == L'$') {
+		if (m->heap.find(val->getWStr()) == m->heap.end()) {
+			throw std::wstring{ val->getWStr() + LangLib::getTrans(L": Переменная не определена\n") };
 		}
 	}
 }
@@ -36,9 +36,9 @@ void checkNotExistValue(Var* val, Machine* m) {
 // Проверяет существование метки
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void checkExistLabel(Var* val, Machine* m) {
-	if ((*val).type == STR && (*val).getWStr()[0] == L'&') {
-		if ((*m).jmp_pointers.find((*val).getWStr()) != (*m).jmp_pointers.end()) {
-			throw std::wstring{(*val).getWStr() + LangLib::getTrans(L": Метка уже определена\n") };
+	if (val->type == STR && val->getWStr()[0] == L'&') {
+		if (m->jmp_pointers.find(val->getWStr()) != m->jmp_pointers.end()) {
+			throw std::wstring{val->getWStr() + LangLib::getTrans(L": Метка уже определена\n") };
 		}
 	}
 }
@@ -95,7 +95,7 @@ void checkParameterCount(unsigned char type, int count, std::wstring* name, int 
 // Проверяет то, что требуется переменная
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void requiredVar(Var* val, std::wstring* type, std::wstring num) {
-	if ((*val).type != STR || (*val).getWStr()[0] != L'$') {
+	if (val->type != STR || val->getWStr()[0] != L'$') {
 		throw std::wstring{ (*type) + LangLib::getTrans(L": ") + num + LangLib::getTrans(L" параметр инструкции должен быть именем переменной\n") };
 	}
 }
@@ -105,7 +105,7 @@ void requiredVar(Var* val, std::wstring* type, std::wstring num) {
 // Проверяет то, что требуется метка
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void requiredLabel(Var* val, std::wstring* type, std::wstring num) {
-	if ((*val).type != STR || (*val).getWStr()[0] != L'&') {
+	if (val->type != STR || val->getWStr()[0] != L'&') {
 		throw std::wstring{ (*type) + LangLib::getTrans(L": ") + num + LangLib::getTrans(L" параметр инструкции должен быть именем метки\n") };
 	}
 }
