@@ -2012,9 +2012,11 @@ void uninterf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 		std::wstring name = L"UNINTERF";
 		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 3);
 		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
+		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR1));
 	}
 	else {
 		checkNotExistValue(&i->parameters[0], m);
+		checkNotExistValue(&i->parameters[1], m);
 	}
 
 	if (prego) {
@@ -2096,8 +2098,8 @@ void rand(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 	}
 	else {
 		if((int)i->parameters.size() == 1) {
-			std::uniform_int_distribution randomizer{ 1ULL, 18446744073709551615ULL };
-			setValue(&i->parameters[0], &m->heap, m) = Var(1.0 / randomizer(m->mersenne_twister));
+			std::uniform_real_distribution<> dis(0.0, 1.0);
+			setValue(&i->parameters[0], &m->heap, m) = Var(dis(m->mersenne_twister));
 		} else {
 			std::uniform_int_distribution randomizer{ getValue(&i->parameters[1], &m->heap, m).toUNTG().data.untg, getValue(&i->parameters[2], &m->heap, m).toUNTG().data.untg };
 			setValue(&i->parameters[0], &m->heap, m) = Var(randomizer(m->mersenne_twister));
