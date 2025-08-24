@@ -1,3 +1,9 @@
+var: $res;
+vtoarr: $arr_keys, 'key1', 'apple', 'bread';
+vtoarr: $arr_vals, 12, 10, 6;
+tointerf: $res, $arr_keys, $arr_vals;
+print: $res, '\n';
+
 var: $time; hrt: $time;
 
 parallel: (
@@ -52,7 +58,7 @@ parallel: (
 ),
 (
 	var: $temp6, true; var: $res6;
-	for: (var: $n, 0), $temp4, (calc: 'inc', $n), (free: $n), 
+	for: (var: $n, 0), $temp6, (calc: 'inc', $n), (free: $n), 
 	(
 		comp: '<', $temp6, $n, 1000000;
 		calc: '/', $res6, dbl 10.0, dbl 15.0;
