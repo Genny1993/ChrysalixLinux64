@@ -3,31 +3,6 @@
 многострочный коментарий
 ##
 
-var: $pi, 3.1415926, 123;
-print: (format: $, $pi, 'dec', 0, 3, 'default', '', $var['key'][2]), '\n';
-
-print: 'Введите букву: ';
-input: $;
-
-jswitch: $, 
-'a', &char_a, 
-'b', &char_b,
-'c', &charc,
-&default;
-
-label: &char_a;
-	print: 'Вы ввели букву a\n';
-jump: &endjswitch;
-
-label: &char_b;
-	print: 'Вы ввели букву b\n';
-jump: &endjswitch;
-
-label: &char_c;
-	print: 'Вы ввели букву c\n';
-jump: &endjswitch;
-
-label: &default;
-	print: 'Вы ввели какую-то другую букву\n';
-label: &endjswitch;
+var: $x, 0.62;
+print: (trigon: 'cos', $, $x), '\n';
 end:0;
