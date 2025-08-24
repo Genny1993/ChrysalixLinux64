@@ -1,5 +1,8 @@
-for: (var: $i, 0), (comp: '<', $, $i, 10), (calc: 'inc', $i), (free: $i), 
+var: $answer, 'stop';
+dowhile: (comp: '!=', $, $answer, 'stop'), 
 (
-	print: 'Итерация цикла № ', (calc: '+', $, $i, 1), '\n';
+	print: 'Цикл выполняется, введите stop если хотите выйти из цикла: ';
+	input: $answer;
 );
+print: 'Цикл завершен\n';
 end: 0;
