@@ -690,56 +690,6 @@ Instruction Parser::toInstruction(const Lexeme& lex) {
     }
 }
 
-std::wstring Parser::showVar(const Var& var) {
-    std::wstring str = L"";
-    if(var.arr.size() >0) {
-        str += var.str + L": ";
-        int sz = var.arr.size();
-        for(int i = 0; i < sz; ++i) {
-            if(var.arr[i].arr.size() > 0) {
-                str += L"(" + this->showVar(var.arr[i]) + L"), ";
-            } else {
-                str += var.arr[i].toSTR().str + L", ";
-            }
-        }
-    } else {
-        str = var.toSTR().str;
-    }
-    return str;
-}
-
-std::wstring Parser::showLexeme(const Lexeme& lex) {
-    if(lex.type ==  LEXTYPE::INSTR) {
-        std::wstring str = L"[INSTR]" + lex.content + L": ";
-        int size = (int)lex.lex_parameters.size();
-        for(int i = 0; i < size; ++i) {
-            str += showLexeme(lex.lex_parameters[i]);
-            if(i < size -1) {
-                str += L", ";
-            }
-        }
-        return str;
-    } else if(lex.type ==  LEXTYPE::PAR) {
-        return L"[PAR]" + lex.content;
-    } else if(lex.type ==  LEXTYPE::INSTBLOCK) {
-        std::wstring str = L"[INSTBLOCK](";
-        int size = (int)lex.lex_parameters.size();
-        for(int i = 0; i < size; ++i) {
-            str += this->showLexeme(lex.lex_parameters[i]);
-            if(i < size -1) {
-                str += L", ";
-            } else {
-                str+= L";";
-            }
-
-        }
-        str += L")";
-        return str;
-    } else {
-        return L"ERROR";
-    }
-}
-
 std::wstring Parser::showInstruction(const Instruction& inst) {
     std::wstring str = L"";
     str += std::to_wstring(inst.opCode) + L": ";

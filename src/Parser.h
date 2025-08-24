@@ -35,7 +35,5 @@ private:
 	Var parseVar(const std::wstring& val, const int& instruction);
 	std::vector<Lexeme> parseLex(const std::wstring& val);
 	Instruction toInstruction(const Lexeme& lex);
-	std::wstring showVar(const Var& var);
-	std::wstring showLexeme(const Lexeme& lex);
 	std::wstring getInstBlockAsString(const Lexeme& block);
 };

@@ -1,0 +1,61 @@
+{
+  "name": "Chrysalix Theme",
+  "type": "dark",
+  "colors": {},
+  "tokenColors": [
+    {
+      "scope": "comment.block.chrysalix",
+      "settings": {
+        "foreground": "#57A64A"
+      }
+    },
+    {
+      "scope": "comment.line.number-sign.chrysalix",
+      "settings": {
+        "foreground": "#57A64A"
+      }
+    },
+    {
+      "scope": "variable.chrysalix",
+      "settings": {
+        "foreground": "#9CDCFE"
+      }
+    },
+    {
+      "scope": "keyword.control.chrysalix",
+      "settings": {
+        "foreground": "#DCDCAA"
+      }
+    },
+    {
+      "scope": "string.quoted.chrysalix",
+      "settings": {
+        "foreground": "#CE9178"
+      }
+    },
+    {
+      "scope": "constant.numeric.chrysalix",
+      "settings": {
+        "foreground": "#B4B4B4"
+      }
+    },
+    {
+      "scope": "entity.name.label.chrysalix",
+      "settings": {
+        "foreground": "#4EC9B0"
+      }
+    },
+    {
+      "scope": "variable.special.chrysalix",
+      "settings": {
+        "foreground": "#FFC0CB"
+      }
+    },
+    {
+      "scope": "constant.language.chrysalix",
+      "settings": {
+        "foreground": "#569CD6"
+      }
+    }
+  ]
+}

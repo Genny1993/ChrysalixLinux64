@@ -1,0 +1,42 @@
+{
+  "scopeName": "source.chrysalix",
+  "patterns": [
+    {
+      "name": "comment.block.chrysalix",
+      "begin": "##",
+      "end": "##"
+    },
+    {
+      "name": "comment.line.number-sign.chrysalix",
+      "match": "#.*$"
+    },
+    {
+      "name": "variable.chrysalix",
+      "match": "\\$[a-zA-Z_][a-zA-Z0-9_]*"
+    },
+    {
+      "name": "keyword.control.chrysalix",
+      "match": "\\b[a-zA-Z]+:"
+    },
+    {
+      "name": "string.quoted.chrysalix",
+      "match": "'([^'\\\\]|\\\\.)*'"
+    },
+    {
+      "name": "constant.numeric.chrysalix",
+      "match": "\\b[0-9]+(\\.[0-9]+)?\\b"
+    },
+    {
+      "name": "entity.name.label.chrysalix",
+      "match": "&[a-zA-Z_][a-zA-Z0-9_]*"
+    },
+    {
+      "name": "variable.special.chrysalix",
+      "match": "\\$(?![a-zA-Z_\\[])"
+    },
+    {
+      "name": "constant.language.chrysalix",
+      "match": "\\b(TRUE|true|FALSE|false|NIL|nil|ARR|arr|MAP|map|NTG|ntg|UNTG|untg|DBL|dbl|CHR|chr|UCHR|uchr)\\b"
+    }
+  ]
+}

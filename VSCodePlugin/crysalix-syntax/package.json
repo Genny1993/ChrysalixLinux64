@@ -1,0 +1,34 @@
+{
+  "name": "chrysalix-syntax",
+  "displayName": "Chrysalix Syntax",
+  "description": "Syntax highlighting for Chrysalix language with custom colors",
+  "version": "0.0.2",
+  "publisher": "chrysalix",
+  "engines": {
+    "vscode": "^1.50.0"
+  },
+  "categories": ["Programming Languages"],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Chrysalix Theme",
+        "uiTheme": "vs-dark",
+        "path": "./themes/chrysalix-color-theme.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "chrysalix",
+        "scopeName": "source.chrysalix",
+        "path": "./syntaxes/chrysalix.tmLanguage.json"
+      }
+    ],
+    "languages": [
+      {
+        "id": "chrysalix",
+        "aliases": ["Chrysalix", "chrysalix"],
+        "extensions": [".cx"]
+      }
+    ]
+  }
+}
