@@ -800,7 +800,13 @@ Var Var::toSTR() const {
         for( int i = 0; i < size_i; ++i) {
             result += this->instructions[i].as_string;
             if(i < size_i - 1) {
-                result += L"; ";
+                if(instructions[i].as_string.at(result.size() - 1) != L';') {
+                    result += L"; ";
+                } else {
+                    if(i != size_i - 1) {
+					    result += L" ";
+				    }
+                }
             }
         }
         return Var(result);
@@ -951,7 +957,13 @@ void Var::print() {
         for( int i = 0; i < size_i; ++i) {
             result += this->instructions[i].as_string;
             if(i < size_i - 1) {
-                result += L"; ";
+                if(instructions[i].as_string.at(result.size() - 1) != L';') {
+                    result += L"; ";
+                } else {
+                    if(i != size_i - 1) {
+					    result += L" ";
+				    }
+                }
             }
         }
         std::wcout << result;

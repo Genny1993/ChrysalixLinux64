@@ -2638,7 +2638,6 @@ void inst(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
 	}
 	else {
-		checkExistValue(&i->parameters[0], m);
 	}
 
 	if (prego) {
@@ -2734,7 +2733,13 @@ void unparse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
         for( int i = 0; i < size_i; ++i) {
             result += temp.instructions[i].as_string;
             if(i < size_i - 1) {
-                result += L"; ";
+				if(temp.instructions[i].as_string.at(result.size() - 1) != L';') {
+                    result += L"; ";
+				} else {
+					if(i != size_i - 1) {
+						result += L" ";
+					}
+				}
             }
         }
 		setValue(&i->parameters[0], &m->heap, m)  = Var(result);

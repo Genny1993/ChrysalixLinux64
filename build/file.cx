@@ -1,24 +1,16 @@
-	vtoarr: $arr, 1, 5, 8, 'abc', 9, 'asd', 6;
-	vtoarr: $arr2, 3, 7, 9, 'abc', 6, 2;
+	var: $code;
+	
+	print: 'Введите код на языке Chrysalix: ';
+	input: $code;
 
-	for: (var: $i, 0), (comp: '<', $, $i, (size: $, $arr)), (calc: 'inc', $i), (free: $i), (
-		for: (var: $j, 0), (comp: '<', $, $j, (size: $, $arr2)), (calc: 'inc', $j), (free: $j), (
-			if: (logic: 'not', $, (castchk: 'ntg', $, $arr[$i])), (
-				#Если элемент первого массива не является числом, выходим из обоих циклов
-				break: 2;
-			);
-
-			if: (logic: 'not', $, (castchk: 'ntg', $, $arr2[$j])), (
-				#Если элемент второго массива не является числом, выходим из обоих циклов
-				break: 2;
-			);
-
-			if: (comp: '==', $, $arr[$i], $arr2[$j]), (
-				print: $arr[$i], ' и ' , $arr2[$j], ', значения равны', '\n';
-			), (
-				print: $arr[$i], ' и ' , $arr2[$j], ', значения не равны', '\n';
-			);
+	while: (change: $, true), (
+		if: (iscode: $, $code), (
+			pe: $, $code;
+			break:;
+		), 
+		(
+			print: 'Введенная строка не является корректным кодом, введите еще раз: ';
+			input: $code;
 		);
-	); 
-	print: 'Цикл завершен\n';
+	);
 	end: 0;
