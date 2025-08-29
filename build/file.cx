@@ -1,16 +1,15 @@
-	var: $code;
-	
-	print: 'Введите код на языке Chrysalix: ';
-	input: $code;
-
-	while: (change: $, true), (
-		if: (iscode: $, $code), (
-			pe: $, $code;
-			break:;
-		), 
-		(
-			print: 'Введенная строка не является корректным кодом, введите еще раз: ';
-			input: $code;
-		);
+	print: 'Введите число: ';
+	label: &start;
+	try: (
+		var: $var;
+		input: $var;
+		calc: '/', $, dbl 5, $var;
+		print: 'Результат деления: ', $, '\n';
+		free: $var;
+	),
+	(
+		print: 'Произошла ошибка: ', $, 'Введите число еще раз: ';
+		free: $var;
+		jump: &start;
 	);
 	end: 0;

@@ -181,7 +181,7 @@ void label(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 	}
 
 	if (prego) {
-		m->jmp_pointers[i->parameters[0].toSTR().getWStr()] = m->instruct_number + 1;
+		m->jmp_pointers[i->parameters[0].toSTR().getWStr()] = m->instruct_number;
 		if(iterate){++m->instruct_number;}
 	}
 	else {
@@ -454,14 +454,14 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 			else if (type == std::wstring_view(L"/")) {
 				const Var& param = getValue(&i->parameters[2], &m->heap, m);
 				if (param == Var(0)) {
-					throw std::wstring{ i->parameters[2].toSTR().getWStr() + LangLib::getTrans(L"Деление на 0. Параметр равен нулю\n") };
+					throw std::wstring{ i->parameters[2].toSTR().getWStr() + LangLib::getTrans(L" Деление на 0. Параметр равен нулю\n") };
 				}
 				setValue(&i->parameters[1], &m->heap, m) /= param;
 			}
 			else if (type == std::wstring_view(L"%")) {
 				const Var& param = getValue(&i->parameters[2], &m->heap, m);
 				if (param == Var(0)) {
-					throw std::wstring{ i->parameters[2].toSTR().getWStr() + LangLib::getTrans(L"Деление на 0. Параметр равен нулю\n") };
+					throw std::wstring{ i->parameters[2].toSTR().getWStr() + LangLib::getTrans(L" Деление на 0. Параметр равен нулю\n") };
 				}
 				setValue(&i->parameters[1], &m->heap, m) %= param;
 			}
@@ -506,14 +506,14 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 			else if (type == std::wstring_view(L"/")) {
 				const Var& param = getValue(&i->parameters[3], &m->heap, m);
 				if (param == Var(0)) {
-					throw std::wstring{ i->parameters[3].toSTR().getWStr() + LangLib::getTrans(L"Деление на 0. Параметр равен нулю\n") };
+					throw std::wstring{ i->parameters[3].toSTR().getWStr() + LangLib::getTrans(L" Деление на 0. Параметр равен нулю\n") };
 				}
 				setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m) / param;
 			}
 			else if (type == std::wstring_view(L"%")) {
 				const Var& param = getValue(&i->parameters[3], &m->heap, m);
 				if (param == Var(0)) {
-					throw std::wstring{ i->parameters[3].toSTR().getWStr() + LangLib::getTrans(L"Деление на 0. Параметр равен нулю\n") };
+					throw std::wstring{ i->parameters[3].toSTR().getWStr() + LangLib::getTrans(L" Деление на 0. Параметр равен нулю\n") };
 				}
 				setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m) % param;
 			}
@@ -850,7 +850,7 @@ void dlabel(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 		if(iterate){++m->instruct_number;}
 	}
 	else {
-		m->jmp_pointers[i->parameters[0].toSTR().getWStr()] = m->instruct_number + 1;
+		m->jmp_pointers[i->parameters[0].toSTR().getWStr()] = m->instruct_number;
 		if(iterate){++m->instruct_number;}
 	}
 }
@@ -3235,13 +3235,15 @@ void tryi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 			getValue(&temp, &m->heap, m);
 		} 
 		catch(const std::wstring error) {
-			Var zerobuff = L"$";
-			setValue(&zerobuff, &m->heap, m) = Var(error);
+			std::wstring temp = error;
+			if(temp.at(0) == L'$') {
+				temp.erase(0, 1);
+			}
+			m->heap[L"$"] = Var(temp);
 			getValue(&catchblock, &m->heap, m);
 		} 
 		catch (const std::vector<int>& error) {
-			Var zerobuff = L"$";
-			setValue(&zerobuff, &m->heap, m) = Var(std::to_wstring(error[0]) + L":" + std::to_wstring(error[1]));
+			m->heap[L"$"] = Var(std::to_wstring(error[0]) + L":" + std::to_wstring(error[1]));
 			getValue(&catchblock, &m->heap, m);
 		}
 		if(iterate){++m->instruct_number;}
