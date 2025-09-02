@@ -1,28 +1,5 @@
-parallel: (
-	var: $temp1, true; var: $res1;
-	for: (var: $i, 0), $temp1, (calc: 'inc', $i), (free: $i), 
-	(
-		comp: '<', $temp1, $i, 1000000;
-		calc: '/', $res1, dbl 10.0, dbl 15.0;
-	);
-	free: $temp1, $res1;
-),
-(
-	var: $temp2, true; var: $res2;
-	for: (var: $j, 0), $temp2, (calc: 'inc', $j), (free: $j), 
-	(
-		comp: '<', $temp2, $j, 1000000;
-		calc: '/', $res2, dbl 10.0, dbl 15.0;
-	);
-	free: $temp2, $res2;
-),
-(
-	var: $temp3, true; var: $res3;
-	for: (var: $k, 0), $temp3, (calc: 'inc', $k), (free: $k), 
-	(
-		comp: '<', $temp3, $k, 1000000;
-		calc: '/', $res3, dbl 10.0, dbl 15.0;
-	);
-	free: $temp3, $res3;
-);
+print: (getchar: $, 'abcde', 2), '\n';
+var: $str, 'abcde';
+setchar: $str, '!', 2;
+print: $str, '\n';
 end: 0;

@@ -107,6 +107,8 @@ enum OP_CODE {
     TRY,
     THROW,
     PARALLEL,
+    GETCHAR,
+    SETCHAR,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -215,5 +217,7 @@ struct CTable {
         {L"TRY", OP_CODE::TRY}, {L"try", OP_CODE::TRY},
         {L"THROW", OP_CODE::THROW}, {L"throw", OP_CODE::THROW},
         {L"PARALLEL", OP_CODE::PARALLEL}, {L"parallel", OP_CODE::PARALLEL},
+        {L"GETCHAR", OP_CODE::GETCHAR}, {L"getchar", OP_CODE::GETCHAR},
+        {L"SETCHAR", OP_CODE::SETCHAR}, {L"setchar", OP_CODE::SETCHAR},
     };
 };

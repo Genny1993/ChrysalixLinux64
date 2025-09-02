@@ -3309,4 +3309,49 @@ void parallel(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 		if(iterate){++m->instruct_number;}
 	}
 }
-	
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// GETCHAR
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void getchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"GETCHAR";
+		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 3);
+	}
+	else {
+		checkNotExistValue(&i->parameters[0], m);
+	}
+
+	if (prego) {
+		if(iterate){++m->instruct_number;}
+	}
+	else {
+		setValue(&i->parameters[0], &m->heap, m) =  getValue(&i->parameters[1], &m->heap, m).toSTR()[getValue(&i->parameters[2], &m->heap, m).toUNTG()];
+		
+		if(iterate){++m->instruct_number;}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SETCHAR
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void setchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"SETCHAR";
+		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 3);
+	}
+	else {
+		checkNotExistValue(&i->parameters[0], m);
+	}
+
+	if (prego) {
+		if(iterate){++m->instruct_number;}
+	}
+	else {
+		std::wstring temp = getValue(&i->parameters[0], &m->heap, m).toSTR().str;
+		temp.replace(getValue(&i->parameters[2], &m->heap, m).toUNTG().getUInt(), 1, 1, getValue(&i->parameters[1], &m->heap, m).toSTR().str[0]);
+		setValue(&i->parameters[0], &m->heap, m) = temp;
+		
+		if(iterate){++m->instruct_number;}
+	}
+}

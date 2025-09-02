@@ -113,6 +113,8 @@ void plzshutup(Machine* m, Instruction* i, bool prevalidate, bool prego, bool it
 void tryi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void throwi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void parallel(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void getchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void setchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -219,5 +221,7 @@ struct InstructionMap {
 		&tryi,
 		&throwi,
 		&parallel,
+		&getchar,
+		&setchar,
 	};
 };
