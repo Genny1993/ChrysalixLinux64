@@ -7,7 +7,7 @@ It is minimalist, explicit, strict, and bare — every instruction performs one 
 
 ## 💡 Features
 
-- 🧱 Simple syntax: `INSTRUCTION: PARAM1, PARAM2, ...;`
+- 🧱 Simple syntax: `instruction: param1, param2, ...;`
 - 📦 Built-in array and dictionary support
 - 🧭 Recursive search (`rin`, `rinall`) and intersection (`intersect`)
 - 🔄 Dynamic memory, typing, arithmetic, string ops

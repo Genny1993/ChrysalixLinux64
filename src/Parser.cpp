@@ -115,8 +115,8 @@ Var Parser::parseVar(const std::wstring& val, const int& instruction) {
         } else {
             return Var(temp);
         }
-    } else if(temp[0] == L'(') {
-        if(temp[temp.size() - 1] != L')') {
+    } else if(temp[0] == L'(' || temp[0] == L'{') {
+        if(temp[temp.size() - 1] != L')' || temp[temp.size() - 1] != L'}') {
             throw std::wstring{ temp + LangLib::getTrans(L": Неверная вложенная инструкция!\n") };
         } else {
             std::wstring temp_s = temp;
@@ -369,17 +369,25 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                         }
                     }
                     else {
-                        //Перебираем символы до тех пор, пока не найдем двоеточие :
+                        //Перебираем символы до тех пор, пока не найдем пробел или таб или перевод строки
                         //Это конец наименования инструкции
                         if (instruction_parameters == false) {
-                            if (c == L':') {
+                            if (c == L' ' || c == L'\t' || c == L'\n') {
                                 str.erase(0, str.find_first_not_of(L" \n\r\t"));
                                 str.erase(str.find_last_not_of(L" \n\r\t") + 1);
                                 instruction.type = LEXTYPE::INSTR;
                                 instruction.content = str;
+
+                                //Если это перевод строки, пробел или таб и инструкция пустая, 
+                                //это не конец инструкции, это форматирование текста
+                                if(str == L"") {
+                                    //Ничего не делаем
+                                } else {
+                                    str = L"";
+                                    //устанавливаем флаг, что начались параметры инструкции
+                                    instruction_parameters = true;
+                                }
                                 str = L"";
-                                //устанавливаем флаг, что начались параметры инструкции
-                                instruction_parameters = true;
                             }
                             else {
                                 //Иначе записываем символ в переменную с названием инструкции
@@ -389,7 +397,7 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                         else {
                             if(is_nested == false && braces == false) {
                                 //Если скобка, это вложенная инструкция
-                                if (c == L'(') {
+                                if (c == L'(' || c == L'{') {
                                     ++parenthesis_count;
                                     is_nested = true;
                                     std::wstring check = L"";
@@ -453,7 +461,7 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                             }
                             else {
                                 //если открывающая скобка
-                                if(c == L'(') {
+                                if(c == L'(' || c == L'{') {
                                     str+=c;
                                     if(parenthesis_count > 0) {
                                         ++parenthesis_count;
@@ -461,20 +469,21 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                         throw std::wstring{ str + LangLib::getTrans(L": Лишняя открывающая скобка '('\n") };
                                     }
                                 //Если закрывающая
-                                } else if(c == L')') {
+                                } else if(c == L')' || c == L'}') {
                                     str+=c;
                                     --parenthesis_count;
                                     if(parenthesis_count == 0 && i == (size_str - 1)) {
                                         int size = (int)str.size();
                                         std::wstring check = L"";
                                         for(int i = size -1; i >= 0; --i) {
-                                            if(str[i] == L')') {
+                                            if(str[i] == L')' || str[i] == L'}') {
                                                 break;
                                             }
                                             if(str[i] != L' ' && str[i] != L'\t' && str[i] != L'\n' && str[i] != L'\r') {
                                                 check += str[i];
                                             }
                                         }
+
                                         if(check != L"") {
                                             reverse(check.begin(), check.end());
                                             throw std::wstring{ check + LangLib::getTrans(L": Лишний символ после вложенной инструкции\n") };
@@ -522,13 +531,14 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                         int size = (int)str.size();
                                         std::wstring check = L"";
                                         for(int i = size -1; i >= 0; --i) {
-                                            if(str[i] == ')') {
+                                            if(str[i] == L')' || str[i] == L'}') {
                                                 break;
                                             }
                                             if(str[i] != L' ' && str[i] != L'\t' && str[i] != L'\n' && str[i] != L'\r') {
                                                 check += str[i];
                                             }
                                         }
+
                                         if(check != L"") {
                                             reverse(check.begin(), check.end());
                                             throw std::wstring{ check + LangLib::getTrans(L": Лишний символ после вложенной инструкции\n") };
@@ -570,13 +580,14 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                         int size = (int)str.size();
                                         std::wstring check = L"";
                                         for(int i = size -1; i >= 0; --i) {
-                                            if(str[i] == ')') {
+                                            if(str[i] == L')' || str[i] == L'}') {
                                                 break;
                                             }
                                             if(str[i] != L' ' && str[i] != L'\t' && str[i] != L'\n' && str[i] != L'\r') {
                                                 check += str[i];
                                             }
                                         }
+
                                         if(check != L"") {
                                             reverse(check.begin(), check.end());
                                             throw std::wstring{ check + LangLib::getTrans(L": Лишний символ после вложенной инструкции\n") };
@@ -642,7 +653,7 @@ Instruction Parser::toInstruction(const Lexeme& lex) {
         Instruction inst;
         try {
             inst.opCode = table.opCodeMap.at(lex.content);
-            inst.as_string = lex.content + L": ";
+            inst.as_string = lex.content + L" ";
         }
         catch (std::out_of_range& ex) {
             //вывод инструкции
@@ -692,7 +703,7 @@ Instruction Parser::toInstruction(const Lexeme& lex) {
 
 std::wstring Parser::showInstruction(const Instruction& inst) {
     std::wstring str = L"";
-    str += std::to_wstring(inst.opCode) + L": ";
+    str += std::to_wstring(inst.opCode) + L" ";
     int size = (int)inst.parameters.size();
     for(int i = 0; i < size; ++i) {
         if(inst.parameters[i].type == Type::INST) {
@@ -721,7 +732,7 @@ std::wstring Parser::showInstruction(const Instruction& inst) {
 
 std::wstring Parser::getInstBlockAsString(const Lexeme& block) {
     if(block.type ==  LEXTYPE::INSTR) {
-        std::wstring str = block.content + L": ";
+        std::wstring str = block.content + L" ";
         int size = (int)block.lex_parameters.size();
         for(int i = 0; i < size; ++i) {
             str += this->getInstBlockAsString(block.lex_parameters[i]);
