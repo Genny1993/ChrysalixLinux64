@@ -675,6 +675,13 @@ Instruction Parser::toInstruction(const Lexeme& lex) {
         try {
             inst.opCode = table.opCodeMap.at(lex.content);
             inst.as_string = lex.content + L" ";
+            inst.alias = lex.alias;
+            if(inst.alias == 1) {
+                inst.as_string = L"." + inst.as_string;
+            }
+            if(inst.alias == 2) {
+                inst.as_string = L".." + inst.as_string;
+            }
         }
         catch (std::out_of_range& ex) {
             //вывод инструкции
@@ -688,7 +695,7 @@ Instruction Parser::toInstruction(const Lexeme& lex) {
             if(parameters[i].type == LEXTYPE::PAR) {
                 inst.as_string += parameters[i].content;
             } else if(parameters[i].type == LEXTYPE::INSTBLOCK) {
-                 inst.as_string += this->getInstBlockAsString(parameters[i]);
+                inst.as_string += this->getInstBlockAsString(parameters[i]);
             }
             if(i < size - 1) {
                 inst.as_string += L", ";
@@ -754,6 +761,12 @@ std::wstring Parser::showInstruction(const Instruction& inst) {
 std::wstring Parser::getInstBlockAsString(const Lexeme& block) {
     if(block.type ==  LEXTYPE::INSTR) {
         std::wstring str = block.content + L" ";
+        if(block.alias == 1) {
+            str = L"." + str;
+        }
+        if(block.alias == 2) {
+            str = L".." + str;
+        }
         int size = (int)block.lex_parameters.size();
         for(int i = 0; i < size; ++i) {
             str += this->getInstBlockAsString(block.lex_parameters[i]);
