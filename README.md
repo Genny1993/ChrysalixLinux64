@@ -7,7 +7,7 @@ It is minimalist, explicit, strict, and bare — every instruction performs one 
 
 ## 💡 Features
 
-- 🧱 Simple syntax: `instruction: param1, param2, ...;`
+- 🧱 Simple syntax: `instruction param1, param2, ...;`
 - 📦 Built-in array and dictionary support
 - 🧭 Recursive search (`rin`, `rinall`) and intersection (`intersect`)
 - 🔄 Dynamic memory, typing, arithmetic, string ops
@@ -28,7 +28,7 @@ make
 ## 🚀 Example code
 
 ```plaintext
-var: $a, ntg 5;
-var: $b, ntg 3;
-calc: '+', $a, $b;
-print: $a, '\n';
+var $a, ntg 5;
+var $b, ntg 3;
+calc '+', $a, $b;
+print $a, '\n';
