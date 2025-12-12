@@ -1,4 +1,15 @@
 #REPL
+.7;
+print$, '\n';
+clearc;
+.8;
+print$, '\n';
+clearc;
+.10;
+print$, '\n';
+clearc;
+.end;
+##
 plzdontcrash true;
 
 print '♥️ =====================================================♥️\n'; 
@@ -16,3 +27,4 @@ label &loop__34567uhgfdqsde34567ujhgfdwt546yhgtfcds;
 jump &loop__34567uhgfdqsde34567ujhgfdwt546yhgtfcds;
 
 end 0;
+##

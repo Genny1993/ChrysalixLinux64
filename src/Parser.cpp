@@ -368,10 +368,39 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                         }
                     }
                     else {
-                        //Перебираем символы до тех пор, пока не найдем пробел или таб или перевод строки
+                        //Перебираем символы до тех пор, пока не найдем любой символ, отличающийся 
+                        //от маленькой буквы или точки.
                         //Это конец наименования инструкции
                         if (instruction_parameters == false) {
-                            if (c == L' ' || c == L'\t' || c == L'\n') {
+                            if (
+                                c != L'a' 
+                                && c != L'b'
+                                && c != L'c'
+                                && c != L'd'
+                                && c != L'e'
+                                && c != L'f'
+                                && c != L'g'
+                                && c != L'h'
+                                && c != L'i'
+                                && c != L'j'
+                                && c != L'k'
+                                && c != L'l'
+                                && c != L'm'
+                                && c != L'n'
+                                && c != L'o'
+                                && c != L'p'
+                                && c != L'q'
+                                && c != L'r'
+                                && c != L's'
+                                && c != L't'
+                                && c != L'u'
+                                && c != L'v'
+                                && c != L'w'
+                                && c != L'x'
+                                && c != L'y'
+                                && c != L'z'
+                                && c != L'.'
+                            ) {
                                 str.erase(0, str.find_first_not_of(L" \n\r\t"));
                                 str.erase(str.find_last_not_of(L" \n\r\t") + 1);
                                 instruction.type = LEXTYPE::INSTR;
@@ -407,6 +436,9 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                     str = L"";
                                     //устанавливаем флаг, что начались параметры инструкции
                                     instruction_parameters = true;
+                                    //Так как символ, заканчивающий инструкцию - значимый, а не просто разделитель,
+                                    //возвращаем итератор назад
+                                    --i;
                                 }
                                 str = L"";
                             }

@@ -109,6 +109,8 @@ enum OP_CODE {
     PARALLEL,
     GETCHAR,
     SETCHAR,
+    DOT,
+    DOTDOT,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -219,5 +221,7 @@ struct CTable {
         {L"parallel", OP_CODE::PARALLEL},
         {L"getchar", OP_CODE::GETCHAR},
         {L"setchar", OP_CODE::SETCHAR},
+        {L".", OP_CODE::DOT},
+        {L"..", OP_CODE::DOTDOT},
     };
 };

@@ -19,15 +19,7 @@ const std::wstring PAR5 = L"Четвертый";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // NOP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void nop(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"NOP";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 0);
-	}
-	else {
-		//Ничего
-	}
-
+void nop_core(Machine* m, bool prego, bool iterate) {
 	if (prego) {
 		if(iterate){++m->instruct_number;}
 	}
@@ -36,18 +28,22 @@ void nop(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// END
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void end(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+void nop(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	if (prevalidate) {
-		std::wstring name = L"END";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
+		std::wstring name = L"nop";
+		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 0);
 	}
 	else {
 		//Ничего
 	}
 
+	nop_core(m, prego, iterate);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// END
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void end_core(Machine* m, Instruction* i, bool prego, bool iterate) {
 	if (prego) {
 		if(iterate){++m->instruct_number;}
 	}
@@ -56,6 +52,32 @@ void end(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 		m->instruct_number = -2147483648;
 		throw Var(L"END");
 	}
+}
+void end(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if(i->alias == 0) {
+		if (prevalidate) {
+			std::wstring name = L"end";
+			checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
+		}
+		else {
+			//Ничего
+		}
+	}
+	if(i->alias == 1 || i->alias == 2) {
+		if (prevalidate) {
+			std::wstring name;
+			if(i->alias == 1) {
+				name = L".end";
+			} else {
+				name = L"..end";
+			}
+			checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 0);
+		}
+		else {
+			i->parameters.push_back(Var(L"$"));
+		}
+	}
+	end_core(m, i, prego, iterate);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3354,4 +3376,39 @@ void setchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		
 		if(iterate){++m->instruct_number;}
 	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// DOT
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void dot(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L".";
+		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
+	}
+	else {
+	}
+
+	if (prego) {
+		if(iterate){++m->instruct_number;}
+	}
+	else {
+		m->heap[L"$"] = getValue(&i->parameters[0], &m->heap, m);
+		if(iterate){++m->instruct_number;}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// DOTDOT
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void dotdot(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"..";
+		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 0);
+	}
+	else {
+	}
+
+	if(prego){}
+	if(iterate){++m->instruct_number;}
 }

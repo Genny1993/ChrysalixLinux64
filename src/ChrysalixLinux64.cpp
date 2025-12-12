@@ -78,12 +78,12 @@ int main(int argc, char* argv[])
         Machine mchn(map, false, false);
 
         //Загружаем и парсим исходный код
-        //auto begin = std::chrono::high_resolution_clock::now();
+        auto begin = std::chrono::high_resolution_clock::now();
         Parser p = Parser();
         p.fileLoad(filename);
-        /* auto end = std::chrono::high_resolution_clock::now();
+        auto end = std::chrono::high_resolution_clock::now();
         auto elapsed_ms = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        std::wcout << L"📂📄" << LangLib::getTrans(L"Время загрузки файла с исходным кодом: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек") << L"\n";
+        /*std::wcout << L"📂📄" << LangLib::getTrans(L"Время загрузки файла с исходным кодом: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек") << L"\n";
         */
 
         //begin = std::chrono::high_resolution_clock::now();
@@ -98,13 +98,13 @@ int main(int argc, char* argv[])
         */
 
         //Выполняем код
-        //begin = std::chrono::high_resolution_clock::now();
+        begin = std::chrono::high_resolution_clock::now();
         mchn.prepare();
         mchn.go();
-        /* end = std::chrono::high_resolution_clock::now();
+        end = std::chrono::high_resolution_clock::now();
         elapsed_ms = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::wcout << L"💫🧠" << LangLib::getTrans(L"Время выполнения кода: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек") << L"\n";
-        */
+        
 
         //Пик по используемой памяти
         /*struct rusage usage;
