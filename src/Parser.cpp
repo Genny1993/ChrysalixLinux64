@@ -332,7 +332,8 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
         }
         else {
             //Если у нас кавычка ' это значит, началась или кончилась строка. Игнорируем все синтаксические символы
-            if (c == L'\'') {
+            if (c == L'\'' && instruction_parameters == true) {
+
                 if (is_string == true) {
                     if (escape == false) {
                         is_string = false;
