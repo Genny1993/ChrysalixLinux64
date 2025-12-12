@@ -1,6 +1,18 @@
-for (var $i, 0), (comp '<', $, $i, 10), (calc 'inc', $i), (free $i),
-{
-	calc '^', $, 5.6, 4.1;
-};
+#REPL
+plzdontcrash true;
+
+print '♥️ =====================================================♥️\n'; 
+print '|CHRYSALIX REPL STARTED                                 |\n'; 
+print '♥️ =====================================================♥️\n';
+
+var $instruction__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; 
+var $result__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; 
+
+label &loop__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; 
+    print '|$ = ', $result__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; 
+    change $result__34567uhgfdqsde34567ujhgfdwt546yhgtfcds, nil; 
+    print '|>'; input $instruction__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; 
+    pe $result__34567uhgfdqsde34567ujhgfdwt546yhgtfcds, $instruction__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; 
+jump &loop__34567uhgfdqsde34567ujhgfdwt546yhgtfcds;
 
 end 0;

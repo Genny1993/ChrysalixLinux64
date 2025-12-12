@@ -17,6 +17,7 @@ public:
 	std::wstring content;
 	std::vector<Lexeme> lex_parameters;
 	std::vector<Var> parameters;
+	int alias;
 
 	Lexeme() {
 		parameters.reserve(100);

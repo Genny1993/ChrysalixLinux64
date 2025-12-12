@@ -283,7 +283,6 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
     int braces_count = 0;
     bool braces = false;
 
-
     Lexeme instruction;
     std::vector<Lexeme> lexemes;
     lexemes.reserve(10000);
@@ -376,7 +375,29 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                 str.erase(0, str.find_first_not_of(L" \n\r\t"));
                                 str.erase(str.find_last_not_of(L" \n\r\t") + 1);
                                 instruction.type = LEXTYPE::INSTR;
+
+                                //Если инструкция с альясами, разбираем количество альясов, 
+                                //после вырезаем начальные символы из строки
+                                if(str != L"." && str != L"..") {
+                                    if(str[0] == L'.') {
+                                        if(str[1] == L'.') {
+                                            if(str[2] == L'.') {
+                                                //Тройной альяс, ошибка! 
+                                                throw std::wstring{ str + LangLib::getTrans(L": Неизвестная инструкция\n") };
+                                            } else {
+                                               instruction.alias = 2; 
+                                            }
+                                            
+                                        } else {
+                                            instruction.alias = 1;
+                                        }
+                                    } else {
+                                        instruction.alias = 0;
+                                    }
+                                    str.erase(0, str.find_first_not_of(L"."));
+                                }
                                 instruction.content = str;
+
 
                                 //Если это перевод строки, пробел или таб и инструкция пустая, 
                                 //это не конец инструкции, это форматирование текста
