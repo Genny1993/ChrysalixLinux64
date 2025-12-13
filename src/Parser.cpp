@@ -400,7 +400,7 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                 && c != L'x'
                                 && c != L'y'
                                 && c != L'z'
-                                && c != L'.'
+                                && c != L'>'
                             ) {
                                 str.erase(0, str.find_first_not_of(L" \n\r\t"));
                                 str.erase(str.find_last_not_of(L" \n\r\t") + 1);
@@ -408,10 +408,10 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
 
                                 //Если инструкция с альясами, разбираем количество альясов, 
                                 //после вырезаем начальные символы из строки
-                                if(str != L"." && str != L"..") {
-                                    if(str[0] == L'.') {
-                                        if(str[1] == L'.') {
-                                            if(str[2] == L'.') {
+                                if(str != L">" && str != L">>") {
+                                    if(str[0] == L'>') {
+                                        if(str[1] == L'>') {
+                                            if(str[2] == L'>') {
                                                 //Тройной альяс, ошибка! 
                                                 throw std::wstring{ str + LangLib::getTrans(L": Неизвестная инструкция\n") };
                                             } else {
@@ -424,7 +424,7 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                     } else {
                                         instruction.alias = 0;
                                     }
-                                    str.erase(0, str.find_first_not_of(L"."));
+                                    str.erase(0, str.find_first_not_of(L">"));
                                 }
                                 instruction.content = str;
 
@@ -710,10 +710,10 @@ Instruction Parser::toInstruction(const Lexeme& lex) {
             inst.as_string = lex.content + L" ";
             inst.alias = lex.alias;
             if(inst.alias == 1) {
-                inst.as_string = L"." + inst.as_string;
+                inst.as_string = L">" + inst.as_string;
             }
             if(inst.alias == 2) {
-                inst.as_string = L".." + inst.as_string;
+                inst.as_string = L">>" + inst.as_string;
             }
         }
         catch (std::out_of_range& ex) {
@@ -795,10 +795,10 @@ std::wstring Parser::getInstBlockAsString(const Lexeme& block) {
     if(block.type ==  LEXTYPE::INSTR) {
         std::wstring str = block.content + L" ";
         if(block.alias == 1) {
-            str = L"." + str;
+            str = L">" + str;
         }
         if(block.alias == 2) {
-            str = L".." + str;
+            str = L">>" + str;
         }
         int size = (int)block.lex_parameters.size();
         for(int i = 0; i < size; ++i) {

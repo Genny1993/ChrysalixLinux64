@@ -3379,9 +3379,9 @@ void setchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// DOT
+// ARROW
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void dot(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+void arrow(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	if (prevalidate) {
 		std::wstring name = L".";
 		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
@@ -3399,9 +3399,9 @@ void dot(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// DOTDOT
+// CHEVRON
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void dotdot(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+void chevron(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	if (prevalidate) {
 		std::wstring name = L"..";
 		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 0);

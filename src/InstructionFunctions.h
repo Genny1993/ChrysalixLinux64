@@ -115,8 +115,8 @@ void throwi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 void parallel(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void getchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void setchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
-void dot(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
-void dotdot(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void arrow(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void chevron(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -225,7 +225,7 @@ struct InstructionMap {
 		&parallel,
 		&getchar,
 		&setchar,
-		&dot,
-		&dotdot,
+		&arrow,
+		&chevron,
 	};
 };
