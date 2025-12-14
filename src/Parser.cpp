@@ -717,10 +717,17 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
 
 Instruction Parser::toInstruction(const Lexeme& lex) {
     CTable table;
+    VRules rules;
     if(lex.type ==  LEXTYPE::INSTR) {
         Instruction inst;
         try {
             inst.opCode = table.opCodeMap.at(lex.content);
+            try {
+                inst.VRule = rules.ValidateRulesMap.at(inst.opCode);
+            }
+            catch (std::out_of_range& ex) {
+                //Ничего не делать
+            }
             inst.as_string = lex.content + L" ";
             inst.alias = lex.alias;
             if(inst.alias == 1) {

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <unordered_map>
+#include <vector>
 #include <string>
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -223,5 +224,40 @@ struct CTable {
         {L"setchar", OP_CODE::SETCHAR},
         {L">", OP_CODE::ARROW},
         {L">>", OP_CODE::CHEVRON},
+    };
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Правила валидации для инструкций
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct VRules {
+    std::unordered_map<OP_CODE, std::unordered_map<std::wstring, std::unordered_map<std::wstring, std::unordered_map<std::wstring, std::vector<int>>>>> ValidateRulesMap = {
+        {OP_CODE::NOP, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"stricted", {0}}}}
+                    }
+                },
+                {L"validate", {}},
+                {L"arrow", {{L"param_replace", {{L"number", {-1}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {-1, -1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
+        {OP_CODE::END, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"stricted", {1}}}}
+                    }
+                },
+                {L"validate", {}},
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, -1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
     };
 };

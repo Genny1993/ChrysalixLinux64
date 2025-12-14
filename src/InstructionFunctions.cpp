@@ -19,7 +19,9 @@ const std::wstring PAR5 = L"Четвертый";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // NOP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void nop_core(Machine* m, bool prego, bool iterate) {
+void nop(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	validateCurrentInstruction(m, *i, prevalidate, L"nop");
+
 	if (prego) {
 		if(iterate){++m->instruct_number;}
 	}
@@ -28,22 +30,12 @@ void nop_core(Machine* m, bool prego, bool iterate) {
 	}
 }
 
-void nop(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"nop";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 0);
-	}
-	else {
-		//Ничего
-	}
-
-	nop_core(m, prego, iterate);
-}
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // END
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void end_core(Machine* m, Instruction* i, bool prego, bool iterate) {
+void end(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	validateCurrentInstruction(m, *i, prevalidate, L"end");
+
 	if (prego) {
 		if(iterate){++m->instruct_number;}
 	}
@@ -52,32 +44,6 @@ void end_core(Machine* m, Instruction* i, bool prego, bool iterate) {
 		m->instruct_number = -2147483648;
 		throw Var(L"END");
 	}
-}
-void end(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if(i->alias == 0) {
-		if (prevalidate) {
-			std::wstring name = L"end";
-			checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
-		}
-		else {
-			//Ничего
-		}
-	}
-	if(i->alias == 1 || i->alias == 2) {
-		if (prevalidate) {
-			std::wstring name;
-			if(i->alias == 1) {
-				name = L">end";
-			} else {
-				name = L">>end";
-			}
-			checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 0);
-		}
-		else {
-			i->parameters.push_back(Var(L"$"));
-		}
-	}
-	end_core(m, i, prego, iterate);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

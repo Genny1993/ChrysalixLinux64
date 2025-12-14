@@ -110,6 +110,11 @@ void requiredLabel(Var* val, std::wstring* type, std::wstring num) {
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// validateInstruction
+// Запускает валидацию инструкции и всех инструкций, вложенных в неё. 
+// Используется в машине перед запуском кода.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void validateInstruction(Instruction& inst, Machine* m, bool nested) {
 	InstructionMap inst_map;
 	inst_map.functions[inst.opCode](m, &inst, true, true, !nested);
@@ -124,4 +129,57 @@ void validateInstruction(Instruction& inst, Machine* m, bool nested) {
 		}
 	}
 
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// validateInstruction
+// Запускает валидацию конркетной переданной инструкции по правилам валидации, хранящимся в таблице
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate, std::wstring name) {
+	if(prevalidate) {
+		if(inst.alias == 1) {
+			name = L">" + name;
+		}
+		if(inst.alias == 2) {
+			name = L">>" + name;
+		}
+		//Если есть правила превалидации
+		if(inst.VRule[L"prevalidate"].size() > 0) {
+			//Если указано правило валидации checkParameterCount
+			if(inst.VRule[L"prevalidate"].find(L"checkParameterCount") != inst.VRule[L"prevalidate"].end()) {
+				std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"checkParameterCount"];
+				//Если режим проверки stricted, вызываем проверку и корректируем число параметров исходя из альясов
+				if(rule.find(L"stricted") != rule.end()) {
+					int param_count = rule[L"stricted"][0];
+					param_count -= inst.alias;
+					if(param_count < 0) {
+						param_count = 0;
+					}
+					if(param_count + inst.VRule[L"modeparams"][L"param"][L"count"][0] <= rule[L"stricted"][0]) {
+						param_count += inst.VRule[L"modeparams"][L"param"][L"count"][0];
+					}
+					checkParameterCount(STRICTED, inst.parameters.size(), &name, param_count);
+				}
+			}
+		}
+		if(inst.alias == 1) {
+			if(inst.VRule[L"arrow"][L"param_replace"][L"number"][0] != -1) {
+				inst.parameters.insert(inst.parameters.begin() + inst.VRule[L"arrow"][L"param_replace"][L"number"][0], L"$");
+			}
+		}
+		if(inst.alias == 2) {
+			if(inst.VRule[L"chevron"][L"param_replace"][L"number"][0] != -1) {
+				inst.parameters.insert(inst.parameters.begin() + inst.VRule[L"chevron"][L"param_replace"][L"number"][0], L"$");
+			}
+			if(inst.VRule[L"chevron"][L"param_replace"][L"number"][1] != -1) {
+				inst.parameters.insert(inst.parameters.begin() + inst.VRule[L"chevron"][L"param_replace"][L"number"][1], L"$");
+			}
+		}
+	} else {
+		//Если есть правила валидации
+		if(inst.VRule[L"validate"].size() > 0) {
+
+		}
+	}
+	return;
 }

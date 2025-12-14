@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Machine.h"
+#include "CTable.h"
 
 const unsigned char STRICTED = 0;	//Только определенно количество параметров
 const unsigned char MINIMAL = 1;	//Минимальное количество параметров
@@ -60,6 +61,9 @@ void requiredLabel(Var* val, std::wstring* type, std::wstring num);
 
 void validateInstruction(Instruction& inst, Machine *m, bool nested = false);
 
+//Хелпер валидации инструкции по правилам валидации
+void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate, std::wstring name);
 //Хелперы кодировки
 std::wstring loadFile(std::wstring filename);
 int Unicode();
+
