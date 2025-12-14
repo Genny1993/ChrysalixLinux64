@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
         }
         catch (const std::wstring& error_message) {
             std::wstring temp = error_message;
-            std::wstring repl_code = L" #REPL\n plzdontcrash true; print '♥️ =====================================================♥️ \\n'; print '|CHRYSALIX REPL STARTED                                 |\n'; print '♥️ =====================================================♥️ \\n'; var $instruction__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; var $result__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; label &loop__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; print '|$ = ', $result__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; change $result__34567uhgfdqsde34567ujhgfdwt546yhgtfcds, nil; print '|>'; input $instruction__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; calc '+', instruction__34567uhgfdqsde34567ujhgfdwt546yhgtfcds, instruction__34567uhgfdqsde34567ujhgfdwt546yhgtfcds, '\n'; pe $result__34567uhgfdqsde34567ujhgfdwt546yhgtfcds, $instruction__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; jump &loop__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; end 0;";            
+            std::wstring repl_code = L"#REPL\n plzdontcrash true\n print '♥️ =====================================================♥️\\n'\n  print '|CHRYSALIX REPL STARTED                                 |\\n'\n print '♥️ =====================================================♥️\\n'\n \n var $reg__34567uhgfd\n \n label &loop__34567uhgfd\n print '|$ = ', $reg__34567uhgfd\n change $reg__34567uhgfd, nil\n print '|>'\n input $reg__34567uhgfd\n calc '+', $reg__34567uhgfd, $reg__34567uhgfd, '\\n'\n pe $reg__34567uhgfd, $reg__34567uhgfd\n jump &loop__34567uhgfd\n >end";            
             std::unordered_map<std::wstring, Var> map;
             map.reserve(100);
         

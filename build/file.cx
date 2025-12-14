@@ -7,7 +7,7 @@ print '♥️ =====================================================♥️\n'
 
 var $reg__34567uhgfd
 
-label &loop__34567uhgfd; 
+label &loop__34567uhgfd
     print '|$ = ', $reg__34567uhgfd
     change $reg__34567uhgfd, nil
     print '|>'
