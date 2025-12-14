@@ -6,14 +6,15 @@ print '|CHRYSALIX REPL STARTED                                 |\n'
 print '♥️ =====================================================♥️\n'
 
 var $reg__34567uhgfd
+var $res__34567uhgfd
 
 label &loop__34567uhgfd
-    print '|$ = ', $reg__34567uhgfd
-    change $reg__34567uhgfd, nil
+    print '|$ = ', $res__34567uhgfd
+    change $res__34567uhgfd, nil
     print '|>'
     input $reg__34567uhgfd
     calc '+', $reg__34567uhgfd, $reg__34567uhgfd, '\n'
-    pe $reg__34567uhgfd, $reg__34567uhgfd
+    pe $res__34567uhgfd, $reg__34567uhgfd
 jump &loop__34567uhgfd
 
 >end
