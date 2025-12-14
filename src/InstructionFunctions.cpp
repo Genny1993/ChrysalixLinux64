@@ -67,9 +67,9 @@ void end(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 		if (prevalidate) {
 			std::wstring name;
 			if(i->alias == 1) {
-				name = L".end";
+				name = L">end";
 			} else {
-				name = L"..end";
+				name = L">>end";
 			}
 			checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 0);
 		}
@@ -3383,7 +3383,7 @@ void setchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void arrow(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	if (prevalidate) {
-		std::wstring name = L".";
+		std::wstring name = L">";
 		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
 	}
 	else {
@@ -3403,7 +3403,7 @@ void arrow(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void chevron(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	if (prevalidate) {
-		std::wstring name = L"..";
+		std::wstring name = L">>";
 		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 0);
 	}
 	else {

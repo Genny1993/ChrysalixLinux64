@@ -127,8 +127,8 @@ Var Parser::parseVar(const std::wstring& val, const int& instruction) {
             temp_s.erase(0, temp_s.find_first_not_of(L" \n\r\t"));
             temp_s.erase(temp_s.find_last_not_of(L" \n\r\t") + 1);
 
-            if(temp_s.at(temp_s.size() - 1) != L';') {
-                temp_s += L';';
+            if(temp_s.at(temp_s.size() - 1) != L'\n') {
+                temp_s += L'\n';
             }
             std::vector<Instruction> temp = this->parse(temp_s);
             
@@ -282,6 +282,7 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
     bool is_nested = false;
     int braces_count = 0;
     bool braces = false;
+    bool is_param_end = false;
 
     Lexeme instruction;
     std::vector<Lexeme> lexemes;
@@ -290,6 +291,9 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
     int size_str = (int)val.size();
     for(int i = 0; i < size_str; ++i) {
         wchar_t c = val[i];
+        if(is_param_end == true && c != ' ' && c != '\n' && c != '\r' && c!= 't' && c != '(' && c != '{') {
+            is_param_end = false;
+        }
         //Вырезаем комментарии, если они есть, игнорируем сиволы после начала комментария до конца строки
         if (is_comment) {
             //Если предыдущий знак был равен #
@@ -468,6 +472,7 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                 }
                                 //Парсим параметры инструкции. Если у нас запятая, параметр кончился.
                                 else if (c == L',') {
+                                    is_param_end = true;
                                     str.erase(0, str.find_first_not_of(L" \n\r\t"));
                                     str.erase(str.find_last_not_of(L" \n\r\t") + 1);
                                     if (str != L"") {
@@ -478,21 +483,25 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                         str = L"";
                                     }
                                 }
-                                //если точка с запятой, инструкция вообще кончилась
-                                else if (c == L';') {
-                                    str.erase(0, str.find_first_not_of(L" \n\r\t"));
-                                    str.erase(str.find_last_not_of(L" \n\r\t") + 1);
-                                    if (str != L"") {
-                                        Lexeme temp;
-                                        temp.type =  LEXTYPE::PAR;
-                                        temp.content = str;
-                                        instruction.lex_parameters.emplace_back(temp);
-                                        str = L"";
+                                //если точка с запятой или перевод строки, инструкция вообще кончилась
+                                else if (c == L'\n' || c == L';') {
+                                    if(c == L'\n' && is_param_end == true) {
+                                        //Ничего не делаем если это перевод строки после конца параметра
+                                    } else {
+                                        str.erase(0, str.find_first_not_of(L" \n\r\t"));
+                                        str.erase(str.find_last_not_of(L" \n\r\t") + 1);
+                                        if (str != L"") {
+                                            Lexeme temp;
+                                            temp.type =  LEXTYPE::PAR;
+                                            temp.content = str;
+                                            instruction.lex_parameters.emplace_back(temp);
+                                            str = L"";
+                                        }
+                                        lexemes.emplace_back(instruction);
+                                        instruction.lex_parameters.clear();
+                                        instruction.content = L"";
+                                        instruction_parameters = false;
                                     }
-                                    lexemes.emplace_back(instruction);
-                                    instruction.lex_parameters.clear();
-                                    instruction.content = L"";
-                                    instruction_parameters = false;
                                 } else if (c == L'[') {
                                     ++braces_count;
                                     braces = true;
@@ -555,9 +564,9 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
 
                                         Lexeme temp;
                                         temp.type =  LEXTYPE::INSTBLOCK;
-                                        //Добавляем конец инструкции ;, чтобы избавиться от излишних ; во вложенных инструкциях
-                                        if(str[str.size() - 1] != L';' ) {
-                                            str += L';';
+                                        //Добавляем конец инструкции \n, чтобы избавиться от излишних \n во вложенных инструкциях
+                                        if(str[str.size() - 1] != L'\n' ) {
+                                            str += L'\n';
                                         }
                                         std::vector<Lexeme> tlexemes = parseLex(str);
 
@@ -581,6 +590,7 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
 
                                 //Если символ начала другой команды
                                 }  else if(c == L',') {
+                                    is_param_end = true;
                                     if(parenthesis_count == 0) {          
                                         int size = (int)str.size();
                                         std::wstring check = L"";
@@ -610,9 +620,9 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
 
                                         Lexeme temp;
                                         temp.type =  LEXTYPE::INSTBLOCK;
-                                        //Добавляем конец инструкции ;, чтобы избавиться от излишних ; во вложенных инструкциях
-                                        if(str[str.size() - 1] != L';' ) {
-                                            str += L';';
+                                        //Добавляем конец инструкции \n, чтобы избавиться от излишних \n во вложенных инструкциях
+                                        if(str[str.size() - 1] != L'\n' ) {
+                                            str += L'\n';
                                         }
                                         std::vector<Lexeme> tlexemes = parseLex(str);
 
@@ -629,59 +639,63 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                         throw std::wstring{ str + LangLib::getTrans(L": Лишняя закрывающая скобка ')'\n") };
                                     }
                                 //Если символ конца инструкции
-                                } else if (c == L';') {
-                                    if(parenthesis_count == 0) {
-                                        int size = (int)str.size();
-                                        std::wstring check = L"";
-                                        for(int i = size -1; i >= 0; --i) {
-                                            if(str[i] == L')' || str[i] == L'}') {
-                                                break;
-                                            }
-                                            if(str[i] != L' ' && str[i] != L'\t' && str[i] != L'\n' && str[i] != L'\r') {
-                                                check += str[i];
-                                            }
-                                        }
-
-                                        if(check != L"") {
-                                            reverse(check.begin(), check.end());
-                                            throw std::wstring{ check + LangLib::getTrans(L": Лишний символ после вложенной инструкции\n") };
-                                        }
-
-                                        str.erase(0, str.find_first_not_of(L" \n\r\t"));
-                                        str.erase(str.find_last_not_of(L" \n\r\t") + 1);
-                                        str.erase(0, 1);
-                                        str.erase(str.size() - 1);
-                                        str.erase(0, str.find_first_not_of(L" \n\r\t"));
-                                        str.erase(str.find_last_not_of(L" \n\r\t") + 1);
-
-                                        if(str == L"") {
-                                            throw std::wstring{ LangLib::getTrans(L"Пустая вложенная инструкция '()'\n") };
-                                        }
-
-                                        Lexeme temp;
-                                        temp.type =  LEXTYPE::INSTBLOCK;
-                                        //Добавляем конец инструкции ;, чтобы избавиться от излишних ; во вложенных инструкциях
-                                        if(str[str.size() - 1] != L';' ) {
-                                            str += L';';
-                                        }
-                                        std::vector<Lexeme> tlexemes = parseLex(str);
-
-                                        int lsize = (int)tlexemes.size();
-                                        for(int i = 0; i < lsize; ++i) {
-                                            temp.lex_parameters.emplace_back(tlexemes[i]);
-                                        }
-                                        instruction.lex_parameters.emplace_back(temp);
-                                        str = L"";
-                                        is_nested = false;
-                                        lexemes.emplace_back(instruction);
-                                        instruction.lex_parameters.clear();
-                                        instruction.content = L"";
-                                        instruction_parameters = false;
-
-                                    } else if (parenthesis_count > 0 ){
-                                        str += c;
+                                } else if (c == L'\n' || c == L';') {
+                                    if(c == L'\n' && is_param_end == true) {
+                                        //Ничего не делаем если это перевод строки после конца параметра
                                     } else {
-                                        throw std::wstring{ str + LangLib::getTrans(L": Лишняя закрывающая скобка ')'\n") };
+                                        if(parenthesis_count == 0) {
+                                            int size = (int)str.size();
+                                            std::wstring check = L"";
+                                            for(int i = size -1; i >= 0; --i) {
+                                                if(str[i] == L')' || str[i] == L'}') {
+                                                    break;
+                                                }
+                                                if(str[i] != L' ' && str[i] != L'\t' && str[i] != L'\n' && str[i] != L'\r') {
+                                                    check += str[i];
+                                                }
+                                            }
+
+                                            if(check != L"") {
+                                                reverse(check.begin(), check.end());
+                                                throw std::wstring{ check + LangLib::getTrans(L": Лишний символ после вложенной инструкции\n") };
+                                            }
+
+                                            str.erase(0, str.find_first_not_of(L" \n\r\t"));
+                                            str.erase(str.find_last_not_of(L" \n\r\t") + 1);
+                                            str.erase(0, 1);
+                                            str.erase(str.size() - 1);
+                                            str.erase(0, str.find_first_not_of(L" \n\r\t"));
+                                            str.erase(str.find_last_not_of(L" \n\r\t") + 1);
+
+                                            if(str == L"") {
+                                                throw std::wstring{ LangLib::getTrans(L"Пустая вложенная инструкция '()'\n") };
+                                            }
+
+                                            Lexeme temp;
+                                            temp.type =  LEXTYPE::INSTBLOCK;
+                                            //Добавляем конец инструкции \n, чтобы избавиться от излишних \n во вложенных инструкциях
+                                            if(str[str.size() - 1] != L'\n' ) {
+                                                str += L'\n';
+                                            }
+                                            std::vector<Lexeme> tlexemes = parseLex(str);
+
+                                            int lsize = (int)tlexemes.size();
+                                            for(int i = 0; i < lsize; ++i) {
+                                                temp.lex_parameters.emplace_back(tlexemes[i]);
+                                            }
+                                            instruction.lex_parameters.emplace_back(temp);
+                                            str = L"";
+                                            is_nested = false;
+                                            lexemes.emplace_back(instruction);
+                                            instruction.lex_parameters.clear();
+                                            instruction.content = L"";
+                                            instruction_parameters = false;
+
+                                        } else if (parenthesis_count > 0 ){
+                                            str += c;
+                                        } else {
+                                            throw std::wstring{ str + LangLib::getTrans(L": Лишняя закрывающая скобка ')'\n") };
+                                        }
                                     }
                                 } else if(parenthesis_count > 0 && i == (size_str - 1)) {
                                     throw std::wstring{ str + LangLib::getTrans(L": Лишняя открывающая скобка '('\n") };

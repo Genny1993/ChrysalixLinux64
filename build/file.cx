@@ -1,18 +1,19 @@
 #REPL
-plzdontcrash true;
+plzdontcrash true
 
-print '♥️ =====================================================♥️\n'; 
-print '|CHRYSALIX REPL STARTED                                 |\n'; 
-print '♥️ =====================================================♥️\n';
+print '♥️ =====================================================♥️\n' 
+print '|CHRYSALIX REPL STARTED                                 |\n' 
+print '♥️ =====================================================♥️\n'
 
-var $instruction__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; 
-var $result__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; 
+var $reg__34567uhgfd
 
-label &loop__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; 
-    print '|$ = ', $result__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; 
-    change $result__34567uhgfdqsde34567ujhgfdwt546yhgtfcds, nil; 
-    print '|>'; input $instruction__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; 
-    pe $result__34567uhgfdqsde34567ujhgfdwt546yhgtfcds, $instruction__34567uhgfdqsde34567ujhgfdwt546yhgtfcds; 
-jump &loop__34567uhgfdqsde34567ujhgfdwt546yhgtfcds;
+label &loop__34567uhgfd; 
+    print '|$ = ', $reg__34567uhgfd
+    change $reg__34567uhgfd, nil
+    print '|>'
+    input $reg__34567uhgfd
+    calc '+', $reg__34567uhgfd, $reg__34567uhgfd, '\n'
+    pe $reg__34567uhgfd, $reg__34567uhgfd
+jump &loop__34567uhgfd
 
-end 0;
+>end
