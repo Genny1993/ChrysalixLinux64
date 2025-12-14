@@ -62,7 +62,7 @@ void requiredLabel(Var* val, std::wstring* type, std::wstring num);
 void validateInstruction(Instruction& inst, Machine *m, bool nested = false);
 
 //Хелпер валидации инструкции по правилам валидации
-void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate, std::wstring name);
+void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate, std::wstring name, std::vector<std::wstring> message = {});
 //Хелперы кодировки
 std::wstring loadFile(std::wstring filename);
 int Unicode();

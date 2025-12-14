@@ -9,9 +9,9 @@ var $reg__34567uhgfd
 var $res__34567uhgfd
 
 label &loop__34567uhgfd
-    print '|$ = ', $res__34567uhgfd
+    print ' $ = ', $res__34567uhgfd
     change $res__34567uhgfd, nil
-    print '|>'
+    print ':'
     input $reg__34567uhgfd
     calc '+', $reg__34567uhgfd, $reg__34567uhgfd, '\n'
     pe $res__34567uhgfd, $reg__34567uhgfd

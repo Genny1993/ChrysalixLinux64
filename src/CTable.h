@@ -259,5 +259,68 @@ struct VRules {
                 {L"modeparams", {{L"param", {{L"count", {0}}}}}}
             }
         },
+        {OP_CODE::SLEEP, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"stricted", {1}}}}
+                    }
+                },
+                {L"validate", {}},
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, -1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
+        {OP_CODE::VAR, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"variants", {2, 1, 2}}}},
+                        {L"requiredVar", {{L"param_nums", {0}}}}
+                    }
+                },
+                {L"validate",
+                    {
+                        {L"checkExistValue", {{L"param_nums", {0}}}}
+                    }
+                },
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, 1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
+        {OP_CODE::PRINT, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"minimal", {1}}}}
+                    }
+                },
+                {L"validate", {}},
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, 1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
+        /*
+        {L"sleep", OP_CODE::SLEEP},
+        {L"var", OP_CODE::VAR},
+        {L"print", OP_CODE::PRINT},
+        {L"free", OP_CODE::FREE},
+        {L"label", OP_CODE::LABEL},
+        {L"jump", OP_CODE::JUMP},
+        {L"input", OP_CODE::INPT},
+        {L"change", OP_CODE::CHANGE},
+        {L"to", OP_CODE::TO},
+        {L"calc", OP_CODE::CALC},
+        {L"newtemp", OP_CODE::NEWTEMP},
+        {L"forget", OP_CODE::FORGET},
+        {L"tcount", OP_CODE::TCOUNT},
+        {L"isset", OP_CODE::ISSET},
+        {L"typeof", OP_CODE::TYPEOF},
+        {L"comp", OP_CODE::COMP},
+        {L"logic", OP_CODE::LOGIC},
+        */
     };
 };

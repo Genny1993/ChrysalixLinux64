@@ -50,15 +50,7 @@ void end(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 // SLEEP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void sleepf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"SLEEP";
-		if (prevalidate) {
-			checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
-		}
-	}
-	else {
-		//Ничего
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"sleep");
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -73,15 +65,10 @@ void sleepf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 // VAR
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void var(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"VAR";
-		int v[2]{ 1, 2 };
-		checkParameterCount(VARIANTS, (int)i->parameters.size(), &name, 0, 0, nullptr, v, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkExistValue(&i->parameters[0], m);
-	}
+	std::vector<std::wstring> message = {
+		PAR1
+	};
+	validateCurrentInstruction(m, *i, prevalidate, L"var", message);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -100,13 +87,7 @@ void var(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 // PRINT
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void print(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"PRINT";
-		checkParameterCount(MINIMAL, (int)i->parameters.size(), &name, 0, 1);
-	}
-	else {
-		//Ничего
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"print");
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -351,16 +332,6 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 			&& type != std::wstring_view(L"/")
 			&& type != std::wstring_view(L"%")
 			&& type != std::wstring_view(L"^")
-			&& type != std::wstring_view(L"INC")
-			&& type != std::wstring_view(L"DEC")
-			&& type != std::wstring_view(L"LOG")
-			&& type != std::wstring_view(L"LN")
-			&& type != std::wstring_view(L"FACT")
-			&& type != std::wstring_view(L"ROOT")
-			&& type != std::wstring_view(L"ABS")
-			&& type != std::wstring_view(L"ROUND")
-			&& type != std::wstring_view(L"FLOOR")
-			&& type != std::wstring_view(L"CEIL")
 			&& type != std::wstring_view(L"inc")
 			&& type != std::wstring_view(L"dec")
 			&& type != std::wstring_view(L"log")

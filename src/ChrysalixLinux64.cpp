@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
         }
         catch (const std::wstring& error_message) {
             std::wstring temp = error_message;
-            std::wstring repl_code = L"#REPL\n plzdontcrash true\n print '♥️ =====================================================♥️\\n'\n  print '|CHRYSALIX REPL STARTED                                 |\\n'\n print '♥️ =====================================================♥️\\n'\n \n var $reg__34567uhgfd\n var $res__34567uhgfd\n\n label &loop__34567uhgfd\n print '|$ = ', $res__34567uhgfd\n change $res__34567uhgfd, nil\n print '|>'\n input $reg__34567uhgfd\n calc '+', $reg__34567uhgfd, $reg__34567uhgfd, '\\n'\n pe $res__34567uhgfd, $reg__34567uhgfd\n jump &loop__34567uhgfd\n >end";            
+            std::wstring repl_code = L"#REPL\n plzdontcrash true\n print '♥️ =====================================================♥️\\n'\n  print '|CHRYSALIX REPL STARTED                                 |\\n'\n print '♥️ =====================================================♥️\\n'\n \n var $reg__34567uhgfd\n var $res__34567uhgfd\n\n label &loop__34567uhgfd\n print ' $ = ', $res__34567uhgfd\n change $res__34567uhgfd, nil\n print ':'\n input $reg__34567uhgfd\n calc '+', $reg__34567uhgfd, $reg__34567uhgfd, '\\n'\n pe $res__34567uhgfd, $reg__34567uhgfd\n jump &loop__34567uhgfd\n >end";            
             std::unordered_map<std::wstring, Var> map;
             map.reserve(100);
         
