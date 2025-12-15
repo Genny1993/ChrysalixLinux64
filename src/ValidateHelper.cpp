@@ -195,6 +195,7 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 				}
 			}
 		}
+		//Подставляем нулевой регистр в параметры исходя из оператора стрелка/шеврон
 		if(inst.alias == 1) {
 			int size = inst.parameters.size();
 			if(inst.VRule[L"arrow"][L"param_replace"][L"number"][0] != -1) {
@@ -221,13 +222,58 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 			//Если валидация, что подставленный параметр - переменная
 			if(inst.VRule[L"prevalidate"].find(L"requiredVar") != inst.VRule[L"prevalidate"].end()) {
 				std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"requiredVar"];
-				unsigned size = rule[L"param_nums"].size();
-				for(unsigned i = 0; i < size; ++i) {
-					std::wstring mess = L"";
-					if(i < message.size()) {
-						mess = message[i];
+				if(rule[L"param_nums"][0] == -1) {
+					unsigned start = rule[L"param_nums"][1];
+					unsigned size = inst.parameters.size();
+					for(unsigned i = start; i < size; ++i) {
+						std::wstring mess = std::to_wstring(i);
+						requiredVar(&inst.parameters[i], &name, LangLib::getTrans(mess));
 					}
-					requiredVar(&inst.parameters[i], &name,LangLib::getTrans(mess));
+				} else {
+					unsigned size = rule[L"param_nums"].size();
+					for(unsigned i = 0; i < size; ++i) {
+						std::wstring mess = L"";
+						if(i < message.size()) {
+							mess = message[i];
+						}
+						requiredVar(&inst.parameters[i], &name, LangLib::getTrans(mess));
+					}
+				}
+			}
+			if(inst.VRule[L"prevalidate"].find(L"requiredLabel") != inst.VRule[L"prevalidate"].end()) {
+				std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"requiredLabel"];
+				if(rule[L"param_nums"][0] == -1) {
+					unsigned start = rule[L"param_nums"][1];
+					unsigned size = inst.parameters.size();
+					for(unsigned i = start; i < size; ++i) {
+						std::wstring mess = std::to_wstring(i);
+						requiredLabel(&inst.parameters[i], &name, LangLib::getTrans(mess));
+					}
+				} else {
+					unsigned size = rule[L"param_nums"].size();
+					for(unsigned i = 0; i < size; ++i) {
+						std::wstring mess = L"";
+						if(i < message.size()) {
+							mess = message[i];
+						}
+						requiredLabel(&inst.parameters[i], &name, LangLib::getTrans(mess));
+					}
+				}
+			}
+			//Если указано правило проверки на существование метки
+			if(inst.VRule[L"prevalidate"].find(L"checkExistLabel") != inst.VRule[L"prevalidate"].end()) {
+				std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"checkExistLabel"];
+				if(rule[L"param_nums"][0] == -1) {
+					unsigned start = rule[L"param_nums"][1];
+					unsigned size = inst.parameters.size();
+					for(unsigned i = start; i < size; ++i) {
+						checkExistLabel(&inst.parameters[i], m);
+					}
+				} else {
+					unsigned size = rule[L"param_nums"].size();
+					for(unsigned i = 0; i < size; ++i) {
+						checkExistLabel(&inst.parameters[i], m);
+					}
 				}
 			}
 		}
@@ -236,15 +282,34 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 		//Если есть правила валидации
 		if(inst.VRule[L"validate"].size() > 0) {
 			//Если указано правило проверки на существование переменной
-			if(inst.VRule[L"validate"].find(L"checkExistValue") != inst.VRule[L"prevalidate"].end()) {
+			if(inst.VRule[L"validate"].find(L"checkExistValue") != inst.VRule[L"validate"].end()) {
 				std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"validate"][L"checkExistValue"];
-				unsigned size = rule[L"param_nums"].size();
-				for(unsigned i = 0; i < size; ++i) {
-					std::wstring mess = L"";
-					if(i < message.size()) {
-						mess = message[i];
+				if(rule[L"param_nums"][0] == -1) {
+					unsigned start = rule[L"param_nums"][1];
+					unsigned size = inst.parameters.size();
+					for(unsigned i = start; i < size; ++i) {
+						checkExistValue(&inst.parameters[i], m);
 					}
-					checkExistValue(&inst.parameters[i], m);
+				} else {
+					unsigned size = rule[L"param_nums"].size();
+					for(unsigned i = 0; i < size; ++i) {
+						checkExistValue(&inst.parameters[i], m);
+					}
+				}
+			}
+			if(inst.VRule[L"validate"].find(L"checkNotExistValue") != inst.VRule[L"validate"].end()) {
+				std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"validate"][L"checkNotExistValue"];
+				if(rule[L"param_nums"][0] == -1) {
+					unsigned start = rule[L"param_nums"][1];
+					unsigned size = inst.parameters.size();
+					for(unsigned i = start; i < size; ++i) {
+						checkNotExistValue(&inst.parameters[i], m);
+					}
+				} else {
+					unsigned size = rule[L"param_nums"].size();
+					for(unsigned i = 0; i < size; ++i) {
+						checkNotExistValue(&inst.parameters[i], m);
+					}
 				}
 			}
 		}

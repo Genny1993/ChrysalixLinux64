@@ -105,20 +105,7 @@ void print(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // FREE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void free(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"FREE";
-		checkParameterCount(MINIMAL, (int)i->parameters.size(), &name, 0, 1);
-		for (Var& i : i->parameters)
-		{
-			requiredVar(&i, &name, i.toSTR().getWStr());
-		}
-	}
-	else {
-		for (Var& i : i->parameters)
-		{
-			checkNotExistValue(&i, m);
-		}
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"free");
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -139,15 +126,10 @@ void free(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 // LABEL
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void label(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"LABEL";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
-		requiredLabel(&i->parameters[0], &name, LangLib::getTrans(PAR4));
-		checkExistLabel(&i->parameters[0], m);
-	}
-	else {
-		//Ничего
-	}
+	std::vector<std::wstring> message = {
+		PAR4
+	};
+	validateCurrentInstruction(m, *i, prevalidate, L"label", message);
 
 	if (prego) {
 		m->jmp_pointers[i->parameters[0].toSTR().getWStr()] = m->instruct_number;
@@ -162,13 +144,7 @@ void label(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // JUMP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void jump(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"JUMP";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
-	}
-	else {
-		//Ничего
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"jump");
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}

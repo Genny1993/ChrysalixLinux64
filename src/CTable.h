@@ -303,13 +303,53 @@ struct VRules {
                 {L"modeparams", {{L"param", {{L"count", {0}}}}}}
             }
         },
+        {OP_CODE::FREE, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"minimal", {1}}}},
+                        {L"requiredVar", {{L"param_nums", {-1, 0}}}}
+                    }
+                },
+                {L"validate",
+                    {
+                        {L"checkNotExistValue", {{L"param_nums", {-1, 0}}}}
+                    }
+                },
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, 1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
+        {OP_CODE::LABEL, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"stricted", {1}}}},
+                        {L"requiredLabel", {{L"param_nums", {0}}}},
+                        {L"checkExistLabel", {{L"param_nums", {0}}}}
+                    }
+                },
+                {L"validate", {}},
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, -1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
+        {OP_CODE::JUMP, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"stricted", {1}}}}
+                    }
+                },
+                {L"validate", {}},
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, -1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
         /*
-        {L"sleep", OP_CODE::SLEEP},
-        {L"var", OP_CODE::VAR},
-        {L"print", OP_CODE::PRINT},
-        {L"free", OP_CODE::FREE},
-        {L"label", OP_CODE::LABEL},
-        {L"jump", OP_CODE::JUMP},
         {L"input", OP_CODE::INPT},
         {L"change", OP_CODE::CHANGE},
         {L"to", OP_CODE::TO},
