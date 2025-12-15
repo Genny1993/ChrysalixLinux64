@@ -541,5 +541,151 @@ struct VRules {
                 {L"modeparams", {{L"param", {{L"count", {1}}}}}}
             }
         },
+        {OP_CODE::JIF, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"stricted", {2}}}},
+                    }
+                },
+                {L"validate", {}},
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, 1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
+        {OP_CODE::JIFNOT, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"stricted", {2}}}},
+                    }
+                },
+                {L"validate", {}},
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, 1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
+        {OP_CODE::DLABEL, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"stricted", {1}}}},
+                        {L"requiredLabel", {{L"param_nums", {0}}}},
+                    }
+                },
+                {L"validate", {}},
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, -1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
+        {OP_CODE::SWAP, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"stricted", {2}}}},
+                        {L"requiredVar", {{L"param_nums", {0, 1}}}},
+                    }
+                },
+                {L"validate", 
+                    {
+                        {L"checkNotExistValue", {{L"param_nums", {0, 1}}}}
+                    }
+                },
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, 1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
+        {OP_CODE::ARRAY, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"minimal", {2}}}},
+                        {L"requiredVar", {{L"param_nums", {0}}}}
+                    }
+                },
+                {L"validate", {}},
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, 1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
+        {OP_CODE::VTOARR, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"minimal", {2}}}},
+                        {L"requiredVar", {{L"param_nums", {0}}}}
+                    }
+                },
+                {L"validate", {}},
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, 1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
+        {OP_CODE::PUSHB, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"stricted", {2}}}},
+                        {L"requiredVar", {{L"param_nums", {0}}}}
+                    }
+                },
+                {L"validate", 
+                    {
+                        {L"checkNotExistValue", {{L"param_nums", {0}}}}
+                    }
+                },
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, 1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
+        /*
+
+        {L"popb", OP_CODE::POPB},
+        {L"pushf", OP_CODE::PUSHF},
+        {L"popf", OP_CODE::POPF},
+        {L"erase", OP_CODE::ERASE},
+        {L"insert", OP_CODE::INSRT},
+        {L"clear", OP_CODE::CLEAR},
+        {L"size", OP_CODE::SIZEARR},
+        {L"slice", OP_CODE::SLICE},
+        {L"merge", OP_CODE::MERGE},
+        {L"sort", OP_CODE::SORT},
+        {L"unique", OP_CODE::UNIQUE},
+        {L"reverse", OP_CODE::REVERSE},
+        {L"equal", OP_CODE::EQUAL},
+        {L"in", OP_CODE::INNER},
+        {L"inall", OP_CODE::INALL},
+        {L"rin", OP_CODE::RINNER},
+        {L"rinall", OP_CODE::RINALL},
+        {L"arrtomap", OP_CODE::ARRTOMAP},
+        {L"inters", OP_CODE::INTERS},
+        {L"notinters", OP_CODE::NOTINTERS},
+        {L"arrtostr", OP_CODE::ARRTOSTR},
+        {L"sum", OP_CODE::SUM},
+        {L"avg", OP_CODE::AVG},
+        {L"min", OP_CODE::MIN},
+        {L"max", OP_CODE::MAX},
+        {L"range", OP_CODE::RNGE},
+        {L"median", OP_CODE::MEDIAN},
+        {L"mode", OP_CODE::MODE},
+        {L"stddev", OP_CODE::STDDEV},
+        {L"push", OP_CODE::PUSH},
+        {L"vtomap", OP_CODE::VTOMAP},
+        {L"getvals", OP_CODE::GETVALS},
+        {L"getkeys", OP_CODE::GETKEYS},
+        {L"getinterf", OP_CODE::GETINTERF},
+        {L"kvinters", OP_CODE::KVINTERS},
+        {L"kvnotinters", OP_CODE::KVNOTINTERS},
+        {L"clearc", OP_CODE::CLEARC},
+        {L"tointerf", OP_CODE::TOINTERF},
+        {L"uninterf", OP_CODE::UNINTERF},
+        {L"interftomap", OP_CODE::INTERFTOMAP},*/
     };
 };

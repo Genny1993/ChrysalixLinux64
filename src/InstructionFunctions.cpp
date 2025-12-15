@@ -671,10 +671,7 @@ void logic(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // JIF
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void jif(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"JIF";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"jif");
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -717,11 +714,7 @@ void jifnot(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 // DLABEL
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void dlabel(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"DLABEL";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
-		requiredLabel(&i->parameters[0], &name, LangLib::getTrans(PAR4));
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"dlabel", par4);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -736,16 +729,7 @@ void dlabel(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 // SWAP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void swap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"SWAP";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-		checkNotExistValue(&i->parameters[1], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"swap", par1_2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -765,13 +749,7 @@ void swap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 // ARRAY
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void arr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"ARRAY";
-		checkParameterCount(MINIMAL, (int)i->parameters.size(), &name, 0, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"array", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -803,14 +781,7 @@ void arr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 // VTOARR
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void vtoarr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"VTOARR";
-		checkParameterCount(MINIMAL, (int)i->parameters.size(), &name, 0, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"vtoarr", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -839,15 +810,7 @@ void vtoarr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 // PUSHB
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void pushb(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"PUSHB";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"pushb", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}

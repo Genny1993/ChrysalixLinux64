@@ -145,38 +145,38 @@ Var Parser::parseVar(const std::wstring& val, const int& instruction) {
     else if(temp[0] == L'&') {
         return Var(temp);
     }
-    else if (temp.substr(0, 3) == std::wstring_view(L"NTG") || temp.substr(0, 3) == std::wstring_view(L"ntg")) {
+    else if (temp.substr(0, 3) == std::wstring_view(L"ntg")) {
         return Var(temp.erase(0, 3)).toNTG();
     }
-    else if (temp.substr(0, 4) == std::wstring_view(L"UNTG") || temp.substr(0, 4) == std::wstring_view(L"untg")) {
+    else if (temp.substr(0, 4) == std::wstring_view(L"untg")) {
         return Var(temp.erase(0, 4)).toUNTG();
     }
-    else if (temp.substr(0, 3) == std::wstring_view(L"DBL") || temp.substr(0, 3) == std::wstring_view(L"dbl")) {
+    else if (temp.substr(0, 3) == std::wstring_view(L"dbl")) {
         return Var(temp.erase(0, 3)).toDBL();
     }
-    else if (temp.substr(0, 3) == std::wstring_view(L"CHR") || temp.substr(0, 3) == std::wstring_view(L"chr")) {
+    else if (temp.substr(0, 3) == std::wstring_view(L"chr")) {
         return Var(temp.erase(0, 3)).toCHR();
     }
-    else if (temp.substr(0, 4) == std::wstring_view(L"UCHR") || temp.substr(0, 4) == std::wstring_view(L"uchr")) {
+    else if (temp.substr(0, 4) == std::wstring_view(L"uchr")) {
         return Var(temp.erase(0, 4)).toUCHR();
     }
-    else if (temp == std::wstring_view(L"ARR") || temp == std::wstring_view(L"arr")) {
+    else if (temp == std::wstring_view(L"arr")) {
         std::vector<Var> v;
         v.reserve(1000);
         return Var(v);
     }
-    else if (temp == std::wstring_view(L"MAP") || temp == std::wstring_view(L"map")) {
+    else if (temp == std::wstring_view(L"map")) {
         std::unordered_map<std::wstring, Var> map;
         map.reserve(1000);
         return Var(map);
     }
-    else if (temp == std::wstring_view(L"TRUE") || temp == std::wstring_view(L"true")) {
+    else if (temp == std::wstring_view(L"true")) {
         return Var(true);
     }
-    else if (temp == std::wstring_view(L"FALSE") || temp == std::wstring_view(L"false")) {
+    else if (temp == std::wstring_view(L"false")) {
         return Var(false);
     }
-    else if (temp == std::wstring_view(L"NIL") || temp == std::wstring_view(L"nil")) {
+    else if (temp == std::wstring_view(L"nil")) {
         return Var();
     }
     else if (temp[0] == L'\'') {
