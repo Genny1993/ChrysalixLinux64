@@ -3292,3 +3292,25 @@ void plztrustme(Machine* m, Instruction* i, bool prevalidate, bool prego, bool i
 		if(iterate){++m->instruct_number;}
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ICOUNT
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void icount(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"icount";
+		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
+		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
+	}
+	else {
+		checkNotExistValue(&i->parameters[0], m);
+	}
+
+	if (prego) {
+		if(iterate){++m->instruct_number;}
+	}
+	else {
+		setValue(&i->parameters[0], &m->heap, m) = Var(m->executed_count);
+		if(iterate){++m->instruct_number;}
+	}
+}

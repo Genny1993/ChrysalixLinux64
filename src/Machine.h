@@ -9,6 +9,7 @@
 class Machine {
 public:
 	unsigned int tmp_count;
+	unsigned long long int executed_count;
 	int instruct_number;
 	bool softerrors;
 	bool silence;

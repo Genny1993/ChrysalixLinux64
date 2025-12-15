@@ -128,7 +128,6 @@ void validateInstruction(Instruction& inst, Machine* m, bool nested) {
 			}
 		}
 	}
-
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -348,5 +347,6 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 			}
 		}
 	}
+	++(m->executed_count);
 	return;
 }

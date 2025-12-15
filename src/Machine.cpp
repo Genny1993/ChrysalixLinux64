@@ -10,6 +10,7 @@ Machine::Machine(std::unordered_map<std::wstring, Var> in, bool soft, bool silen
 	this->silence = silence;
 	this->validate = validate;
 	this->tmp_count = 0;
+	this->executed_count = 0;
 	this->instructions.reserve(10000);
 	this->heap.reserve(1000);
 	this->jmp_pointers.reserve(1000);

@@ -113,6 +113,7 @@ enum OP_CODE {
     ARROW,
     CHEVRON,
     PLZTRUSTME,
+    ICOUNT,
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -225,7 +226,8 @@ struct CTable {
         {L"setchar", OP_CODE::SETCHAR},
         {L">", OP_CODE::ARROW},
         {L">>", OP_CODE::CHEVRON},
-        {L"plztrustme", OP_CODE::PLZTRUSTME}
+        {L"plztrustme", OP_CODE::PLZTRUSTME},
+        {L"icount", OP_CODE::ICOUNT}
     };
 };
 
