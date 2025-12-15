@@ -461,10 +461,7 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 // NEWTEMP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void newtemp(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"NEWTEMP";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"newtemp");
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -3311,4 +3308,29 @@ void chevron(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 
 	if(prego){}
 	if(iterate){++m->instruct_number;}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PLZTRUSTME
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void plztrustme(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
+	if (prevalidate) {
+		std::wstring name = L"plztrustme";
+		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
+	}
+	else {
+	}
+
+	if (prego) {
+		if(iterate){++m->instruct_number;}
+	}
+	else {
+		bool mode = getValue(&i->parameters[0], &m->heap, m).toBLN().data.bln;
+		if(mode) {
+			m->validate = false;
+		} else {
+			m->validate = true;
+		}
+		if(iterate){++m->instruct_number;}
+	}
 }

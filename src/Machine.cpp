@@ -3,12 +3,12 @@
 #include "LangLib.h"
 #include "Helpers.h"
 
-Machine::Machine(std::unordered_map<std::wstring, Var> in, bool dbg, bool soft, bool silence) {
+Machine::Machine(std::unordered_map<std::wstring, Var> in, bool soft, bool silence, bool validate) {
 	this->in_data = in;
-	this->debug = dbg;
 	this->instruct_number = 0;
 	this->softerrors = soft;
 	this->silence = silence;
+	this->validate = validate;
 	this->tmp_count = 0;
 	this->instructions.reserve(10000);
 	this->heap.reserve(1000);

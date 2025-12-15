@@ -133,188 +133,216 @@ void validateInstruction(Instruction& inst, Machine* m, bool nested) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // validateInstruction
-// Запускает валидацию конркетной переданной инструкции по правилам валидации, хранящимся в таблице
+// Запускает валидацию конкретной переданной инструкции по правилам валидации, хранящимся в таблице
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate, std::wstring name, std::vector<std::wstring> message) {
-	if(prevalidate) {
-		if(inst.alias == 1) {
-			name = L">" + name;
-		}
-		if(inst.alias == 2) {
-			name = L">>" + name;
-		}
-		//Если есть правила превалидации
-		if(inst.VRule[L"prevalidate"].size() > 0) {
-			//Если указано правило валидации checkParameterCount
-			if(inst.VRule[L"prevalidate"].find(L"checkParameterCount") != inst.VRule[L"prevalidate"].end()) {
-				std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"checkParameterCount"];
-				//Если режим проверки stricted, вызываем проверку и корректируем число параметров исходя из альясов
-				if(rule.find(L"stricted") != rule.end()) {
-					int param_count = rule[L"stricted"][0];
-					param_count -= inst.alias;
-					if(param_count < inst.VRule[L"modeparams"][L"param"][L"count"][0]) {
-						param_count = inst.VRule[L"modeparams"][L"param"][L"count"][0];
-					}
-					checkParameterCount(STRICTED, (int)inst.parameters.size(), &name, param_count);
-				}
-				//Вызываем проверку variants
-				if(rule.find(L"variants") != rule.end()) {
+	if(m->validate) {
+		if(prevalidate) {
+			if(inst.alias == 1) {
+				name = L">" + name;
+			}
+			if(inst.alias == 2) {
+				name = L">>" + name;
+			}
+			//Если есть правила превалидации
+			if(inst.VRule[L"prevalidate"].size() > 0) {
+				//Если указано правило валидации checkParameterCount
+				if(inst.VRule[L"prevalidate"].find(L"checkParameterCount") != inst.VRule[L"prevalidate"].end()) {
 					std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"checkParameterCount"];
-					int array_size = rule[L"variants"][0];
-					int* arr = new int[array_size];
-					for(int i = 0; i < array_size; ++i) {
-						int param_count = rule[L"variants"][i + 1];
+					//Если режим проверки stricted, вызываем проверку и корректируем число параметров исходя из альясов
+					if(rule.find(L"stricted") != rule.end()) {
+						int param_count = rule[L"stricted"][0];
 						param_count -= inst.alias;
 						if(param_count < inst.VRule[L"modeparams"][L"param"][L"count"][0]) {
 							param_count = inst.VRule[L"modeparams"][L"param"][L"count"][0];
 						}
-						arr[i] = param_count;
+						checkParameterCount(STRICTED, (int)inst.parameters.size(), &name, param_count);
 					}
-					checkParameterCount(VARIANTS,(int)inst.parameters.size(), &name, 0, 0, nullptr, arr, array_size);
-					delete[] arr;
-					arr = nullptr;
-				}
-				//Вызываем проверку minimal
-				if(rule.find(L"minimal") != rule.end()) {
-					std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"checkParameterCount"];
-					int min_count = rule[L"minimal"][0];
-					min_count -= inst.alias;
-					if(min_count < inst.VRule[L"modeparams"][L"param"][L"count"][0]) {
-						min_count = inst.VRule[L"modeparams"][L"param"][L"count"][0];
+					//Вызываем проверку variants
+					if(rule.find(L"variants") != rule.end()) {
+						std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"checkParameterCount"];
+						int array_size = rule[L"variants"][0];
+						int* arr = new int[array_size];
+						for(int i = 0; i < array_size; ++i) {
+							int param_count = rule[L"variants"][i + 1];
+							param_count -= inst.alias;
+							if(param_count < inst.VRule[L"modeparams"][L"param"][L"count"][0]) {
+								param_count = inst.VRule[L"modeparams"][L"param"][L"count"][0];
+							}
+							arr[i] = param_count;
+						}
+						checkParameterCount(VARIANTS,(int)inst.parameters.size(), &name, 0, 0, nullptr, arr, array_size);
+						delete[] arr;
+						arr = nullptr;
 					}
-					checkParameterCount(MINIMAL, (int)inst.parameters.size(), &name, 0, min_count);
-				}
-				if(rule.find(L"range") != rule.end()) {
-					std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"checkParameterCount"];
-					int min_count = rule[L"range"][0];
-					int max_count = rule[L"range"][1];
-					min_count -= inst.alias;
-					if(min_count < inst.VRule[L"modeparams"][L"param"][L"count"][0]) {
-						min_count = inst.VRule[L"modeparams"][L"param"][L"count"][0];
+					//Вызываем проверку minimal
+					if(rule.find(L"minimal") != rule.end()) {
+						std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"checkParameterCount"];
+						int min_count = rule[L"minimal"][0];
+						min_count -= inst.alias;
+						if(min_count < inst.VRule[L"modeparams"][L"param"][L"count"][0]) {
+							min_count = inst.VRule[L"modeparams"][L"param"][L"count"][0];
+						}
+						checkParameterCount(MINIMAL, (int)inst.parameters.size(), &name, 0, min_count);
 					}
-					max_count -= inst.alias;
-					if(max_count < inst.VRule[L"modeparams"][L"param"][L"count"][0]) {
-						max_count = inst.VRule[L"modeparams"][L"param"][L"count"][0];
+					if(rule.find(L"range") != rule.end()) {
+						std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"checkParameterCount"];
+						int min_count = rule[L"range"][0];
+						int max_count = rule[L"range"][1];
+						min_count -= inst.alias;
+						if(min_count < inst.VRule[L"modeparams"][L"param"][L"count"][0]) {
+							min_count = inst.VRule[L"modeparams"][L"param"][L"count"][0];
+						}
+						max_count -= inst.alias;
+						if(max_count < inst.VRule[L"modeparams"][L"param"][L"count"][0]) {
+							max_count = inst.VRule[L"modeparams"][L"param"][L"count"][0];
+						}
+						int v[2]{min_count, max_count};
+						checkParameterCount(RANGE, (int)inst.parameters.size(), &name, 0, 0, v);
 					}
-					int v[2]{min_count, max_count};
-					checkParameterCount(RANGE, (int)inst.parameters.size(), &name, 0, 0, v);
 				}
 			}
-		}
-		//Подставляем нулевой регистр в параметры исходя из оператора стрелка/шеврон
-		if(inst.alias == 1) {
-			int size = inst.parameters.size();
-			if(inst.VRule[L"arrow"][L"param_replace"][L"number"][0] != -1) {
-				if(inst.VRule[L"arrow"][L"param_replace"][L"number"][0] <= size + 1) {
-					inst.parameters.insert(inst.parameters.begin() + inst.VRule[L"arrow"][L"param_replace"][L"number"][0], L"$");
-				}
-			}
-		}
-		if(inst.alias == 2) {
-			int size = inst.parameters.size();
-			if(inst.VRule[L"chevron"][L"param_replace"][L"number"][0] != -1) {
-				if(inst.VRule[L"chevron"][L"param_replace"][L"number"][0] <= size) {
-					inst.parameters.insert(inst.parameters.begin() + inst.VRule[L"chevron"][L"param_replace"][L"number"][0], L"$");
-				}
-			}
-			if(inst.VRule[L"chevron"][L"param_replace"][L"number"][1] != -1) {
+			//Подставляем нулевой регистр в параметры исходя из оператора стрелка/шеврон
+			if(inst.alias == 1) {
 				int size = inst.parameters.size();
-				if(inst.VRule[L"chevron"][L"param_replace"][L"number"][1] <= size) {
-					inst.parameters.insert(inst.parameters.begin() + inst.VRule[L"chevron"][L"param_replace"][L"number"][1], L"$");
+				if(inst.VRule[L"arrow"][L"param_replace"][L"number"][0] != -1) {
+					if(inst.VRule[L"arrow"][L"param_replace"][L"number"][0] <= size + 1) {
+						inst.parameters.insert(inst.parameters.begin() + inst.VRule[L"arrow"][L"param_replace"][L"number"][0], L"$");
+					}
 				}
 			}
-		}
-		if(inst.VRule[L"prevalidate"].size() > 0) {
-			//Если валидация, что подставленный параметр - переменная
-			if(inst.VRule[L"prevalidate"].find(L"requiredVar") != inst.VRule[L"prevalidate"].end()) {
-				std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"requiredVar"];
-				if(rule[L"param_nums"][0] == -1) {
-					unsigned start = rule[L"param_nums"][1];
-					unsigned size = inst.parameters.size();
-					for(unsigned i = start; i < size; ++i) {
-						std::wstring mess = std::to_wstring(i);
-						requiredVar(&inst.parameters[i], &name, LangLib::getTrans(mess));
+			if(inst.alias == 2) {
+				int size = inst.parameters.size();
+				if(inst.VRule[L"chevron"][L"param_replace"][L"number"][0] != -1) {
+					if(inst.VRule[L"chevron"][L"param_replace"][L"number"][0] <= size) {
+						inst.parameters.insert(inst.parameters.begin() + inst.VRule[L"chevron"][L"param_replace"][L"number"][0], L"$");
 					}
-				} else {
-					unsigned size = rule[L"param_nums"].size();
-					for(unsigned i = 0; i < size; ++i) {
-						std::wstring mess = L"";
-						if(i < message.size()) {
-							mess = message[i];
+				}
+				if(inst.VRule[L"chevron"][L"param_replace"][L"number"][1] != -1) {
+					int size = inst.parameters.size();
+					if(inst.VRule[L"chevron"][L"param_replace"][L"number"][1] <= size) {
+						inst.parameters.insert(inst.parameters.begin() + inst.VRule[L"chevron"][L"param_replace"][L"number"][1], L"$");
+					}
+				}
+			}
+			if(inst.VRule[L"prevalidate"].size() > 0) {
+				//Если валидация, что подставленный параметр - переменная
+				if(inst.VRule[L"prevalidate"].find(L"requiredVar") != inst.VRule[L"prevalidate"].end()) {
+					std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"requiredVar"];
+					if(rule[L"param_nums"][0] == -1) {
+						unsigned start = rule[L"param_nums"][1];
+						unsigned size = inst.parameters.size();
+						for(unsigned i = start; i < size; ++i) {
+							std::wstring mess = std::to_wstring(i);
+							requiredVar(&inst.parameters[i], &name, LangLib::getTrans(mess));
 						}
-						requiredVar(&inst.parameters[rule[L"param_nums"][i]], &name, LangLib::getTrans(mess));
-					}
-				}
-			}
-			if(inst.VRule[L"prevalidate"].find(L"requiredLabel") != inst.VRule[L"prevalidate"].end()) {
-				std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"requiredLabel"];
-				if(rule[L"param_nums"][0] == -1) {
-					unsigned start = rule[L"param_nums"][1];
-					unsigned size = inst.parameters.size();
-					for(unsigned i = start; i < size; ++i) {
-						std::wstring mess = std::to_wstring(i);
-						requiredLabel(&inst.parameters[i], &name, LangLib::getTrans(mess));
-					}
-				} else {
-					unsigned size = rule[L"param_nums"].size();
-					for(unsigned i = 0; i < size; ++i) {
-						std::wstring mess = L"";
-						if(i < message.size()) {
-							mess = message[i];
+					} else {
+						unsigned size = rule[L"param_nums"].size();
+						for(unsigned i = 0; i < size; ++i) {
+							std::wstring mess = L"";
+							if(i < message.size()) {
+								mess = message[i];
+							}
+							requiredVar(&inst.parameters[rule[L"param_nums"][i]], &name, LangLib::getTrans(mess));
 						}
-						requiredLabel(&inst.parameters[rule[L"param_nums"][i]], &name, LangLib::getTrans(mess));
+					}
+				}
+				if(inst.VRule[L"prevalidate"].find(L"requiredLabel") != inst.VRule[L"prevalidate"].end()) {
+					std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"requiredLabel"];
+					if(rule[L"param_nums"][0] == -1) {
+						unsigned start = rule[L"param_nums"][1];
+						unsigned size = inst.parameters.size();
+						for(unsigned i = start; i < size; ++i) {
+							std::wstring mess = std::to_wstring(i);
+							requiredLabel(&inst.parameters[i], &name, LangLib::getTrans(mess));
+						}
+					} else {
+						unsigned size = rule[L"param_nums"].size();
+						for(unsigned i = 0; i < size; ++i) {
+							std::wstring mess = L"";
+							if(i < message.size()) {
+								mess = message[i];
+							}
+							requiredLabel(&inst.parameters[rule[L"param_nums"][i]], &name, LangLib::getTrans(mess));
+						}
+					}
+				}
+				//Если указано правило проверки на существование метки
+				if(inst.VRule[L"prevalidate"].find(L"checkExistLabel") != inst.VRule[L"prevalidate"].end()) {
+					std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"checkExistLabel"];
+					if(rule[L"param_nums"][0] == -1) {
+						unsigned start = rule[L"param_nums"][1];
+						unsigned size = inst.parameters.size();
+						for(unsigned i = start; i < size; ++i) {
+							checkExistLabel(&inst.parameters[i], m);
+						}
+					} else {
+						unsigned size = rule[L"param_nums"].size();
+						for(unsigned i = 0; i < size; ++i) {
+							checkExistLabel(&inst.parameters[rule[L"param_nums"][i]], m);
+						}
 					}
 				}
 			}
-			//Если указано правило проверки на существование метки
-			if(inst.VRule[L"prevalidate"].find(L"checkExistLabel") != inst.VRule[L"prevalidate"].end()) {
-				std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"checkExistLabel"];
-				if(rule[L"param_nums"][0] == -1) {
-					unsigned start = rule[L"param_nums"][1];
-					unsigned size = inst.parameters.size();
-					for(unsigned i = start; i < size; ++i) {
-						checkExistLabel(&inst.parameters[i], m);
-					}
-				} else {
-					unsigned size = rule[L"param_nums"].size();
-					for(unsigned i = 0; i < size; ++i) {
-						checkExistLabel(&inst.parameters[rule[L"param_nums"][i]], m);
-					}
-				}
-			}
-		}
 
-	} else {
-		//Если есть правила валидации
-		if(inst.VRule[L"validate"].size() > 0) {
-			//Если указано правило проверки на существование переменной
-			if(inst.VRule[L"validate"].find(L"checkExistValue") != inst.VRule[L"validate"].end()) {
-				std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"validate"][L"checkExistValue"];
-				if(rule[L"param_nums"][0] == -1) {
-					unsigned start = rule[L"param_nums"][1];
-					unsigned size = inst.parameters.size();
-					for(unsigned i = start; i < size; ++i) {
-						checkExistValue(&inst.parameters[i], m);
+		} else {
+			//Если есть правила валидации
+			if(inst.VRule[L"validate"].size() > 0) {
+				//Если указано правило проверки на существование переменной
+				if(inst.VRule[L"validate"].find(L"checkExistValue") != inst.VRule[L"validate"].end()) {
+					std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"validate"][L"checkExistValue"];
+					if(rule[L"param_nums"][0] == -1) {
+						unsigned start = rule[L"param_nums"][1];
+						unsigned size = inst.parameters.size();
+						for(unsigned i = start; i < size; ++i) {
+							checkExistValue(&inst.parameters[i], m);
+						}
+					} else {
+						unsigned size = rule[L"param_nums"].size();
+						for(unsigned i = 0; i < size; ++i) {
+							checkExistValue(&inst.parameters[rule[L"param_nums"][i]], m);
+						}
 					}
-				} else {
-					unsigned size = rule[L"param_nums"].size();
-					for(unsigned i = 0; i < size; ++i) {
-						checkExistValue(&inst.parameters[rule[L"param_nums"][i]], m);
+				}
+				if(inst.VRule[L"validate"].find(L"checkNotExistValue") != inst.VRule[L"validate"].end()) {
+					std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"validate"][L"checkNotExistValue"];
+					if(rule[L"param_nums"][0] == -1) {
+						unsigned start = rule[L"param_nums"][1];
+						unsigned size = inst.parameters.size();
+						for(unsigned i = start; i < size; ++i) {
+							checkNotExistValue(&inst.parameters[i], m);
+						}
+					} else {
+						unsigned size = rule[L"param_nums"].size();
+						for(unsigned i = 0; i < size; ++i) {
+							checkNotExistValue(&inst.parameters[rule[L"param_nums"][i]], m);
+						}
 					}
 				}
 			}
-			if(inst.VRule[L"validate"].find(L"checkNotExistValue") != inst.VRule[L"validate"].end()) {
-				std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"validate"][L"checkNotExistValue"];
-				if(rule[L"param_nums"][0] == -1) {
-					unsigned start = rule[L"param_nums"][1];
-					unsigned size = inst.parameters.size();
-					for(unsigned i = start; i < size; ++i) {
-						checkNotExistValue(&inst.parameters[i], m);
+		}
+	} else {
+		if(prevalidate) {
+			//Подставляем нулевой регистр в параметры исходя из оператора стрелка/шеврон
+			if(inst.alias == 1) {
+				int size = inst.parameters.size();
+				if(inst.VRule[L"arrow"][L"param_replace"][L"number"][0] != -1) {
+					if(inst.VRule[L"arrow"][L"param_replace"][L"number"][0] <= size + 1) {
+						inst.parameters.insert(inst.parameters.begin() + inst.VRule[L"arrow"][L"param_replace"][L"number"][0], L"$");
 					}
-				} else {
-					unsigned size = rule[L"param_nums"].size();
-					for(unsigned i = 0; i < size; ++i) {
-						checkNotExistValue(&inst.parameters[rule[L"param_nums"][i]], m);
+				}
+			}
+			if(inst.alias == 2) {
+				int size = inst.parameters.size();
+				if(inst.VRule[L"chevron"][L"param_replace"][L"number"][0] != -1) {
+					if(inst.VRule[L"chevron"][L"param_replace"][L"number"][0] <= size) {
+						inst.parameters.insert(inst.parameters.begin() + inst.VRule[L"chevron"][L"param_replace"][L"number"][0], L"$");
+					}
+				}
+				if(inst.VRule[L"chevron"][L"param_replace"][L"number"][1] != -1) {
+					int size = inst.parameters.size();
+					if(inst.VRule[L"chevron"][L"param_replace"][L"number"][1] <= size) {
+						inst.parameters.insert(inst.parameters.begin() + inst.VRule[L"chevron"][L"param_replace"][L"number"][1], L"$");
 					}
 				}
 			}

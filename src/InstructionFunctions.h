@@ -117,6 +117,7 @@ void getchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 void setchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void arrow(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 void chevron(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
+void plztrustme(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Массив с функциями - инструкциями
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -227,5 +228,6 @@ struct InstructionMap {
 		&setchar,
 		&arrow,
 		&chevron,
+		&plztrustme,
 	};
 };

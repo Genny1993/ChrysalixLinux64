@@ -83,19 +83,17 @@ int main(int argc, char* argv[])
         p.fileLoad(filename);
         auto end = std::chrono::high_resolution_clock::now();
         auto elapsed_ms = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-        /*std::wcout << L"📂📄" << LangLib::getTrans(L"Время загрузки файла с исходным кодом: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек") << L"\n";
-        */
+        std::wcout << L"📂📄" << LangLib::getTrans(L"Время загрузки файла с исходным кодом: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек") << L"\n";
 
-        //begin = std::chrono::high_resolution_clock::now();
+        begin = std::chrono::high_resolution_clock::now();
         std::vector<Instruction> instructions = p.parse(p.file_content);
         int size = (int)instructions.size();
         for(int i = 0; i < size; ++i) {
             mchn.instructions.emplace_back(instructions[i]);
         }
-        /* end = std::chrono::high_resolution_clock::now();
+        end = std::chrono::high_resolution_clock::now();
         elapsed_ms = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
         std::wcout <<  L"⚙️ 🎀" + LangLib::getTrans(L"Время обработки исходного кода: ") << std::to_wstring((double)elapsed_ms.count() / 1000000.0) << LangLib::getTrans(L" сек") <<L"\n";
-        */
 
         //Выполняем код
         begin = std::chrono::high_resolution_clock::now();
@@ -107,10 +105,9 @@ int main(int argc, char* argv[])
         
 
         //Пик по используемой памяти
-        /*struct rusage usage;
+        struct rusage usage;
         getrusage(RUSAGE_SELF, &usage);
         std::wcout << L"🧺🌸" << LangLib::getTrans(L"Пиковое использование памяти: ") << usage.ru_maxrss << L" KB\n";
-        */
     }
     catch (const std::wstring& error_message) {
         std::wcout << std::endl << error_message;
