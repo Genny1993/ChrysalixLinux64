@@ -1,4 +1,22 @@
+##plztrustme true
+var $i, 0
+label &start_loop
+	>comp '==', $i, 1000000
+	jif $, &end_loop
+	>calc 'inc'
+	calc 'inc', $i
+jump &start_loop
+label &end_loop
+free $i
+>end##
+
+
+##for(var $i, 0), (>comp '<', $i, 1000000), (calc 'inc', $i), (free $i), {
+	>calc 'inc'
+}
+>end##
 #REPL
+##
 plzdontcrash true
 
 print '♥️ =====================================================♥️\n' 
@@ -18,3 +36,4 @@ label &loop__34567uhgfd
 jump &loop__34567uhgfd
 
 >end
+##

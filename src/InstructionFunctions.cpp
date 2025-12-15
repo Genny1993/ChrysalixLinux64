@@ -16,6 +16,25 @@ const std::wstring PAR2 = L"Второй";
 const std::wstring PAR3 = L"Третий";
 const std::wstring PAR4 = L"Единственный";
 const std::wstring PAR5 = L"Четвертый";
+std::vector<std::wstring> par1 = {
+	PAR1
+};
+std::vector<std::wstring> par2 = {
+	PAR2
+};
+std::vector<std::wstring> par3 = {
+	PAR3
+};
+std::vector<std::wstring> par4 = {
+	PAR4
+};
+std::vector<std::wstring> par5 = {
+	PAR5
+};
+std::vector<std::wstring> par1_2 = {
+	PAR1,
+	PAR2
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // NOP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,10 +84,7 @@ void sleepf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 // VAR
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void var(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	std::vector<std::wstring> message = {
-		PAR1
-	};
-	validateCurrentInstruction(m, *i, prevalidate, L"var", message);
+	validateCurrentInstruction(m, *i, prevalidate, L"var", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -126,10 +142,7 @@ void free(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 // LABEL
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void label(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	std::vector<std::wstring> message = {
-		PAR4
-	};
-	validateCurrentInstruction(m, *i, prevalidate, L"label", message);
+	validateCurrentInstruction(m, *i, prevalidate, L"label", par4);
 
 	if (prego) {
 		m->jmp_pointers[i->parameters[0].toSTR().getWStr()] = m->instruct_number;
@@ -158,10 +171,7 @@ void jump(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 // INPUT
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void input(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	std::vector<std::wstring> message = {
-		PAR1
-	};
-	validateCurrentInstruction(m, *i, prevalidate, L"input", message);
+	validateCurrentInstruction(m, *i, prevalidate, L"input", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -178,10 +188,7 @@ void input(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // CHANGE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void change(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	std::vector<std::wstring> message = {
-		PAR1
-	};
-	validateCurrentInstruction(m, *i, prevalidate, L"change", message);
+	validateCurrentInstruction(m, *i, prevalidate, L"change", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -196,10 +203,7 @@ void change(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 // TO
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void to(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	std::vector<std::wstring> message = {
-		PAR2
-	};
-	validateCurrentInstruction(m, *i, prevalidate, L"to", message);
+	validateCurrentInstruction(m, *i, prevalidate, L"to", par2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -279,10 +283,7 @@ void to(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) 
 // CALC
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void calc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	std::vector<std::wstring> message = {
-		PAR2
-	};
-	validateCurrentInstruction(m, *i, prevalidate, L"calc", message);
+	validateCurrentInstruction(m, *i, prevalidate, L"calc", par2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -481,11 +482,7 @@ void newtemp(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 // FORGET
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void forget(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"FORGET";
-		int v[2]{ 0, 1 };
-		checkParameterCount(VARIANTS, (int)i->parameters.size(), &name, 0, 0, nullptr, v, 2);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"forget");
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -514,14 +511,7 @@ void forget(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 // TCOUNT
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void tcount(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"TCOUNT";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"tcount", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -537,15 +527,7 @@ void tcount(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 // ISSET
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void isset(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"ISSET";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"isset", par1_2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -567,16 +549,8 @@ void isset(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // TYPEOF
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void typeofv(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-
-	if (prevalidate) {
-		std::wstring name = L"TYPEOF";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
-
+	validateCurrentInstruction(m, *i, prevalidate, L"typeof", par1);
+	
 	if (prego) {
 		if(iterate){++m->instruct_number;}
 	}
@@ -591,14 +565,7 @@ void typeofv(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 // COMP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void comp(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"COMP";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 4);
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&i->parameters[1], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"comp", par2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -642,16 +609,7 @@ void comp(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 // LOGIC
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void logic(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"LOGIC";
-		int v[2]{ 3, 4 };
-		checkParameterCount(VARIANTS, (int)i->parameters.size(), &name, 0, 0, nullptr, v, 2);
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-
-	}
-	else {
-		checkNotExistValue(&i->parameters[1], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"logic", par2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
