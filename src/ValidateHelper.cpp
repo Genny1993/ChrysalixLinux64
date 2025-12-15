@@ -152,11 +152,8 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 				if(rule.find(L"stricted") != rule.end()) {
 					int param_count = rule[L"stricted"][0];
 					param_count -= inst.alias;
-					if(param_count < 0) {
-						param_count = 0;
-					}
-					if(param_count + inst.VRule[L"modeparams"][L"param"][L"count"][0] <= rule[L"stricted"][0]) {
-						param_count += inst.VRule[L"modeparams"][L"param"][L"count"][0];
+					if(param_count < inst.VRule[L"modeparams"][L"param"][L"count"][0]) {
+						param_count = inst.VRule[L"modeparams"][L"param"][L"count"][0];
 					}
 					checkParameterCount(STRICTED, (int)inst.parameters.size(), &name, param_count);
 				}
@@ -168,11 +165,8 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 					for(int i = 0; i < array_size; ++i) {
 						int param_count = rule[L"variants"][i + 1];
 						param_count -= inst.alias;
-						if(param_count < 0) {
-							param_count = 0;
-						}
-						if(param_count + inst.VRule[L"modeparams"][L"param"][L"count"][0] <= rule[L"variants"][0]) {
-							param_count += inst.VRule[L"modeparams"][L"param"][L"count"][0];
+						if(param_count < inst.VRule[L"modeparams"][L"param"][L"count"][0]) {
+							param_count = inst.VRule[L"modeparams"][L"param"][L"count"][0];
 						}
 						arr[i] = param_count;
 					}
@@ -185,13 +179,25 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 					std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"checkParameterCount"];
 					int min_count = rule[L"minimal"][0];
 					min_count -= inst.alias;
-					if(min_count < 0) {
-						min_count = 0;
-					}
-					if(min_count + inst.VRule[L"modeparams"][L"param"][L"count"][0] <= rule[L"minimal"][0]) {
-						min_count += inst.VRule[L"modeparams"][L"param"][L"count"][0];
+					if(min_count < inst.VRule[L"modeparams"][L"param"][L"count"][0]) {
+						min_count = inst.VRule[L"modeparams"][L"param"][L"count"][0];
 					}
 					checkParameterCount(MINIMAL, (int)inst.parameters.size(), &name, 0, min_count);
+				}
+				if(rule.find(L"range") != rule.end()) {
+					std::unordered_map<std::wstring, std::vector<int>> rule = inst.VRule[L"prevalidate"][L"checkParameterCount"];
+					int min_count = rule[L"range"][0];
+					int max_count = rule[L"range"][1];
+					min_count -= inst.alias;
+					if(min_count < inst.VRule[L"modeparams"][L"param"][L"count"][0]) {
+						min_count = inst.VRule[L"modeparams"][L"param"][L"count"][0];
+					}
+					max_count -= inst.alias;
+					if(max_count < inst.VRule[L"modeparams"][L"param"][L"count"][0]) {
+						max_count = inst.VRule[L"modeparams"][L"param"][L"count"][0];
+					}
+					int v[2]{min_count, max_count};
+					checkParameterCount(RANGE, (int)inst.parameters.size(), &name, 0, 0, v);
 				}
 			}
 		}
@@ -236,7 +242,7 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 						if(i < message.size()) {
 							mess = message[i];
 						}
-						requiredVar(&inst.parameters[i], &name, LangLib::getTrans(mess));
+						requiredVar(&inst.parameters[rule[L"param_nums"][i]], &name, LangLib::getTrans(mess));
 					}
 				}
 			}
@@ -256,7 +262,7 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 						if(i < message.size()) {
 							mess = message[i];
 						}
-						requiredLabel(&inst.parameters[i], &name, LangLib::getTrans(mess));
+						requiredLabel(&inst.parameters[rule[L"param_nums"][i]], &name, LangLib::getTrans(mess));
 					}
 				}
 			}
@@ -272,7 +278,7 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 				} else {
 					unsigned size = rule[L"param_nums"].size();
 					for(unsigned i = 0; i < size; ++i) {
-						checkExistLabel(&inst.parameters[i], m);
+						checkExistLabel(&inst.parameters[rule[L"param_nums"][i]], m);
 					}
 				}
 			}
@@ -293,7 +299,7 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 				} else {
 					unsigned size = rule[L"param_nums"].size();
 					for(unsigned i = 0; i < size; ++i) {
-						checkExistValue(&inst.parameters[i], m);
+						checkExistValue(&inst.parameters[rule[L"param_nums"][i]], m);
 					}
 				}
 			}
@@ -308,7 +314,7 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 				} else {
 					unsigned size = rule[L"param_nums"].size();
 					for(unsigned i = 0; i < size; ++i) {
-						checkNotExistValue(&inst.parameters[i], m);
+						checkNotExistValue(&inst.parameters[rule[L"param_nums"][i]], m);
 					}
 				}
 			}
