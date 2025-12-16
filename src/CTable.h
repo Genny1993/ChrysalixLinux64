@@ -645,12 +645,79 @@ struct VRules {
                 {L"modeparams", {{L"param", {{L"count", {0}}}}}}
             }
         },
+        {OP_CODE::POPB, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"variants", {2, 1, 2}}}},
+                        {L"requiredVar", {{L"param_nums", {0, 1}}}}
+                    }
+                },
+                {L"validate", 
+                    {
+                        {L"checkNotExistValue", {{L"param_nums", {0, 1}}}}
+                    }
+                },
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, 1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
+        {OP_CODE::PUSHF, 
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"stricted", {2}}}},
+                        {L"requiredVar", {{L"param_nums", {0}}}}
+                    }
+                },
+                {L"validate", 
+                    {
+                        {L"checkNotExistValue", {{L"param_nums", {0}}}}
+                    }
+                },
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, 1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
+        {OP_CODE::POPF,
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"variants", {2, 1, 2}}}},
+                        {L"requiredVar", {{L"param_nums", {0, 1}}}}
+                    }
+                },
+                {L"validate", 
+                    {
+                        {L"checkNotExistValue", {{L"param_nums", {0, 1}}}}
+                    }
+                },
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, 1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
+        {OP_CODE::ERASE,
+            {
+                {L"prevalidate", 
+                    {
+                        {L"checkParameterCount", {{L"variants", {2, 2, 3}}}},
+                        {L"requiredVar", {{L"param_nums", {0, 1}}, {L"condition", {2, 3}}}}
+                    }
+                },
+                {L"validate", 
+                    {
+                        {L"checkNotExistValue", {{L"param_nums", {0, 1}}, {L"condition", {2, 3}}}}
+                    }
+                },
+                {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
+                {L"chevron", {{L"param_replace", {{L"number", {0, 1}}}}}},
+                {L"modeparams", {{L"param", {{L"count", {0}}}}}}
+            }
+        },
         /*
-
-        {L"popb", OP_CODE::POPB},
-        {L"pushf", OP_CODE::PUSHF},
-        {L"popf", OP_CODE::POPF},
-        {L"erase", OP_CODE::ERASE},
         {L"insert", OP_CODE::INSRT},
         {L"clear", OP_CODE::CLEAR},
         {L"size", OP_CODE::SIZEARR},

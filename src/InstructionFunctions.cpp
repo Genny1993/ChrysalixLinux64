@@ -691,10 +691,7 @@ void jif(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 // JIFNOT
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void jifnot(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"JIFNOT";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"jifnot");
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -825,21 +822,7 @@ void pushb(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // POPB
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void popb(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"POPB";
-		int v[2]{ 1, 2 };
-		checkParameterCount(VARIANTS, (int)i->parameters.size(), &name, 0, 0, nullptr, v, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-		if (i->parameters.size() == 2) {
-			requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-		}
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-		if (i->parameters.size() == 2) {
-			checkNotExistValue(&i->parameters[2], m);
-		}
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"popb", par1_2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -860,14 +843,7 @@ void popb(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 // PUSHF
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void pushf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"PUSHF";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"pushf", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -882,21 +858,7 @@ void pushf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // POPF
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void popf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"POPF";
-		int v[2]{ 1, 2 };
-		checkParameterCount(VARIANTS, (int)i->parameters.size(), &name, 0, 0, nullptr, v, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-		if (i->parameters.size() == 2) {
-			requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-		}
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-		if (i->parameters.size() == 2) {
-			checkNotExistValue(&i->parameters[1], m);
-		}
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"popf", par1_2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}

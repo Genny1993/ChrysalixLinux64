@@ -242,7 +242,9 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 							if(i < message.size()) {
 								mess = message[i];
 							}
-							requiredVar(&inst.parameters[rule[L"param_nums"][i]], &name, LangLib::getTrans(mess));
+							if(static_cast<unsigned>(rule[L"param_nums"][i]) < inst.parameters.size()) {
+								requiredVar(&inst.parameters[rule[L"param_nums"][i]], &name, LangLib::getTrans(mess));
+							}
 						}
 					}
 				}
@@ -262,7 +264,9 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 							if(i < message.size()) {
 								mess = message[i];
 							}
-							requiredLabel(&inst.parameters[rule[L"param_nums"][i]], &name, LangLib::getTrans(mess));
+							if(static_cast<unsigned>(rule[L"param_nums"][i]) < inst.parameters.size()) {
+								requiredLabel(&inst.parameters[rule[L"param_nums"][i]], &name, LangLib::getTrans(mess));
+							}
 						}
 					}
 				}
@@ -278,7 +282,9 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 					} else {
 						unsigned size = rule[L"param_nums"].size();
 						for(unsigned i = 0; i < size; ++i) {
-							checkExistLabel(&inst.parameters[rule[L"param_nums"][i]], m);
+							if(static_cast<unsigned>(rule[L"param_nums"][i]) < inst.parameters.size()) {
+								checkExistLabel(&inst.parameters[rule[L"param_nums"][i]], m);
+							}
 						}
 					}
 				}
@@ -299,7 +305,9 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 					} else {
 						unsigned size = rule[L"param_nums"].size();
 						for(unsigned i = 0; i < size; ++i) {
-							checkExistValue(&inst.parameters[rule[L"param_nums"][i]], m);
+							if(static_cast<unsigned>(rule[L"param_nums"][i]) < inst.parameters.size()) {
+								checkExistValue(&inst.parameters[rule[L"param_nums"][i]], m);
+							}
 						}
 					}
 				}
@@ -314,7 +322,9 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 					} else {
 						unsigned size = rule[L"param_nums"].size();
 						for(unsigned i = 0; i < size; ++i) {
-							checkNotExistValue(&inst.parameters[rule[L"param_nums"][i]], m);
+							if(static_cast<unsigned>(rule[L"param_nums"][i]) < inst.parameters.size()) {
+								checkNotExistValue(&inst.parameters[rule[L"param_nums"][i]], m);
+							}
 						}
 					}
 				}

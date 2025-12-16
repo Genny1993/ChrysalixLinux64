@@ -1,14 +1,15 @@
 plztrustme false
 ##
+
 var $i, 0
 label &start_loop
 	>comp '==', $i, 1000000
 	jif $, &end_loop
-	>calc 'inc'
 	calc 'inc', $i
 jump &start_loop
 label &end_loop
 free $i
+
 icount $
 >print ' инструкций выполнено машиной\n'
 >end
