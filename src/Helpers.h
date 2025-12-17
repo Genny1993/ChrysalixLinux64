@@ -19,7 +19,7 @@ Var getValue(Var* val,std::unordered_map<std::wstring, Var>* heap, Machine *m);
 // getLabel
 // Возвращает значение параметра по имени переменной или литералу
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Var getLabel(Var* val,std::unordered_map<std::wstring, int>* pointers);
+Var getLabel(Var* val, std::unordered_map<std::wstring, int>* pointers);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  setValue 
 // Возвращает переменную для присваивания
@@ -62,8 +62,7 @@ void requiredLabel(Var* val, std::wstring* type, std::wstring num);
 void validateInstruction(Instruction& inst, Machine *m, bool nested = false);
 
 //Хелпер валидации инструкции по правилам валидации
-void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate, std::wstring name, std::vector<std::wstring> message = {});
+void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate, const std::wstring& name, const std::vector<std::wstring>& message);
 //Хелперы кодировки
 std::wstring loadFile(std::wstring filename);
-int Unicode();
 

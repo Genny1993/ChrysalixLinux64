@@ -16,22 +16,24 @@ const std::wstring PAR2 = L"Второй";
 const std::wstring PAR3 = L"Третий";
 const std::wstring PAR4 = L"Единственный";
 const std::wstring PAR5 = L"Четвертый";
-std::vector<std::wstring> par1 = {
+
+const std::vector<std::wstring> emp = {};
+const std::vector<std::wstring> par1 = {
 	PAR1
 };
-std::vector<std::wstring> par2 = {
+const std::vector<std::wstring> par2 = {
 	PAR2
 };
-std::vector<std::wstring> par3 = {
+const std::vector<std::wstring> par3 = {
 	PAR3
 };
-std::vector<std::wstring> par4 = {
+const std::vector<std::wstring> par4 = {
 	PAR4
 };
-std::vector<std::wstring> par5 = {
+const std::vector<std::wstring> par5 = {
 	PAR5
 };
-std::vector<std::wstring> par1_2 = {
+const std::vector<std::wstring> par1_2 = {
 	PAR1,
 	PAR2
 };
@@ -39,13 +41,13 @@ std::vector<std::wstring> par1_2 = {
 // NOP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void nop(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	validateCurrentInstruction(m, *i, prevalidate, L"nop");
+	validateCurrentInstruction(m, *i, prevalidate, L"nop", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
 	}
 	else {
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -53,7 +55,7 @@ void nop(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 // END
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void end(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	validateCurrentInstruction(m, *i, prevalidate, L"end");
+	validateCurrentInstruction(m, *i, prevalidate, L"end", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -61,6 +63,7 @@ void end(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 	else {
 		m->ret_data = getValue(&i->parameters[0], &m->heap, m);
 		m->instruct_number = -2147483648;
+		++m->executed_count;
 		throw Var(L"END");
 	}
 }
@@ -69,14 +72,14 @@ void end(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 // SLEEP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void sleepf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	validateCurrentInstruction(m, *i, prevalidate, L"sleep");
+	validateCurrentInstruction(m, *i, prevalidate, L"sleep", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
 	}
 	else {
 		sleep(getValue(&i->parameters[0], &m->heap, m).toUNTG().getUInt());
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -95,7 +98,7 @@ void var(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 		} else {
 			m->heap[i->parameters[0].toSTR().getWStr()] = getValue(&i->parameters[1], &m->heap, m);
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -103,7 +106,7 @@ void var(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 // PRINT
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void print(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	validateCurrentInstruction(m, *i, prevalidate, L"print");
+	validateCurrentInstruction(m, *i, prevalidate, L"print", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -113,7 +116,7 @@ void print(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 		{
 			std::wcout << getValue(&v, &m->heap, m);
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -121,7 +124,7 @@ void print(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // FREE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void free(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	validateCurrentInstruction(m, *i, prevalidate, L"free");
+	validateCurrentInstruction(m, *i, prevalidate, L"free", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -134,7 +137,7 @@ void free(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 			}
 			m->heap.erase(v.getWStr());
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -149,7 +152,7 @@ void label(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 		if(iterate){++m->instruct_number;}
 	}
 	else {
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -157,13 +160,14 @@ void label(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // JUMP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void jump(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	validateCurrentInstruction(m, *i, prevalidate, L"jump");
+	validateCurrentInstruction(m, *i, prevalidate, L"jump", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
 	}
 	else {
 		m->instruct_number = (int)getLabel(&i->parameters[0], &m->jmp_pointers).toUNTG().getUInt();
+		++m->executed_count;
 	}
 }
 
@@ -180,7 +184,7 @@ void input(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 		std::wstring str;
 		getline(std::wcin, str);
 		setValue(&i->parameters[0], &m->heap, m) = Var(str);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -195,7 +199,7 @@ void change(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = getValue(&i->parameters[1], &m->heap, m);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -275,7 +279,7 @@ void to(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) 
 				throw std::wstring{ LangLib::getTrans(L": Тип данных неизвестен\n") };
 			}
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -454,7 +458,7 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 				throw std::wstring{ type + L" " + LangLib::getTrans(L": Математическая операция принимает до 3 параметров\n") };
 			}
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -462,7 +466,7 @@ void calc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 // NEWTEMP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void newtemp(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	validateCurrentInstruction(m, *i, prevalidate, L"newtemp");
+	validateCurrentInstruction(m, *i, prevalidate, L"newtemp", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -473,7 +477,7 @@ void newtemp(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		for (unsigned int it = start; it < m->tmp_count; ++it) {
 			m->heap[L"$" + std::to_wstring(it)] = Var();
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 
 }
@@ -482,7 +486,7 @@ void newtemp(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 // FORGET
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void forget(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	validateCurrentInstruction(m, *i, prevalidate, L"forget");
+	validateCurrentInstruction(m, *i, prevalidate, L"forget", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -502,7 +506,7 @@ void forget(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 				m->heap.erase(L"$" + std::to_wstring(it));
 			}
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 
 }
@@ -518,7 +522,7 @@ void tcount(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = Var(m->tmp_count);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 
 }
@@ -540,7 +544,7 @@ void isset(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 		catch(const std::wstring& error_message) {
 			setValue(&i->parameters[0], &m->heap, m) = Var(false);
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 
 }
@@ -556,7 +560,7 @@ void typeofv(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = getValue(&i->parameters[1], &m->heap, m).typeOf();
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 
 }
@@ -600,7 +604,7 @@ void comp(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 		else {
 			throw std::wstring{ type + LangLib::getTrans(L": Операция сравнения неизвестна\n") };
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 
 }
@@ -663,7 +667,7 @@ void logic(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 				throw std::wstring{ type + LangLib::getTrans(L": Логическая операция принимет не более 3 параметров\n") };
 			}
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -671,7 +675,7 @@ void logic(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // JIF
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void jif(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	validateCurrentInstruction(m, *i, prevalidate, L"jif");
+	validateCurrentInstruction(m, *i, prevalidate, L"jif", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -682,7 +686,7 @@ void jif(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 			m->instruct_number = (int)getLabel(&i->parameters[1], &m->jmp_pointers).toUNTG().getUInt();
 		}
 		else {
-			if(iterate){++m->instruct_number;}
+			if(iterate){++m->instruct_number;} ++m->executed_count;
 		}
 	}
 }
@@ -691,7 +695,7 @@ void jif(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 // JIFNOT
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void jifnot(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	validateCurrentInstruction(m, *i, prevalidate, L"jifnot");
+	validateCurrentInstruction(m, *i, prevalidate, L"jifnot", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -699,7 +703,7 @@ void jifnot(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 	else {
 		bool swtch = getValue(&i->parameters[0], &m->heap, m).toBLN().getBool();
 		if (swtch) {
-			if(iterate){++m->instruct_number;}
+			if(iterate){++m->instruct_number;} ++m->executed_count;
 		}
 		else {
 			m->instruct_number = (int)getLabel(&i->parameters[1], &m->jmp_pointers).toUNTG().getUInt();
@@ -718,7 +722,7 @@ void dlabel(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 	}
 	else {
 		m->jmp_pointers[i->parameters[0].toSTR().getWStr()] = m->instruct_number;
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -738,7 +742,7 @@ void swap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 
 		setValue(&i->parameters[0], &m->heap, m) = firstval;
 		setValue(&i->parameters[1], &m->heap, m) = secondval;
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -769,7 +773,7 @@ void arr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 		} else {
 			setValue(&i->parameters[0], &m->heap, m) = result;
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 
 }
@@ -798,7 +802,7 @@ void vtoarr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 			setValue(&i->parameters[0], &m->heap, m) = arr;
 		}
 
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 
 }
@@ -814,7 +818,7 @@ void pushb(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m).pushb(getValue(&i->parameters[1], &m->heap, m));
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -830,11 +834,11 @@ void popb(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 	else {
 		if (i->parameters.size() == 1) {
 			setValue(&i->parameters[0], &m->heap, m).popb();
-			if(iterate){++m->instruct_number;}
+			if(iterate){++m->instruct_number;} ++m->executed_count;
 		}
 		else {
 			setValue(&i->parameters[0], &m->heap, m) = setValue(&i->parameters[1], &m->heap, m).popb();
-			if(iterate){++m->instruct_number;}
+			if(iterate){++m->instruct_number;} ++m->executed_count;
 		}
 	}
 }
@@ -850,7 +854,7 @@ void pushf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m).pushf(getValue(&i->parameters[1], &m->heap, m));
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -866,11 +870,11 @@ void popf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 	else {
 		if (i->parameters.size() == 1) {
 			setValue(&i->parameters[0], &m->heap, m).popf();
-			if(iterate){++m->instruct_number;}
+			if(iterate){++m->instruct_number;} ++m->executed_count;
 		}
 		else {
 			setValue(&i->parameters[0], &m->heap, m) = setValue(&i->parameters[1], &m->heap, m).popf();
-			if(iterate){++m->instruct_number;}
+			if(iterate){++m->instruct_number;} ++m->executed_count;
 		}
 	}
 }
@@ -879,21 +883,7 @@ void popf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 // ERASE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void erase(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"ERASE";
-		int v[2]{ 2, 3 };
-		checkParameterCount(VARIANTS, (int)i->parameters.size(), &name, 0, 0, nullptr, v, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-		if (i->parameters.size() == 3) {
-			requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-		}
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-		if (i->parameters.size() == 3) {
-			checkNotExistValue(&i->parameters[1], m);
-		}
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"erase", par1_2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -901,11 +891,11 @@ void erase(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 	else {
 		if (i->parameters.size() == 2) {
 			setValue(&i->parameters[0], &m->heap, m).erase(getValue(&i->parameters[1], &m->heap, m));
-			if(iterate){++m->instruct_number;}
+			if(iterate){++m->instruct_number;} ++m->executed_count;
 		}
 		else {
 			setValue(&i->parameters[0], &m->heap, m) = setValue(&i->parameters[1], &m->heap, m).erase(getValue(&i->parameters[2], &m->heap, m));
-			if(iterate){++m->instruct_number;}
+			if(iterate){++m->instruct_number;} ++m->executed_count;
 		}
 	}
 }
@@ -928,7 +918,7 @@ void insrt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m).insert_vector(getValue(&i->parameters[2], &m->heap, m), getValue(&i->parameters[1], &m->heap, m));
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -950,7 +940,7 @@ void clear(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m).clear();
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -974,7 +964,7 @@ void sizearr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = getValue(&i->parameters[1], &m->heap, m).len();
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1013,7 +1003,7 @@ void slice(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 		}
 
 		setValue(&i->parameters[0], &m->heap, m) = getValue(&i->parameters[1], &m->heap, m).toARR().slice(x, y);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1061,7 +1051,7 @@ void merge(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 				setValue(&i->parameters[0], &m->heap, m) = getValue(&i->parameters[1], &m->heap, m).toARR().merge(getValue(&i->parameters[2], &m->heap, m).toARR());
 			}
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1090,7 +1080,7 @@ void sort(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 		else {
 			setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m).toARR().sortarr(getValue(&i->parameters[0], &m->heap, m).toSTR().getWStr());
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1118,7 +1108,7 @@ void unique(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 		else {
 			setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m).uniq(getValue(&i->parameters[0], &m->heap, m).toSTR().getWStr());
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1146,7 +1136,7 @@ void reverse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		else {
 			setValue(&i->parameters[0], &m->heap, m) = getValue(&i->parameters[1], &m->heap, m).toARR().rev();
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1168,7 +1158,7 @@ void equal(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 	}
 	else {
 		setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m).eq(getValue(&i->parameters[0], &m->heap, m).toSTR().getWStr(), getValue(&i->parameters[3], &m->heap, m));
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1190,7 +1180,7 @@ void in(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) 
 	}
 	else {
 		setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m).in(getValue(&i->parameters[0], &m->heap, m).toSTR().getWStr(), getValue(&i->parameters[3], &m->heap, m));
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1212,7 +1202,7 @@ void inall(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 	}
 	else {
 		setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m).inall(getValue(&i->parameters[0], &m->heap, m).toSTR().getWStr(), getValue(&i->parameters[3], &m->heap, m));
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1234,7 +1224,7 @@ void rin(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 	}
 	else {
 		setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m).rin(getValue(&i->parameters[0], &m->heap, m).toSTR().getWStr(), getValue(&i->parameters[3], &m->heap, m));
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1256,7 +1246,7 @@ void rinall(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 	}
 	else {
 		setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m).rinall(getValue(&i->parameters[0], &m->heap, m).toSTR().getWStr(), getValue(&i->parameters[3], &m->heap, m));
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1289,7 +1279,7 @@ void arrtomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 		
 		setValue(&i->parameters[0], &m->heap, m) = Var(map);
 
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1311,7 +1301,7 @@ void inters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 	}
 	else {
 		setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m).toARR().intersect(getValue(&i->parameters[0], &m->heap, m).toSTR().getWStr(), getValue(&i->parameters[3], &m->heap, m).toARR());
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1333,7 +1323,7 @@ void notinters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool it
 	}
 	else {
 		setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m).toARR().notintersect(getValue(&i->parameters[0], &m->heap, m).toSTR().getWStr(), getValue(&i->parameters[3], &m->heap, m).toARR());
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1355,7 +1345,7 @@ void arrtostr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = getValue(&i->parameters[1], &m->heap, m).toARR().arrtostr(getValue(&i->parameters[2], &m->heap, m));
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1377,7 +1367,7 @@ void sum(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = getValue(&i->parameters[1], &m->heap, m).toARR().sum();
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1399,7 +1389,7 @@ void avg(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = getValue(&i->parameters[1], &m->heap, m).toARR().avg();
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1421,7 +1411,7 @@ void min(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = getValue(&i->parameters[1], &m->heap, m).toARR().min();
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1443,7 +1433,7 @@ void max(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = getValue(&i->parameters[1], &m->heap, m).toARR().max();
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1465,7 +1455,7 @@ void range(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = getValue(&i->parameters[1], &m->heap, m).toARR().range();
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1487,7 +1477,7 @@ void median(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = getValue(&i->parameters[1], &m->heap, m).toARR().median();
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1509,7 +1499,7 @@ void mode(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = getValue(&i->parameters[1], &m->heap, m).toARR().mode();
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1531,7 +1521,7 @@ void stddev(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = getValue(&i->parameters[1], &m->heap, m).toARR().stddev();
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1553,7 +1543,7 @@ void push(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m).push(getValue(&i->parameters[1], &m->heap, m), getValue(&i->parameters[2], &m->heap, m));
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1589,7 +1579,7 @@ void vtomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 			setValue(&i->parameters[0], &m->heap, m) = map;
 		}
 
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1624,7 +1614,7 @@ void getvals(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		}
 
 		setValue(&i->parameters[0], &m->heap, m) = Var(vals);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1659,7 +1649,7 @@ void getkeys(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		}
 
 		setValue(&i->parameters[0], &m->heap, m) = Var(keys);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1698,7 +1688,7 @@ void getinterf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool it
 		}
 
 		setValue(&i->parameters[0], &m->heap, m) = Var(pairs);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1720,7 +1710,7 @@ void kvinters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 	}
 	else {
 		setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m).kvintersect(getValue(&i->parameters[0], &m->heap, m).toSTR().getWStr(), getValue(&i->parameters[3], &m->heap, m));
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1742,7 +1732,7 @@ void kvnotinters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool 
 	}
 	else {
 		setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m).kvnotintersect(getValue(&i->parameters[0], &m->heap, m).toSTR().getWStr(), getValue(&i->parameters[3], &m->heap, m));
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1763,7 +1753,7 @@ void clearc(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 	}
 	else {
 		system("clear");
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1802,7 +1792,7 @@ void tointerf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 			pair.clear();
 		}
 		setValue(&i->parameters[0], &m->heap, m) = Var(result);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1841,7 +1831,7 @@ void uninterf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 		}
 		setValue(&i->parameters[0], &m->heap, m) = Var(keyarr);
 		setValue(&i->parameters[1], &m->heap, m) = Var(valarr);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1877,7 +1867,7 @@ void interftomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool 
 			result.insert({getValue(&a, &m->heap, m).toSTR().getWStr(), getValue(&b, &m->heap, m)});
 		}
 		setValue(&i->parameters[0], &m->heap, m) = Var(result);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1906,7 +1896,7 @@ void rand(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 			std::uniform_int_distribution randomizer{ getValue(&i->parameters[1], &m->heap, m).toUNTG().data.untg, getValue(&i->parameters[2], &m->heap, m).toUNTG().data.untg };
 			setValue(&i->parameters[0], &m->heap, m) = Var(randomizer(m->mersenne_twister));
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1928,7 +1918,7 @@ void t(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = Var((unsigned long long int)std::time(nullptr));
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1950,7 +1940,7 @@ void hrt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = Var(static_cast<unsigned long long int>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count()));
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -1973,7 +1963,7 @@ void between(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 	else {
 		const Var& result = getValue(&i->parameters[1], &m->heap, m) >= getValue(&i->parameters[2], &m->heap, m) && getValue(&i->parameters[1], &m->heap, m) <= getValue(&i->parameters[3], &m->heap, m);
 		setValue(&i->parameters[0], &m->heap, m) = result;
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2025,6 +2015,7 @@ void jswitch(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 			}
 		}
 		m->instruct_number = (int)getLabel(&i->parameters[i->parameters.size() - 1], &m->jmp_pointers).toUNTG().getUInt();
+		++m->executed_count;
 	}
 }
 
@@ -2146,7 +2137,7 @@ void fmt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 		}
 		setValue(&i->parameters[0], &m->heap, m) = result;
 
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2229,7 +2220,7 @@ void trigon(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 			}
 			setValue(&i->parameters[1], &m->heap, m) = std::asinl(1.0 / val);
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2250,7 +2241,7 @@ void degtorad(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = Var(getValue( &i->parameters[1], &m->heap, m).toDBL().data.dbl * M_PI / 180.0);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2272,7 +2263,7 @@ void radtodeg(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = Var(getValue( &i->parameters[1], &m->heap, m).toDBL().data.dbl * 180.0 / M_PI);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2294,7 +2285,7 @@ void variance(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 	}
 	else {
 		setValue(&i->parameters[0], &m->heap, m) = std::pow(getValue(&i->parameters[1], &m->heap, m).toARR().stddev().toDBL().data.dbl, 2);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2349,7 +2340,7 @@ void castchk(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		catch(const std::wstring& error_message) {
 			setValue(&i->parameters[1], &m->heap, m) = Var(false);
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2374,7 +2365,7 @@ void finalize(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 			throw std::wstring{ LangLib::getTrans(L"Нулевой регистр невозможно сделать константой!\n") };
 		}
 		setValue(&i->parameters[0], &m->heap, m).is_const = true;
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2397,7 +2388,7 @@ void constv(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 	else {
 		m->heap[i->parameters[0].toSTR().getWStr()] = getValue(&i->parameters[1], &m->heap, m);
 		m->heap[i->parameters[0].toSTR().getWStr()].is_const = true;
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2426,7 +2417,7 @@ void isconst(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		} else {
 			throw std::wstring{ type + L": " + LangLib::getTrans(L"Неизвестный тип константы\n") };
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2451,7 +2442,7 @@ void inst(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 		}
 		m->heap[i->parameters[0].toSTR().getWStr()] = i->parameters[1];
 		m->heap[i->parameters[0].toSTR().getWStr()].deactivate = true;
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2475,7 +2466,7 @@ void e(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 		Var temp = getValue(&i->parameters[1], &m->heap, m);
 		temp.deactivate = false;
 		setValue(&i->parameters[0], &m->heap, m) = getValue(&temp, &m->heap, m);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2508,7 +2499,7 @@ void parse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 		} else {
 			setValue(&i->parameters[0], &m->heap, m) = temp;
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2545,7 +2536,7 @@ void unparse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
             }
         }
 		setValue(&i->parameters[0], &m->heap, m)  = Var(result);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2572,7 +2563,7 @@ void pe(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) 
 			validateInstruction(temp.instructions[i], m, true);	
 		}
 		setValue(&i->parameters[0], &m->heap, m) = getValue(&temp, &m->heap, m);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2611,7 +2602,7 @@ void ifi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 				getValue(&falsecond, &m->heap, m);
 			}
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2674,7 +2665,7 @@ void fori(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 			getValue(&increment, &m->heap, m);
 		}
 
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2703,7 +2694,7 @@ void breaki(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 			bstruct.emplace_back(1);
 		}
 		throw bstruct;
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2732,7 +2723,7 @@ void continuei(Machine* m, Instruction* i, bool prevalidate, bool prego, bool it
 			cstruct.emplace_back(1);
 		}
 		throw cstruct;
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2786,7 +2777,7 @@ void whilei(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 			}				
 		}
 
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2840,7 +2831,7 @@ void dowhile(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 			}		
 		}
 
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2869,7 +2860,7 @@ void switchi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 					throw std::wstring{ L"SWITCH: " + LangLib::getTrans(L"Каждый нечетный параметр кроме первого должны быть блоком инструкций\n") };
 				}
 				getValue(&temp, &m->heap, m);
-				if(iterate){++m->instruct_number;}
+				if(iterate){++m->instruct_number;} ++m->executed_count;
 				return;
 			}
 		}
@@ -2878,7 +2869,7 @@ void switchi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 			throw std::wstring{ L"SWITCH: " + LangLib::getTrans(L"Последний параметр должен быть блоком инструкций\n") };
 		}
 		getValue( &tempdefault, &m->heap, m);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2911,7 +2902,7 @@ void iscode(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 		catch(const std::wstring& e) {
 			setValue(&i->parameters[0], &m->heap, m) = Var(false);
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2934,7 +2925,7 @@ void sconst(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 	else {
 		m->heap[i->parameters[0].toSTR().getWStr()] = getValue(&i->parameters[1], &m->heap, m);
 		m->heap[i->parameters[0].toSTR().getWStr()].is_superconst = true;
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2959,7 +2950,7 @@ void sfinalize(Machine* m, Instruction* i, bool prevalidate, bool prego, bool it
 			throw std::wstring{ LangLib::getTrans(L"Нулевой регистр невозможно сделать константой!\n") };
 		}
 		setValue(&i->parameters[0], &m->heap, m).is_superconst = true;
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -2984,7 +2975,7 @@ void plzdontcrash(Machine* m, Instruction* i, bool prevalidate, bool prego, bool
 		} else {
 			m->softerrors = false;
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -3009,7 +3000,7 @@ void plzshutup(Machine* m, Instruction* i, bool prevalidate, bool prego, bool it
 		} else {
 			m->silence = false;
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -3048,7 +3039,7 @@ void tryi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 			m->heap[L"$"] = Var(std::to_wstring(error[0]) + L":" + std::to_wstring(error[1]));
 			getValue(&catchblock, &m->heap, m);
 		}
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -3074,7 +3065,7 @@ void throwi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 			str += getValue(&v, &m->heap, m).toSTR().str;
 		}
 		throw str;
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -3108,7 +3099,7 @@ void parallel(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 			t.join();
 		}
 		
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -3130,7 +3121,7 @@ void getchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 	else {
 		setValue(&i->parameters[0], &m->heap, m) =  getValue(&i->parameters[1], &m->heap, m).toSTR()[getValue(&i->parameters[2], &m->heap, m).toUNTG()];
 		
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -3154,7 +3145,7 @@ void setchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		temp.replace(getValue(&i->parameters[2], &m->heap, m).toUNTG().getUInt(), 1, 1, getValue(&i->parameters[1], &m->heap, m).toSTR().str[0]);
 		setValue(&i->parameters[0], &m->heap, m) = temp;
 		
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -3174,7 +3165,7 @@ void arrow(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 	}
 	else {
 		m->heap[L"$"] = getValue(&i->parameters[0], &m->heap, m);
-		if(iterate){++m->instruct_number;}
+		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
 
@@ -3190,7 +3181,7 @@ void chevron(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 	}
 
 	if(prego){}
-	if(iterate){++m->instruct_number;}
+	if(iterate){++m->instruct_number;} ++m->executed_count;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

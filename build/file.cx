@@ -1,24 +1,21 @@
 plztrustme false
 ##
-
 var $i, 0
-label &start_loop
-	>comp '==', $i, 1000000
-	jif $, &end_loop
+label &l
+	>comp '<', $i, 1000000
+	>jifnot &e 
 	calc 'inc', $i
-jump &start_loop
-label &end_loop
-free $i
-
-icount $
->print ' инструкций выполнено машиной\n'
+	>calc '+', 1
+jump &l
+label &e
 >end
 ##
-
-##for(var $i, 0), (>comp '<', $i, 1000000), (calc 'inc', $i), (free $i), {
-	>calc 'inc'
+##
+for(var $i, 0), (>comp '<', $i, 1000000), (calc 'inc', $i), (free $i), {
+	nop
 }
->end##
+>end
+##
 
 #REPL
 plzdontcrash true
@@ -40,3 +37,4 @@ label &loop__34567uhgfd
 jump &loop__34567uhgfd
 
 >end
+

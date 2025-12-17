@@ -134,14 +134,15 @@ void validateInstruction(Instruction& inst, Machine* m, bool nested) {
 // validateInstruction
 // Запускает валидацию конкретной переданной инструкции по правилам валидации, хранящимся в таблице
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate, std::wstring name, std::vector<std::wstring> message) {
+void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate, const std::wstring& cname, const std::vector<std::wstring>& message) {
 	if(m->validate) {
 		if(prevalidate) {
+			std::wstring name;
 			if(inst.alias == 1) {
-				name = L">" + name;
+				name = L">" + cname;
 			}
 			if(inst.alias == 2) {
-				name = L">>" + name;
+				name = L">>" + cname;
 			}
 			//Если есть правила превалидации
 			if(inst.VRule[L"prevalidate"].size() > 0) {
@@ -243,7 +244,11 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 								mess = message[i];
 							}
 							if(static_cast<unsigned>(rule[L"param_nums"][i]) < inst.parameters.size()) {
-								requiredVar(&inst.parameters[rule[L"param_nums"][i]], &name, LangLib::getTrans(mess));
+								if(rule.find(L"condition") != rule.end() && static_cast<unsigned>(rule[L"condition"][i]) == inst.parameters.size()) {
+									requiredVar(&inst.parameters[rule[L"param_nums"][i]], &name, LangLib::getTrans(mess));
+								} else if (rule.find(L"condition") == rule.end()){
+									requiredVar(&inst.parameters[rule[L"param_nums"][i]], &name, LangLib::getTrans(mess));
+								}
 							}
 						}
 					}
@@ -265,7 +270,11 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 								mess = message[i];
 							}
 							if(static_cast<unsigned>(rule[L"param_nums"][i]) < inst.parameters.size()) {
-								requiredLabel(&inst.parameters[rule[L"param_nums"][i]], &name, LangLib::getTrans(mess));
+								if(rule.find(L"condition") != rule.end() && static_cast<unsigned>(rule[L"condition"][i]) == inst.parameters.size()) {
+									requiredLabel(&inst.parameters[rule[L"param_nums"][i]], &name, LangLib::getTrans(mess));
+								} else if (rule.find(L"condition") == rule.end()){
+									requiredLabel(&inst.parameters[rule[L"param_nums"][i]], &name, LangLib::getTrans(mess));
+								}
 							}
 						}
 					}
@@ -283,7 +292,11 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 						unsigned size = rule[L"param_nums"].size();
 						for(unsigned i = 0; i < size; ++i) {
 							if(static_cast<unsigned>(rule[L"param_nums"][i]) < inst.parameters.size()) {
-								checkExistLabel(&inst.parameters[rule[L"param_nums"][i]], m);
+								if(rule.find(L"condition") != rule.end() && static_cast<unsigned>(rule[L"condition"][i]) == inst.parameters.size()) {
+									checkExistLabel(&inst.parameters[rule[L"param_nums"][i]], m);
+								} else if (rule.find(L"condition") == rule.end()){
+									checkExistLabel(&inst.parameters[rule[L"param_nums"][i]], m);
+								}
 							}
 						}
 					}
@@ -306,7 +319,11 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 						unsigned size = rule[L"param_nums"].size();
 						for(unsigned i = 0; i < size; ++i) {
 							if(static_cast<unsigned>(rule[L"param_nums"][i]) < inst.parameters.size()) {
-								checkExistValue(&inst.parameters[rule[L"param_nums"][i]], m);
+								if(rule.find(L"condition") != rule.end() && static_cast<unsigned>(rule[L"condition"][i]) == inst.parameters.size()) {
+									checkExistValue(&inst.parameters[rule[L"param_nums"][i]], m);
+								} else if (rule.find(L"condition") == rule.end()){
+									checkExistValue(&inst.parameters[rule[L"param_nums"][i]], m);
+								}
 							}
 						}
 					}
@@ -323,7 +340,11 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 						unsigned size = rule[L"param_nums"].size();
 						for(unsigned i = 0; i < size; ++i) {
 							if(static_cast<unsigned>(rule[L"param_nums"][i]) < inst.parameters.size()) {
-								checkNotExistValue(&inst.parameters[rule[L"param_nums"][i]], m);
+								if(rule.find(L"condition") != rule.end() && static_cast<unsigned>(rule[L"condition"][i]) == inst.parameters.size()) {
+									checkNotExistValue(&inst.parameters[rule[L"param_nums"][i]], m);
+								} else if (rule.find(L"condition") == rule.end()){
+									checkNotExistValue(&inst.parameters[rule[L"param_nums"][i]], m);
+								}
 							}
 						}
 					}
@@ -357,6 +378,5 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 			}
 		}
 	}
-	++(m->executed_count);
 	return;
 }
