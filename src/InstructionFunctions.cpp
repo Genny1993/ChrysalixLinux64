@@ -904,14 +904,7 @@ void erase(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // INSERT
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void insrt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"INSERT";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 3);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"insert", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -926,14 +919,7 @@ void insrt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // CLEAR
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void clear(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"CLEAR";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR4));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"clear", par4);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -948,16 +934,7 @@ void clear(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // SIZE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void sizearr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"SIZE";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-		checkNotExistValue(&i->parameters[1], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"size", par1_2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -972,15 +949,7 @@ void sizearr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 // SLICE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void slice(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"SLICE";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 4);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"slice", par1_2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1011,15 +980,7 @@ void slice(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // MERGE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void merge(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"MERGE";
-		int v[2]{ 2, 3 };
-		checkParameterCount(VARIANTS, (int)i->parameters.size(), &name, 0, 0, nullptr, v, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"merge", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1059,15 +1020,7 @@ void merge(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // SORT
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void sort(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"SORT";
-		int v[2]{ 2, 3 };
-		checkParameterCount(VARIANTS, (int)i->parameters.size(), &name, 0, 0, nullptr, v, 2);
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&i->parameters[1], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"sort", par2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1088,15 +1041,7 @@ void sort(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 // UNIQUE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void unique(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"UNIQUE";
-		int v[2]{ 2, 3 };
-		checkParameterCount(VARIANTS, (int)i->parameters.size(), &name, 0, 0, nullptr, v, 2);
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&i->parameters[1], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"unique", par2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1116,15 +1061,7 @@ void unique(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 // REVERSE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void reverse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"REVERSE";
-		int v[2]{ 1, 2 };
-		checkParameterCount(VARIANTS, (int)i->parameters.size(), &name, 0, 0, nullptr, v, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"reverse", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1144,14 +1081,7 @@ void reverse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 // EQUAL
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void equal(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"EQUAL";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 4);
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&i->parameters[1], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"equal", par2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1166,14 +1096,7 @@ void equal(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // IN
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void in(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"IN";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 4);
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&i->parameters[1], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"in", par2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1188,14 +1111,7 @@ void in(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) 
 // INALL
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void inall(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"INALL";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 4);
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&i->parameters[1], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"inall", par2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1210,14 +1126,7 @@ void inall(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // RIN
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void rin(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"RIN";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 4);
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&i->parameters[1], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"rin", par2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1232,14 +1141,7 @@ void rin(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 // RINALL
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void rinall(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"RINALL";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 4);
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&i->parameters[1], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"rinall", par2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1254,14 +1156,7 @@ void rinall(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 // ARRTOMAP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void arrtomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"ARRTOMAP";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"arrtomap", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1287,14 +1182,7 @@ void arrtomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 // INTERS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void inters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"INTERS";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 4);
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&i->parameters[1], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"inters", par2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1309,14 +1197,7 @@ void inters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 // NOTINTERS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void notinters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"NOTINTERS";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 4);
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&i->parameters[1], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"notinters", par2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1331,14 +1212,7 @@ void notinters(Machine* m, Instruction* i, bool prevalidate, bool prego, bool it
 // ARRTOSTR
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void arrtostr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"ARRTOSTR";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 3);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"arrtostr", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1353,14 +1227,7 @@ void arrtostr(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 // SUM
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void sum(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"SUM";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"sum", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1375,14 +1242,7 @@ void sum(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 // AVG
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void avg(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"AVG";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"avg", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1397,14 +1257,7 @@ void avg(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 // MIN
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void min(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"MIN";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"min", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1419,14 +1272,7 @@ void min(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 // MAX
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void max(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"MAX";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"max", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1441,14 +1287,7 @@ void max(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 // RANGE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void range(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"RANGE";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"range", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1463,14 +1302,7 @@ void range(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // MEDIAN
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void median(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"MEDIAN";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"median", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}

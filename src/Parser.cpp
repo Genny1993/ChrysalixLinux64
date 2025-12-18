@@ -32,15 +32,15 @@ std::vector<Instruction> Parser::parse(const std::wstring& string) {
 
 Var Parser::parseVar(const std::wstring& val, const int& instruction) {
     std::wstring temp = val;
-    temp.erase(0, temp.find_first_not_of(L" \n\r\t"));
-    temp.erase(temp.find_last_not_of(L" \n\r\t") + 1);
+    temp.erase(0, temp.find_first_not_of(L"  \n\r\t"));
+    temp.erase(temp.find_last_not_of(L"  \n\r\t") + 1);
     if (temp[0] == L'$') {
         size_t is_arr = temp.find(L"[");
         if (is_arr != std::wstring::npos) {
             //Проверка на пустые скобки
             std::wstring check = L"";
             for (wchar_t& c : temp) {
-                if(c != L' ' && c != '\n' && c!= L'\t' && c != L'\r') {
+                if(c != L' ' && c != L' ' && c != '\n' && c!= L'\t' && c != L'\r') {
                     check += c;
                 }
             }
@@ -81,10 +81,10 @@ Var Parser::parseVar(const std::wstring& val, const int& instruction) {
                                 new_brace = true;
                             }
                         } else {
-                            if(new_brace && c != L' ' && c != L'\t' && c!= L'\n' && c!= '\r') {
+                            if(new_brace && c != L' ' && c != L' ' && c != L'\t' && c!= L'\n' && c!= '\r') {
                                 throw std::wstring{ LangLib::getTrans(L"Лишний символ между скобок: ") + c + L"\n" };
                             } else {
-                                if(c != L' ' && c != L'\t' && c!= L'\n' && c!= '\r') {
+                                if(c != L' ' && c != L' ' && c != L'\t' && c!= L'\n' && c!= '\r') {
                                     part += c;
                                 }
                             }
@@ -122,10 +122,10 @@ Var Parser::parseVar(const std::wstring& val, const int& instruction) {
             std::wstring temp_s = temp;
             temp_s.erase(0, 1);
             temp_s.erase(temp_s.size() - 1);
-            temp_s.erase(0, temp_s.find_first_not_of(L" \n\r\t"));
-            temp_s.erase(temp_s.find_last_not_of(L" \n\r\t") + 1);
-            temp_s.erase(0, temp_s.find_first_not_of(L" \n\r\t"));
-            temp_s.erase(temp_s.find_last_not_of(L" \n\r\t") + 1);
+            temp_s.erase(0, temp_s.find_first_not_of(L"  \n\r\t"));
+            temp_s.erase(temp_s.find_last_not_of(L"  \n\r\t") + 1);
+            temp_s.erase(0, temp_s.find_first_not_of(L"  \n\r\t"));
+            temp_s.erase(temp_s.find_last_not_of(L"  \n\r\t") + 1);
 
             if(temp_s.at(temp_s.size() - 1) != L'\n') {
                 temp_s += L'\n';
@@ -181,8 +181,8 @@ Var Parser::parseVar(const std::wstring& val, const int& instruction) {
     }
     else if (temp[0] == L'\'') {
         std::wstring s_temp = temp;
-        s_temp.erase(0, s_temp.find_first_not_of(L" \n\r\t"));
-        s_temp.erase(s_temp.find_last_not_of(L" \n\r\t") + 1);
+        s_temp.erase(0, s_temp.find_first_not_of(L"  \n\r\t"));
+        s_temp.erase(s_temp.find_last_not_of(L"  \n\r\t") + 1);
         s_temp.erase(0, 1);
         s_temp.erase(s_temp.size() - 1);
         std::wstring str = s_temp;
@@ -406,8 +406,8 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                 && c != L'z'
                                 && c != L'>'
                             ) {
-                                str.erase(0, str.find_first_not_of(L" \n\r\t"));
-                                str.erase(str.find_last_not_of(L" \n\r\t") + 1);
+                                str.erase(0, str.find_first_not_of(L"  \n\r\t"));
+                                str.erase(str.find_last_not_of(L"  \n\r\t") + 1);
                                 instruction.type = LEXTYPE::INSTR;
 
                                 //Если инструкция с альясами, разбираем количество альясов, 
@@ -461,7 +461,7 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                     std::wstring check = L"";
                                     int size_str = (int)str.size();
                                     for(int i = 0; i < size_str; ++i) {
-                                        if(str[i] != L' ' && str[i] != '\n' && str[i] != '\r' && str[i] != L'\t') {
+                                        if(str[i] != L' ' && str[i] != L' ' && str[i] != L'\n' && str[i] != L'\r' && str[i] != L'\t') {
                                             check += c;
                                         }
                                     }
@@ -473,8 +473,8 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                 //Парсим параметры инструкции. Если у нас запятая, параметр кончился.
                                 else if (c == L',') {
                                     is_param_end = true;
-                                    str.erase(0, str.find_first_not_of(L" \n\r\t"));
-                                    str.erase(str.find_last_not_of(L" \n\r\t") + 1);
+                                    str.erase(0, str.find_first_not_of(L"  \n\r\t"));
+                                    str.erase(str.find_last_not_of(L"  \n\r\t") + 1);
                                     if (str != L"") {
                                         Lexeme temp;
                                         temp.type =  LEXTYPE::PAR;
@@ -488,8 +488,8 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                     if(c == L'\n' && is_param_end == true) {
                                         //Ничего не делаем если это перевод строки после конца параметра
                                     } else {
-                                        str.erase(0, str.find_first_not_of(L" \n\r\t"));
-                                        str.erase(str.find_last_not_of(L" \n\r\t") + 1);
+                                        str.erase(0, str.find_first_not_of(L"  \n\r\t"));
+                                        str.erase(str.find_last_not_of(L"  \n\r\t") + 1);
                                         if (str != L"") {
                                             Lexeme temp;
                                             temp.type =  LEXTYPE::PAR;
@@ -542,7 +542,7 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                             if(str[i] == L')' || str[i] == L'}') {
                                                 break;
                                             }
-                                            if(str[i] != L' ' && str[i] != L'\t' && str[i] != L'\n' && str[i] != L'\r') {
+                                            if(str[i] != L' ' && str[i] != L' ' && str[i] != L'\t' && str[i] != L'\n' && str[i] != L'\r') {
                                                 check += str[i];
                                             }
                                         }
@@ -551,12 +551,12 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                             reverse(check.begin(), check.end());
                                             throw std::wstring{ check + LangLib::getTrans(L": Лишний символ после вложенной инструкции\n") };
                                         }
-                                        str.erase(0, str.find_first_not_of(L" \n\r\t"));
-                                        str.erase(str.find_last_not_of(L" \n\r\t") + 1);
+                                        str.erase(0, str.find_first_not_of(L"  \n\r\t"));
+                                        str.erase(str.find_last_not_of(L"  \n\r\t") + 1);
                                         str.erase(0, 1);
                                         str.erase(str.size() - 1);
-                                        str.erase(0, str.find_first_not_of(L" \n\r\t"));
-                                        str.erase(str.find_last_not_of(L" \n\r\t") + 1);
+                                        str.erase(0, str.find_first_not_of(L"  \n\r\t"));
+                                        str.erase(str.find_last_not_of(L"  \n\r\t") + 1);
                                         
                                         if(str == L"") {
                                             throw std::wstring{ LangLib::getTrans(L"Пустая вложенная инструкция '()'\n") };
@@ -598,7 +598,7 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                             if(str[i] == L')' || str[i] == L'}') {
                                                 break;
                                             }
-                                            if(str[i] != L' ' && str[i] != L'\t' && str[i] != L'\n' && str[i] != L'\r') {
+                                            if(str[i] != L' ' && str[i] != L' ' && str[i] != L'\t' && str[i] != L'\n' && str[i] != L'\r') {
                                                 check += str[i];
                                             }
                                         }
@@ -607,12 +607,12 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                             reverse(check.begin(), check.end());
                                             throw std::wstring{ check + LangLib::getTrans(L": Лишний символ после вложенной инструкции\n") };
                                         }
-                                        str.erase(0, str.find_first_not_of(L" \n\r\t"));
-                                        str.erase(str.find_last_not_of(L" \n\r\t") + 1);
+                                        str.erase(0, str.find_first_not_of(L"  \n\r\t"));
+                                        str.erase(str.find_last_not_of(L"  \n\r\t") + 1);
                                         str.erase(0, 1);
                                         str.erase(str.size() - 1);
-                                        str.erase(0, str.find_first_not_of(L" \n\r\t"));
-                                        str.erase(str.find_last_not_of(L" \n\r\t") + 1);
+                                        str.erase(0, str.find_first_not_of(L"  \n\r\t"));
+                                        str.erase(str.find_last_not_of(L"  \n\r\t") + 1);
 
                                         if(str == L"") {
                                             throw std::wstring{ LangLib::getTrans(L"Пустая вложенная инструкция '()'\n") };
@@ -650,7 +650,7 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                                 if(str[i] == L')' || str[i] == L'}') {
                                                     break;
                                                 }
-                                                if(str[i] != L' ' && str[i] != L'\t' && str[i] != L'\n' && str[i] != L'\r') {
+                                                if(str[i] != L' ' && str[i] != L' ' && str[i] != L'\t' && str[i] != L'\n' && str[i] != L'\r') {
                                                     check += str[i];
                                                 }
                                             }
@@ -660,12 +660,12 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                                 throw std::wstring{ check + LangLib::getTrans(L": Лишний символ после вложенной инструкции\n") };
                                             }
 
-                                            str.erase(0, str.find_first_not_of(L" \n\r\t"));
-                                            str.erase(str.find_last_not_of(L" \n\r\t") + 1);
+                                            str.erase(0, str.find_first_not_of(L"  \n\r\t"));
+                                            str.erase(str.find_last_not_of(L"  \n\r\t") + 1);
                                             str.erase(0, 1);
                                             str.erase(str.size() - 1);
-                                            str.erase(0, str.find_first_not_of(L" \n\r\t"));
-                                            str.erase(str.find_last_not_of(L" \n\r\t") + 1);
+                                            str.erase(0, str.find_first_not_of(L"  \n\r\t"));
+                                            str.erase(str.find_last_not_of(L"  \n\r\t") + 1);
 
                                             if(str == L"") {
                                                 throw std::wstring{ LangLib::getTrans(L"Пустая вложенная инструкция '()'\n") };
