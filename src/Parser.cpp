@@ -291,8 +291,10 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
     int size_str = (int)val.size();
     for(int i = 0; i < size_str; ++i) {
         wchar_t c = val[i];
-        if(is_param_end == true && c != ' ' && c != '\n' && c != '\r' && c!= 't' && c != '(' && c != '{') {
-            is_param_end = false;
+        if(is_param_end == true && c != ' ' && c != '\n' && c != '\r' && c!= '\t' && c != '(' && c != '{' && c != L'#') {
+            if(!is_comment && !is_long_comment) {
+                is_param_end = false;
+            }
         }
         //Вырезаем комментарии, если они есть, игнорируем сиволы после начала комментария до конца строки
         if (is_comment) {
@@ -329,6 +331,7 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                         is_comment = false;
                         is_long_comment = false;
                         first_comment_char = false;
+                        --i;
                     }
                 }
             }
@@ -510,6 +513,7 @@ std::vector<Lexeme> Parser::parseLex(const std::wstring& val) {
                                 else {
                                     str += c;
                                 }
+
                             } else if(braces == true) {
                                 if(c == L'[') {
                                     ++braces_count;
