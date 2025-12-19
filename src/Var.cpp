@@ -265,7 +265,7 @@ Var Var::toNTG() const {
         {
             std::string temp = err.what();
             std::wstring error = LangLib::getTrans(MESSAGE1);
-            error += L"NTG\n";
+            error += L"ntg\n";
             throw std::wstring{ error };
         }
     }
@@ -279,16 +279,16 @@ Var Var::toNTG() const {
     }
     else if (this->type == ARR) {
         std::wstring error = LangLib::getTrans(MESSAGE2);
-        error += L"NTG\n";
+        error += L"ntg\n";
         throw std::wstring{ error };
     }
     else if (this->type == MAP) {
         std::wstring error = LangLib::getTrans(MESSAGE3);
-        error += L"NTG\n";
+        error += L"ntg\n";
         throw std::wstring{ error };
     } else if (this->type == INST) {
         std::wstring error = LangLib::getTrans(MESSAGE10);
-        error += L"NTG\n";
+        error += L"ntg\n";
         throw std::wstring{ error };
     }
     return Var();
@@ -342,7 +342,7 @@ Var Var::toUNTG() const {
         {
             std::string temp = err.what();
             std::wstring error = LangLib::getTrans(MESSAGE1);
-            error += L"UNTG\n";
+            error += L"untg\n";
             throw std::wstring{ error };
         }
     }
@@ -419,7 +419,7 @@ Var Var::toDBL() const {
         {
             std::string temp = err.what();
             std::wstring error = LangLib::getTrans(MESSAGE1);
-            error += L"DBL\n";
+            error += L"dbl\n";
             throw std::wstring{ error };
         }
     }
@@ -496,7 +496,7 @@ Var Var::toCHR() const {
         {
             std::string temp = err.what();
             std::wstring error = LangLib::getTrans(MESSAGE1);
-            error += L"CHR\n";
+            error += L"chr\n";
             throw std::wstring{ error };
         }
     }
@@ -574,7 +574,7 @@ Var Var::toUCHR() const {
         {
             std::string temp = err.what();
             std::wstring error = LangLib::getTrans(MESSAGE1);
-            error += L"UCHR\n";
+            error += L"uchr\n";
             throw std::wstring{ error };
         }
     }
@@ -588,17 +588,17 @@ Var Var::toUCHR() const {
     }
     else if (this->type == ARR) {
         std::wstring error = LangLib::getTrans(MESSAGE2);
-        error += L"UCHR\n";
+        error += L"uchr\n";
         throw std::wstring{ error };
 
     }
     else if (this->type == MAP) {
         std::wstring error = LangLib::getTrans(MESSAGE3);
-        error += L"UCHR\n";
+        error += L"uchr\n";
         throw std::wstring{ error };
     } else if (this->type == INST) {
         std::wstring error = LangLib::getTrans(MESSAGE10);
-        error += L"UCHR\n";
+        error += L"uchr\n";
         throw std::wstring{ error };
     }
     return Var();
@@ -689,7 +689,7 @@ Var Var::toBLN() const {
         return result;
     } else if (this->type == INST) {
         std::wstring error = LangLib::getTrans(MESSAGE10);
-        error += L"BLN\n";
+        error += L"bln\n";
         throw std::wstring{ error };
     }
     return Var();
@@ -731,10 +731,10 @@ Var Var::toSTR() const {
         result.type = STR;
 
         if (this->data.bln) {
-            result.str = L"TRUE";
+            result.str = L"true";
         }
         else {
-            result.str = L"FALSE";
+            result.str = L"false";
         }
 
         return result;
@@ -746,7 +746,7 @@ Var Var::toSTR() const {
         return result;
     }
     else if (this->type == NIL) {
-        Var result = L"NIL";
+        Var result = L"nil";
         return result;
     }
     else if (this->type == UNKNOWN) {
@@ -874,11 +874,11 @@ Var Var::toARR() const {
     }
     else if (this->type == MAP) {
         std::wstring error = LangLib::getTrans(MESSAGE3);
-        error += L"ARR\n";
+        error += L"arr\n";
         throw std::wstring{ error };
     } else if (this->type == INST) {
         std::wstring error = LangLib::getTrans(MESSAGE10);
-        error += L"ARR\n";
+        error += L"arr\n";
         throw std::wstring{ error };
     }
     return Var();
@@ -929,17 +929,17 @@ void Var::print() {
         break;
     case BLN:
         if (this->data.bln) {
-            std::wcout << L"TRUE";
+            std::wcout << L"true";
         }
         else {
-            std::wcout << L"FALSE";
+            std::wcout << L"false";
         }
         break;
     case STR:
         std::wcout << this->str;
         break;
     case NIL:
-        std::wcout << L"NIL";
+        std::wcout << L"nil";
         break;
     case ARR:
         for (int i = 0; i < (int)this->arr.size(); ++i)
@@ -970,7 +970,7 @@ void Var::print() {
         break;
     }
     default:
-        std::wcout << L"UNKNOWN";
+        std::wcout << L"unknown";
     }
 }
 
@@ -978,49 +978,49 @@ std::wstring Var::typeOf() {
     std::wstring result = L"";
     switch (this->type) {
     case UNTG:
-        result = L"UNTG";
+        result = L"untg";
         return result;
         break;
     case NTG:
-        result = L"NTG";
+        result = L"ntg";
         return result;
         break;
     case DBL:
-        result = L"DBL";
+        result = L"dbl";
         return result;
         break;
     case CHR:
-        result = L"CHR";
+        result = L"chr";
         return result;
         break;
     case UCHR:
-        result = L"UCHR";
+        result = L"uchr";
         return result;
         break;
     case BLN:
-        result = L"BLN";
+        result = L"bln";
         return result;
         break;
     case STR:
-        result = L"STR";
+        result = L"str";
         return result;
         break;
     case NIL:
-        result = L"NIL";
+        result = L"nil";
         return result;
         break;
     case ARR:
-        result = L"ARR";
+        result = L"arr";
         return result;
         break;
     case MAP:
-        result = L"MAP";
+        result = L"map";
         return result;
     case INST:
-        result = L"INST";
+        result = L"inst";
         return result;
     default:
-        result = L"UNKNOWN";
+        result = L"unknown";
         return result;
     }
 }
@@ -1050,7 +1050,7 @@ Var& Var::operator[](int ind) {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE5);
-        error += L"STR, ARR, MAP\n";
+        error += L"str, arr, map\n";
         throw std::wstring{ error };
     }
 }
@@ -1061,7 +1061,7 @@ Var& Var::operator[](const wchar_t* str) {
         }
         else {
             std::wstring error = LangLib::getTrans(MESSAGE5);
-            error += L"STR, ARR, MAP\n";
+            error += L"str, arr, map\n";
             throw std::wstring{ error };
         }
     }
@@ -1077,7 +1077,7 @@ Var& Var::operator[](std::wstring str) {
         }
         else {
             std::wstring error = LangLib::getTrans(MESSAGE5);
-            error += L"STR, ARR, MAP\n";
+            error += L"str, arr, map\n";
             throw std::wstring{ error };
         }
     }
@@ -1112,7 +1112,7 @@ Var& Var::operator[](Var v) {
         }
         else {
             std::wstring error = LangLib::getTrans(MESSAGE5);
-            error += L"STR, ARR, MAP\n";
+            error += L"str, arr, map\n";
             throw std::wstring{ error };
         }
     }
@@ -1153,7 +1153,7 @@ Var Var::len() const {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"STR, ARR, MAP\n";
+        error += L"str, arr, map\n";
         throw std::wstring{ error };
     }
 }
@@ -1178,7 +1178,7 @@ Var Var::rev() const {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"STR, ARR\n";
+        error += L"str, arr\n";
         throw std::wstring{ error };
     }
 }
@@ -1204,7 +1204,7 @@ Var Var::slice(const int &x, const int &y) const {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"STR, ARR\n";
+        error += L"str, arr\n";
         throw std::wstring{ error };
     }
 }
@@ -1217,34 +1217,30 @@ Var Var::slice(const Var &x, const Var &y) const {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"STR, ARR\n";
+        error += L"str, arr\n";
         throw std::wstring{ error };
     }
 }
 
 Var Var::sortarr(const std::wstring &type) const{
-    if (type != std::wstring_view(L"ASC")
-		&& type != std::wstring_view(L"DESC")
-		&& type != std::wstring_view(L"asc")
+    if (type != std::wstring_view(L"asc")
 		&& type != std::wstring_view(L"desc")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сортировки неизвестен\n")};
 	}
 
     std::vector<Var> clear_arr = this->arr;
 
-    if (type == std::wstring_view(L"ASC") || type == std::wstring_view(L"asc")) {
+    if (type == std::wstring_view(L"asc")) {
 		sort(clear_arr.begin(), clear_arr.end());
 	}
-	else if (type == std::wstring_view(L"DESC") || type == std::wstring_view(L"desc")) {
+	else if (type == std::wstring_view(L"desc")) {
 		sort(clear_arr.begin(), clear_arr.end(), std::greater<Var>());
 	}
     return Var(clear_arr);
 }
 
 Var Var::eq(const std::wstring &type, const Var &b) const {
-    if (type != std::wstring_view(L"STRICT")
-		&& type != std::wstring_view(L"DYNAMIC")
-		&& type != std::wstring_view(L"strict")
+    if (type != std::wstring_view(L"strict")
 		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
@@ -1299,7 +1295,7 @@ Var Var::eq_recursive(const std::wstring &type, const Var &a, const Var &b) cons
         return Var(false);
     }
     else {
-        if(type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
+        if(type == std::wstring_view(L"strict")) {
             if (a.type == b.type && a == b) { return Var(true); }
             else { return Var(false); }
         } else {
@@ -1311,9 +1307,7 @@ Var Var::eq_recursive(const std::wstring &type, const Var &a, const Var &b) cons
 }
 
 Var Var::uniq(const std::wstring &type) const {
-    if (type != std::wstring_view(L"STRICT")
-		&& type != std::wstring_view(L"DYNAMIC")
-		&& type != std::wstring_view(L"strict")
+    if (type != std::wstring_view(L"strict")
 		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
@@ -1332,7 +1326,7 @@ Var Var::uniq(const std::wstring &type) const {
         arr =this->toARR().arr;
     }
 
-    if (type == std::wstring_view(L"STRICT") || type == std::wstring_view(L"strict")) {
+    if (type == std::wstring_view(L"strict")) {
         int size = (int)arr.size();
         for (int i = 0; i < size; ++i) {
             const Var& arr_i = arr[i];
@@ -1377,9 +1371,7 @@ Var Var::uniq(const std::wstring &type) const {
  }
 
  Var Var::in(const std::wstring &type, const Var &b) const {
-    if (type != std::wstring_view(L"STRICT")
-		&& type != std::wstring_view(L"DYNAMIC")
-		&& type != std::wstring_view(L"strict")
+    if (type != std::wstring_view(L"strict")
 		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
@@ -1412,9 +1404,7 @@ Var Var::uniq(const std::wstring &type) const {
 }
 
 Var Var::inall(const std::wstring &type, const Var &b) const {
-    if (type != std::wstring_view(L"STRICT")
-		&& type != std::wstring_view(L"DYNAMIC")
-		&& type != std::wstring_view(L"strict")
+    if (type != std::wstring_view(L"strict")
 		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
@@ -1450,9 +1440,7 @@ Var Var::rin(const std::wstring &type, const Var &b, std::vector<Var> result) co
     if(result.capacity() < 1000) {
         result.reserve(1000);
     }
-    if (type != std::wstring_view(L"STRICT")
-		&& type != std::wstring_view(L"DYNAMIC")
-		&& type != std::wstring_view(L"strict")
+    if (type != std::wstring_view(L"strict")
 		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
@@ -1535,9 +1523,7 @@ Var Var::rin_recursive(const std::wstring &type, const Var &a, const Var &b, std
 }
 
 Var Var::rinall(const std::wstring &type, const Var &b) const{
-    if (type != std::wstring_view(L"STRICT")
-		&& type != std::wstring_view(L"DYNAMIC")
-		&& type != std::wstring_view(L"strict")
+    if (type != std::wstring_view(L"strict")
 		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
@@ -1644,9 +1630,7 @@ Var Var::rinall_recursive(const std::wstring &type, const Var &a, const Var &b, 
 }
 
 Var Var::intersect(const std::wstring &type, const Var &b) const {
-    if (type != std::wstring_view(L"STRICT")
-		&& type != std::wstring_view(L"DYNAMIC")
-		&& type != std::wstring_view(L"strict")
+    if (type != std::wstring_view(L"strict")
 		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
@@ -1674,9 +1658,7 @@ Var Var::intersect(const std::wstring &type, const Var &b) const {
 }
 
 Var Var::notintersect(const std::wstring &type, const Var &b) const {
-     if (type != std::wstring_view(L"STRICT")
-		&& type != std::wstring_view(L"DYNAMIC")
-		&& type != std::wstring_view(L"strict")
+     if (type != std::wstring_view(L"strict")
 		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
@@ -1722,16 +1704,14 @@ Var Var::notintersect(const std::wstring &type, const Var &b) const {
 }
 
 Var Var::kvintersect(const std::wstring &type, const Var &b) const {
-    if (type != std::wstring_view(L"STRICT")
-		&& type != std::wstring_view(L"DYNAMIC")
-		&& type != std::wstring_view(L"strict")
+    if (type != std::wstring_view(L"strict")
 		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
 
     if(this->type != MAP || b.type != MAP) {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"MAP\n";
+        error += L"map\n";
         throw std::wstring{ error };
     }
 
@@ -1752,16 +1732,14 @@ Var Var::kvintersect(const std::wstring &type, const Var &b) const {
 }
 
 Var Var::kvnotintersect(const std::wstring &type, const Var &b) const {
-     if (type != std::wstring_view(L"STRICT")
-		&& type != std::wstring_view(L"DYNAMIC")
-		&& type != std::wstring_view(L"strict")
+     if (type != std::wstring_view(L"strict")
 		&& type != std::wstring_view(L"dynamic")) {
 		throw std::wstring{ type + LangLib::getTrans(L": Способ сравнения неизвестен\n") };
 	}
 
     if(this->type != MAP || b.type != MAP) {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"MAP\n";
+        error += L"map\n";
         throw std::wstring{ error };
     }
 
@@ -1941,7 +1919,7 @@ Var Var::stddev() const {
  Var Var::kexist(const Var &key) const {
     if(this->type != MAP) {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"MAP\n";
+        error += L"map\n";
         throw std::wstring{ error };
     }
     if (this->mp.find(key.toSTR().getWStr()) == this->mp.end()) {
@@ -1958,7 +1936,7 @@ Var Var::in(Var sent) const {
     } 
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"STR\n";
+        error += L"str\n";
         throw std::wstring{ error };
     }
 }
@@ -1969,7 +1947,7 @@ Var Var::in(const wchar_t* sent) const {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"STR\n";
+        error += L"str\n";
         throw std::wstring{ error };
     }
 }
@@ -1980,7 +1958,7 @@ Var Var::in(std::wstring sent) const {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"STR\n";
+        error += L"str\n";
         throw std::wstring{ error };
     }
 }
@@ -1995,7 +1973,7 @@ Var Var::ltrim() const {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"STR\n";
+        error += L"str\n";
         throw std::wstring{ error };
     }
 }
@@ -2007,7 +1985,7 @@ Var Var::rtrim() const {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"STR\n";
+        error += L"str\n";
         throw std::wstring{ error };
     }
 }
@@ -2020,7 +1998,7 @@ Var Var::trim() const {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"STR\n";
+        error += L"str\n";
         throw std::wstring{ error };
     }
 }
@@ -2037,7 +2015,7 @@ Var Var::repl(Var substr, Var newsubstr) const {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"STR\n";
+        error += L"str\n";
         throw std::wstring{ error };
     }
 }
@@ -2055,7 +2033,7 @@ Var Var::repl(const wchar_t* substr, const wchar_t* newsubstr) const {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"STR\n";
+        error += L"str\n";
         throw std::wstring{ error };
     }
 }
@@ -2071,7 +2049,7 @@ Var Var::repl(std::wstring substr, const std::wstring newsubstr) const {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"STR\n";
+        error += L"str\n";
         throw std::wstring{ error };
     }
 }
@@ -2106,7 +2084,7 @@ Var Var::split(Var delim) const {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"STR\n";
+        error += L"str\n";
         throw std::wstring{ error };
     }
 }
@@ -2130,7 +2108,7 @@ Var Var::join(Var delim) {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"ARR\n";
+        error += L"arr\n";
         throw std::wstring{ error };
     }
 }
@@ -2149,7 +2127,7 @@ Var Var::upper() const {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"STR\n";
+        error += L"str\n";
         throw std::wstring{ error };
     }
 }
@@ -2162,7 +2140,7 @@ Var Var::lower() const {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"STR\n";
+        error += L"str\n";
         throw std::wstring{ error };
     }
 }
@@ -2173,7 +2151,7 @@ void Var::pushb(const Var &v) {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"ARR\n";
+        error += L"arr\n";
         throw std::wstring{ error };
     }
 }
@@ -2187,7 +2165,7 @@ Var Var::popb() {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"ARR\n";
+        error += L"arr\n";
         throw std::wstring{ error };
     }
 }
@@ -2198,7 +2176,7 @@ void Var::pushf(const Var &val) {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"ARR\n";
+        error += L"arr\n";
         throw std::wstring{ error };
     }
 }
@@ -2212,7 +2190,7 @@ Var Var::popf() {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"ARR\n";
+        error += L"arr\n";
         throw std::wstring{ error };
     }
 }
@@ -2222,7 +2200,7 @@ void Var::push(const Var &key, const Var &val) {
         this->mp.insert({key.toSTR().getWStr(), val});
     } else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"MAP\n";
+        error += L"map\n";
         throw std::wstring{ error };
     }
 }
@@ -2236,7 +2214,7 @@ void Var::clear() {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"ARR, MAP\n";
+        error += L"arr, map\n";
         throw std::wstring{ error };
     }
 
@@ -2250,7 +2228,7 @@ void Var::erase(const int &x) {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"ARR\n";
+        error += L"arr\n";
         throw std::wstring{ error };
     }
 }
@@ -2279,7 +2257,7 @@ Var Var::erase(const Var &x) {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"ARR, MAP\n";
+        error += L"arr, map\n";
         throw std::wstring{ error };
     }
 }
@@ -2289,7 +2267,7 @@ void Var::erase(const std::wstring &x) {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"MAP\n";
+        error += L"map\n";
         throw std::wstring{ error };
     }
 }
@@ -2299,7 +2277,7 @@ void Var::erase(const wchar_t* x) {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"MAP\n";
+        error += L"map\n";
         throw std::wstring{ error };
     }
 }
@@ -2313,7 +2291,7 @@ void Var::insert_vector(const Var &x, const Var &val) {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"ARR\n";
+        error += L"arr\n";
         throw std::wstring{ error };
     }
 }
@@ -2324,7 +2302,7 @@ void Var::insert(Var str, Var val) {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"MAP\n";
+        error += L"map\n";
         throw std::wstring{ error };
     }
 }
@@ -2334,7 +2312,7 @@ void Var::insert(std::wstring str, Var val) {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"MAP\n";
+        error += L"map\n";
         throw std::wstring{ error };
     }
 }
@@ -2344,7 +2322,7 @@ void Var::insert(const wchar_t* str, Var val) {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"MAP\n";
+        error += L"map\n";
         throw std::wstring{ error };
     }
 }
@@ -2368,7 +2346,7 @@ Var Var::merge(const Var &val) const {
     } 
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"ARR, MAP\n";
+        error += L"arr, map\n";
         throw std::wstring{ error };
     }
 }
@@ -2384,7 +2362,7 @@ Var Var::csize() const {
     }
     else {
         std::wstring error = LangLib::getTrans(MESSAGE7);
-        error += L"ARR, MAP\n";
+        error += L"arr, map\n";
         throw std::wstring{ error };
     }
 }
@@ -2409,17 +2387,17 @@ std::wostream& operator<< (std::wostream& wos, const Var& var)
         break;
     case BLN:
         if (var.data.bln) {
-            return wos << L"TRUE";
+            return wos << L"true";
         }
         else {
-            return wos << L"FALSE";
+            return wos << L"false";
         }
         break;
     case STR:
         return wos << var.str;
         break;
     case NIL:
-        return wos << L"NIL";
+        return wos << L"nil";
         break;
     case ARR: 
     {
@@ -2481,7 +2459,7 @@ std::wostream& operator<< (std::wostream& wos, const Var& var)
         break;
     }
     default:
-        return wos << L"UNKNOWN";
+        return wos << L"unknown";
     }
 }
 
