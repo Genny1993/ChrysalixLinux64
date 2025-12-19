@@ -1,5 +1,6 @@
 ﻿#include <random>
 #include <ctime>
+#include <thread>
 #include <chrono>
 #include <cmath>
 #include <iostream>
@@ -78,7 +79,7 @@ void sleepf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 		if(iterate){++m->instruct_number;}
 	}
 	else {
-		sleep(getValue(&i->parameters[0], &m->heap, m).toUNTG().getUInt());
+		std::this_thread::sleep_for(std::chrono::milliseconds(getValue(&i->parameters[0], &m->heap, m).toUNTG().getUInt()));
 		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }
