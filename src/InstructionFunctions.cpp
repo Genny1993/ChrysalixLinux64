@@ -1399,7 +1399,7 @@ void getvals(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		const Var &map = getValue(&i->parameters[1], &m->heap, m);
 		if(map.type != MAP) {
 			std::wstring error = LangLib::getTrans(L"Инструкция используется только для следующих типов: ");
-        	error += L"MAP\n";
+        	error += L"map\n";
         	throw std::wstring{ error };
 		}
 		std::vector<Var> vals;
@@ -1427,7 +1427,7 @@ void getkeys(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		const Var &map = getValue(&i->parameters[1], &m->heap, m);
 		if(map.type != MAP) {
 			std::wstring error = LangLib::getTrans(L"Инструкция используется только для следующих типов: ");
-        	error += L"MAP\n";
+        	error += L"map\n";
         	throw std::wstring{ error };
 		}
 		std::vector<Var> keys;
@@ -1455,7 +1455,7 @@ void getinterf(Machine* m, Instruction* i, bool prevalidate, bool prego, bool it
 		const Var &map = getValue(&i->parameters[1], &m->heap, m);
 		if(map.type != MAP) {
 			std::wstring error = LangLib::getTrans(L"Инструкция используется только для следующих типов: ");
-        	error += L"MAP\n";
+        	error += L"map\n";
         	throw std::wstring{ error };
 		}
 		std::vector<Var> pairs;
@@ -1614,15 +1614,7 @@ void interftomap(Machine* m, Instruction* i, bool prevalidate, bool prego, bool 
 // RAND
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void rand(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"RAND";
-		int v[2]{ 1, 3 };
-		checkParameterCount(VARIANTS, (int)i->parameters.size(), &name, 0, 0, nullptr, v, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"rand", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1643,14 +1635,7 @@ void rand(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 // T
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void t(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"TIME";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"t", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1665,14 +1650,7 @@ void t(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
 // HRT
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void hrt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"HRT";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"hrt", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1687,14 +1665,7 @@ void hrt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 // BETWEEN
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void between(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"BETWEEN";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 4);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"between", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1710,10 +1681,7 @@ void between(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 // JIFELSE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void jifelse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"JIFELSE";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 3);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"jifelse", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1733,13 +1701,7 @@ void jifelse(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 // JSWITCH
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void jswitch(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"JSWITCH";
-		checkParameterCount(MINIMAL, (int)i->parameters.size(), &name, 0, 4);
-		if(i->parameters.size() % 2) {
-			throw std::wstring{ LangLib::getTrans(L"Инструкция принимает четное количество параметров!\n") };
-		}
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"jswitch", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1762,13 +1724,7 @@ void jswitch(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 // FORMAT
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void fmt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"FORMAT";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 7);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	} else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"format", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1787,31 +1743,31 @@ void fmt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 			parameter.type != BLN && parameter.type != DBL && parameter.type != STR
 		) {
 			std::wstring error = type + LangLib::getTrans(L"Инструкция используется только для следующих типов: ");
-			error += L"CHR, UCHR, NTG, UNTG, BLN, DBL, STR";
+			error += L"chr, uchr, ntg, untg, bln, dbl, str";
 			throw std::wstring{ type + error };
 		}
 
-		if(type != std::wstring_view(L"DEC") && type != std::wstring_view(L"dec") &&
-			type != std::wstring_view(L"OCT") && type != std::wstring_view(L"oct") &&
-			type != std::wstring_view(L"HEX") && type != std::wstring_view(L"hex") &&
-			type != std::wstring_view(L"BIN") && type != std::wstring_view(L"bin")) {
+		if(type != std::wstring_view(L"dec") &&
+			type != std::wstring_view(L"oct") &&
+			type != std::wstring_view(L"hex") &&
+			type != std::wstring_view(L"bin")) {
 			throw std::wstring{ type + LangLib::getTrans( L": Неизвестное представление числа\n") };
 		}
 
-		if(align.str != std::wstring_view(L"LEFT") && align.str != std::wstring_view(L"left") &&
-		align.str != std::wstring_view(L"RIGHT") && align.str != std::wstring_view(L"right") && 
-		align.str != std::wstring_view(L"DEFAULT") && align.str != std::wstring_view(L"default")
+		if(align.str != std::wstring_view(L"left") &&
+		align.str != std::wstring_view(L"right") && 
+		align.str != std::wstring_view(L"default")
 		) {
 			throw std::wstring{ align.str + LangLib::getTrans(L": Неизвестный тип выравнивания\n") };
 		}
 		
 		std::wostringstream woss;
 
-		if(align.str == std::wstring_view(L"LEFT") || align.str != std::wstring_view(L"left")) {
+		if(align.str != std::wstring_view(L"left")) {
 			woss << std::left;
 		}
 
-		if(align.str == std::wstring_view(L"RIGHT") || align.str != std::wstring_view(L"right")) {
+		if(align.str != std::wstring_view(L"right")) {
 			woss << std::right;
 		}
 		if(width.data.ntg > 0) {
@@ -1827,11 +1783,11 @@ void fmt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 			woss << std::fixed << std::setprecision(precision.data.ntg);
 		}
 	
-		if(type == std::wstring_view(L"OCT") || type == std::wstring_view(L"oct") ) {
+		if(type == std::wstring_view(L"oct") ) {
 			woss << std::oct;
-		} else if (type == std::wstring_view(L"HEX") || type == std::wstring_view(L"hex") ) {
+		} else if (type == std::wstring_view(L"hex") ) {
 			woss << std::hex;
-		} else if (type == std::wstring_view(L"BIN") || type == std::wstring_view(L"bin") ) {
+		} else if (type == std::wstring_view(L"bin") ) {
 			if(parameter.type == NTG ||  parameter.type == CHR) {
 				woss << std::bitset<64>(parameter.toNTG().data.ntg);
 			} else if(parameter.type == UCHR || parameter.type == UNTG || parameter.type == BLN) {
@@ -1842,7 +1798,7 @@ void fmt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 			
 		}
 
-		if(type != std::wstring_view(L"BIN") && type != std::wstring_view(L"bin")) {
+		if(type != std::wstring_view(L"bin")) {
 			if(parameter.type == NTG ||  parameter.type == CHR) {
 				woss << parameter.toNTG().data.ntg;
 			} else if(parameter.type == UCHR || parameter.type == UNTG || parameter.type == BLN) {
@@ -1853,7 +1809,7 @@ void fmt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 		}
 
 		Var result = woss.str();
-		if(type == L"BIN" || type == L"bin") {
+		if(type == L"bin") {
 			std::wstring str = result.str;
 			std::wstring newstr = L"";
 
@@ -1884,13 +1840,7 @@ void fmt(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 // TRIGON
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void trigon(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"TRIGON";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 3);
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-	} else {
-		checkNotExistValue(&i->parameters[1], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"trigon", par2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1899,65 +1849,52 @@ void trigon(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 
 		std::wstring type = getValue( &i->parameters[0], &m->heap, m).toSTR().str;
 
-		if(type != std::wstring_view(L"SIN") && type != std::wstring_view(L"sin") &&
-			type != std::wstring_view(L"COS") && type != std::wstring_view(L"cos") &&
-			type != std::wstring_view(L"TAN") && type != std::wstring_view(L"tan") &&
-			type != std::wstring_view(L"CTG") && type != std::wstring_view(L"ctg") &&
-			type != std::wstring_view(L"ASIN") && type != std::wstring_view(L"asin") &&
-			type != std::wstring_view(L"ACOS") && type != std::wstring_view(L"acos") &&
-			type != std::wstring_view(L"ATAN") && type != std::wstring_view(L"atan") &&
-			type != std::wstring_view(L"ACTG") && type != std::wstring_view(L"actg") &&
-			type != std::wstring_view(L"SEC") && type != std::wstring_view(L"sec") &&
-			type != std::wstring_view(L"CSC") && type != std::wstring_view(L"csc") &&
-			type != std::wstring_view(L"ASEC") && type != std::wstring_view(L"asec") &&
-			type != std::wstring_view(L"ACSC") && type != std::wstring_view(L"acsc")) {
-			throw std::wstring{ type + LangLib::getTrans( L": Неизвестная тригонометрическая функция\n") };
-		}
-
-		if(type == std::wstring_view(L"SIN") || type == std::wstring_view(L"sin")) {
+		if(type == std::wstring_view(L"sin")) {
 			setValue(&i->parameters[1], &m->heap, m) = std::sinl(getValue( &i->parameters[2], &m->heap, m).toDBL().data.dbl);
-		} else if(type == std::wstring_view(L"COS") || type == std::wstring_view(L"cos")) {
+		} else if(type == std::wstring_view(L"cos")) {
 			setValue(&i->parameters[1], &m->heap, m) = std::cosl(getValue( &i->parameters[2], &m->heap, m).toDBL().data.dbl);
-		} else if(type == std::wstring_view(L"TAN") || type == std::wstring_view(L"tan")) {
+		} else if(type == std::wstring_view(L"tan")) {
 			setValue(&i->parameters[1], &m->heap, m) = std::tanl(getValue( &i->parameters[2], &m->heap, m).toDBL().data.dbl);
-		} else if(type == std::wstring_view(L"CTG") || type == std::wstring_view(L"ctg")) {
+		} else if(type == std::wstring_view(L"ctg")) {
 			long double val = std::tan(getValue( &i->parameters[2], &m->heap, m).toDBL().data.dbl);
 			if(val == 0.0 ){
 				val = 0.0000000000000000000000000001L;
 			}
 			setValue(&i->parameters[1], &m->heap, m) = 1.0 / val;
-		} else if(type == std::wstring_view(L"ASIN") || type == std::wstring_view(L"asin")) {
+		} else if(type == std::wstring_view(L"asin")) {
 			setValue(&i->parameters[1], &m->heap, m) = std::asinl(getValue( &i->parameters[2], &m->heap, m).toDBL().data.dbl);
-		} else if(type == std::wstring_view(L"ACOS") || type == std::wstring_view(L"acos")) {
+		} else if(type == std::wstring_view(L"acos")) {
 			setValue(&i->parameters[1], &m->heap, m) = std::acosl(getValue( &i->parameters[2], &m->heap, m).toDBL().data.dbl);
-		} else if(type == std::wstring_view(L"ATAN") || type == std::wstring_view(L"atan")) {
+		} else if(type == std::wstring_view(L"atan")) {
 			setValue(&i->parameters[1], &m->heap, m) = std::atanl(getValue( &i->parameters[2], &m->heap, m).toDBL().data.dbl);
-		} else if(type == std::wstring_view(L"ACTG") || type == std::wstring_view(L"actg")) {
+		} else if(type == std::wstring_view(L"actg")) {
 			setValue(&i->parameters[1], &m->heap, m) = (M_PI / 2.0) - std::atanl(getValue( &i->parameters[2], &m->heap, m).toDBL().data.dbl);
-		} else if(type == std::wstring_view(L"SEC") || type == std::wstring_view(L"sec")) {
+		} else if(type == std::wstring_view(L"sec")) {
 			long double val = std::cos(getValue( &i->parameters[2], &m->heap, m).toDBL().data.dbl);
 			if(val == 0.0 ){
 				val = 0.0000000000000000000000000001L;
 			}
 			setValue(&i->parameters[1], &m->heap, m) = 1.0 /  val;
-		} else if(type == std::wstring_view(L"CSC") || type == std::wstring_view(L"csc")) {
+		} else if(type == std::wstring_view(L"csc")) {
 			long double val = std::sin(getValue( &i->parameters[2], &m->heap, m).toDBL().data.dbl);
 			if(val == 0.0 ){
 				val = 0.0000000000000000000000000001L;
 			}
 			setValue(&i->parameters[1], &m->heap, m) = 1.0 / val;
-		} else if(type == std::wstring_view(L"ASEC") || type == std::wstring_view(L"asec")) {
+		} else if(type == std::wstring_view(L"asec")) {
 			long double val = getValue( &i->parameters[2], &m->heap, m).toDBL().data.dbl;
 			if(val == 0.0 ){
 				val = 0.0000000000000000000000000001L;
 			}
 			setValue(&i->parameters[1], &m->heap, m) = std::acosl(1.0 / val);
-		} else if(type == std::wstring_view(L"ACSC") || type == std::wstring_view(L"acsc")) {
+		} else if(type == std::wstring_view(L"acsc")) {
 			long double val = getValue( &i->parameters[2], &m->heap, m).toDBL().data.dbl;
 			if(val == 0.0 ){
 				val = 0.0000000000000000000000000001L;
 			}
 			setValue(&i->parameters[1], &m->heap, m) = std::asinl(1.0 / val);
+		} else {
+			throw std::wstring{ type + LangLib::getTrans( L": Неизвестная тригонометрическая функция\n") };
 		}
 		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
@@ -1967,13 +1904,7 @@ void trigon(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 // DEGTORAD
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void degtorad(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"DEGTORAD";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	} else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"degtorad", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -1988,14 +1919,7 @@ void degtorad(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 // RADTODEG
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void radtodeg(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"RADTODEG";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"radtodeg", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -2010,14 +1934,7 @@ void radtodeg(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 // VARIANCE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void variance(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"VARIANCE";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"variance", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -2032,14 +1949,7 @@ void variance(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 // CASTCHK
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void castchk(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"CASTCHK";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 3);
-		requiredVar(&i->parameters[1], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&i->parameters[1], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"castchk", par2);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -2047,28 +1957,28 @@ void castchk(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 	else {
 		std::wstring type = getValue(&i->parameters[0], &m->heap, m).toSTR().getWStr();
 		try {
-			if (type == std::wstring_view(L"NTG") || type == std::wstring_view(L"ntg")) {
+			if (type == std::wstring_view(L"ntg")) {
 				getValue(&i->parameters[2], &m->heap, m).toNTG();
 			}
-			else if (type == std::wstring_view(L"UNTG") || type == std::wstring_view(L"untg")) {
+			else if (type == std::wstring_view(L"untg")) {
 				getValue(&i->parameters[2], &m->heap, m).toUNTG();
 			}
-			else if (type == std::wstring_view(L"DBL") || type == std::wstring_view(L"dbl")) {
+			else if (type == std::wstring_view(L"dbl")) {
 				getValue(&i->parameters[2], &m->heap, m).toDBL();
 			}
-			else if (type == std::wstring_view(L"CHR") || type == std::wstring_view(L"chr")) {
+			else if (type == std::wstring_view(L"chr")) {
 				getValue(&i->parameters[2], &m->heap, m).toCHR();
 			}
-			else if (type == std::wstring_view(L"UCHR") || type == std::wstring_view(L"uchr")) {
+			else if (type == std::wstring_view(L"uchr")) {
 				getValue(&i->parameters[2], &m->heap, m).toUCHR();
 			}
-			else if (type == std::wstring_view(L"BLN") || type == std::wstring_view(L"bln")) {
+			else if (type == std::wstring_view(L"bln")) {
 				getValue(&i->parameters[2], &m->heap, m).toBLN();
 			}
-			else if (type == std::wstring_view(L"STR") || type == std::wstring_view(L"str")) {
+			else if (type == std::wstring_view(L"str")) {
 				getValue(&i->parameters[2], &m->heap, m).toSTR();
 			}
-			else if (type == std::wstring_view(L"ARR") || type == std::wstring_view(L"arr")) {
+			else if (type == std::wstring_view(L"arr")) {
 				getValue(&i->parameters[2], &m->heap, m).toARR();
 			}
 			else {

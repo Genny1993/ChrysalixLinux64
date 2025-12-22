@@ -28,7 +28,7 @@ make
 ## 🚀 Example code
 
 ```plaintext
-var $a, ntg 5
-var $b, ntg 3
-calc '+', $a, $b
-print $a, '\n'
+> 5
+var $b, 3
+>calc '+', $b
+>print '\n'

@@ -1,5 +1,8 @@
->vtomap 'a', 1, 'b', 2
->print
+plztrustme true
+> 5
+var $b, 3
+>calc '+', $b
+>print '\n'
 >end
 ##
 #REPL
