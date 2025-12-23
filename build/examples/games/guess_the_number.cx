@@ -1,4 +1,4 @@
-plztrustme false
+plztrustme true
 
 print '=======================================\n'
 print 'Добро пожаловать в игру "Угадай число"!\n'
@@ -9,7 +9,7 @@ while true, {
 	var $max_min, 10
 	var $max_max, 100
 	var $tries_multiplier, 2
-	print 'Выберите сложность (e - легко, m- сложно, h - очень сложно, eh - очень сложно): '
+	print 'Выберите сложность (e - легко, m - средне, h - сложно, eh - очень сложно): '
 	while true, {
 		>input
 		>switch 'e', {

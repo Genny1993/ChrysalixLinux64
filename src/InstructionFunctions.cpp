@@ -2429,13 +2429,7 @@ void switchi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 // ISCODE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void iscode(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"ISCODE";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"iscode", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -2462,14 +2456,7 @@ void iscode(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 // SCONST
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void sconst(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"SCONST";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"sconst", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -2485,14 +2472,7 @@ void sconst(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 // SFINALIZE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void sfinalize(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"SFINALIZE";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR2));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"sfinalize", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -2510,12 +2490,7 @@ void sfinalize(Machine* m, Instruction* i, bool prevalidate, bool prego, bool it
 // PLZDONTCRASH
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void plzdontcrash(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"PLZDONTCRASH";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
-	}
-	else {
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"plzdontcrash", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -2535,12 +2510,7 @@ void plzdontcrash(Machine* m, Instruction* i, bool prevalidate, bool prego, bool
 // PLZSHUTUP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void plzshutup(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"PLZSHUTUP";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
-	}
-	else {
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"plzshutup", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -2560,12 +2530,7 @@ void plzshutup(Machine* m, Instruction* i, bool prevalidate, bool prego, bool it
 // TRY
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void tryi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"TRY";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 2);
-	}
-	else {
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"try", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -2574,7 +2539,7 @@ void tryi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 		Var temp = i->parameters[0];
 		Var catchblock = i->parameters[1];
 		if(temp.type != INST || catchblock.type != INST) {
-			throw std::wstring{ L"TRY: " + LangLib::getTrans(L"Все параметры должны быть блоками инструкций\n") };
+			throw std::wstring{ L"try: " + LangLib::getTrans(L"Все параметры должны быть блоками инструкций\n") };
 		}
 		try{
 			getValue(&temp, &m->heap, m);
@@ -2599,12 +2564,7 @@ void tryi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 // THROW
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void throwi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"THROW";
-		checkParameterCount(MINIMAL, (int)i->parameters.size(), &name, 0, 1);
-	}
-	else {
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"throw", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -2625,12 +2585,7 @@ void throwi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool itera
 // PARALLEL
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void parallel(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"PARALLEL";
-		checkParameterCount(MINIMAL, (int)i->parameters.size(), &name, 0, 1);
-	}
-	else {
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"parallel", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -2659,13 +2614,7 @@ void parallel(Machine* m, Instruction* i, bool prevalidate, bool prego, bool ite
 // GETCHAR
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void getchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"GETCHAR";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 3);
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"getchar", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -2681,13 +2630,7 @@ void getchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 // SETCHAR
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void setchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"SETCHAR";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 3);
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"setchar", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -2705,12 +2648,7 @@ void setchar(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 // ARROW
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void arrow(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L">";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
-	}
-	else {
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L">", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -2725,12 +2663,7 @@ void arrow(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 // CHEVRON
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void chevron(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L">>";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 0);
-	}
-	else {
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L">>", emp);
 
 	if(prego){}
 	if(iterate){++m->instruct_number;} ++m->executed_count;
@@ -2740,12 +2673,7 @@ void chevron(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 // PLZTRUSTME
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void plztrustme(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"plztrustme";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
-	}
-	else {
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"plztrustme", emp);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
@@ -2765,14 +2693,7 @@ void plztrustme(Machine* m, Instruction* i, bool prevalidate, bool prego, bool i
 // ICOUNT
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void icount(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate) {
-	if (prevalidate) {
-		std::wstring name = L"icount";
-		checkParameterCount(STRICTED, (int)i->parameters.size(), &name, 1);
-		requiredVar(&i->parameters[0], &name, LangLib::getTrans(PAR1));
-	}
-	else {
-		checkNotExistValue(&i->parameters[0], m);
-	}
+	validateCurrentInstruction(m, *i, prevalidate, L"icount", par1);
 
 	if (prego) {
 		if(iterate){++m->instruct_number;}
