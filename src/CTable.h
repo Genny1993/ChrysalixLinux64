@@ -1367,7 +1367,7 @@ struct VRules {
                 },
                 {L"validate",
                     {
-                        {L"checkExistValue", {{L"param_nums", {0}}}}
+                        {L"checkNotExistValue", {{L"param_nums", {0}}}}
                     }
                 },
                 {L"arrow", {{L"param_replace", {{L"number", {0}}}}}},
@@ -1774,7 +1774,7 @@ struct VRules {
                 {L"modeparams", {{L"param", {{L"count", {0}}}}}}
             }
         },
-        {OP_CODE::JSWITCH, 
+        {OP_CODE::SWITCH, 
             {
                 {L"prevalidate", 
                     {

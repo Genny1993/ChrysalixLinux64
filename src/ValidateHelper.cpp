@@ -204,7 +204,6 @@ void validateCurrentInstruction(Machine *m, Instruction& inst, bool prevalidate,
 				if(inst.VRule[L"prevalidate"].find(L"module") != inst.VRule[L"prevalidate"].end()) {
 					std::unordered_map<std::wstring, std::vector<int>> &rule = inst.VRule[L"prevalidate"][L"module"];
 					int size = (int)inst.parameters.size() + inst.alias;
-					std::wcout << size << L" " << size - rule[L"param_nums"][0] << std::endl;
 					if((size - rule[L"param_nums"][0]) % rule[L"param_nums"][1] != 0) {
 						throw std::wstring{ LangLib::getTrans(L"Неверное число параметров! Каждый ключ должен иметь пару - значение\n") };
 					} 
