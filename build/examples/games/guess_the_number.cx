@@ -44,7 +44,7 @@ while true, {
   	var $x, 0 #Переменная с угадываемым числом          
   	var $max, (>rand $max_min, $max_max)  #Максимальное загадываемое число, выбирается случайно в зависимости от сложности
   	#Количество попыток, логарифм по основанию 2 от максимального числа, умноженный на множитель попыток
-  	>calc 'log', $max, 2; >>calc '*', $tries_multiplier; >to 'ntg'
+  	>calc log, $max, 2; >>calc *, $tries_multiplier; >to 'ntg'
   	var $tries, $
   	var $secret, (>rand $min, $max)  #загаданное число
   	
@@ -81,7 +81,7 @@ while true, {
 		}
     
 		#Уменьшаем число попыток
-		calc 'dec', $tries
+		calc dec, $tries
 	}
   
 	#Поздравление, если число угадано

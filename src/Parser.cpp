@@ -5,6 +5,8 @@
 #include "Helpers.h"
 #include "LangLib.h"
 
+Operators op;
+
 void Parser::fileLoad(std::wstring file_name) {
     //Чтение файла в кодировке UTF-8
     this->file = file_name;
@@ -264,7 +266,12 @@ Var Parser::parseVar(const std::wstring& val, const int& instruction) {
         }
     }
     else {
-        throw std::wstring{temp + LangLib::getTrans(L": Неизвестный литерал\n")};
+        std::vector<std::wstring>::iterator it = std::find(op.list.begin(), op.list.end(), temp);
+        if(it != op.list.end()) {
+            return Var(temp);
+        } else {
+            throw std::wstring{temp + LangLib::getTrans(L": Неизвестный литерал\n")};
+        }
     }
     return Var();
 }
