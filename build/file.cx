@@ -1,8 +1,5 @@
-plztrustme true
-> 5
-var $b, 3
->calc '+', $b
->print '\n'
+print (calc '*', $, 3, (calc '-', $, 6, 2)), '\n'
+	 var $second, ntg1
 >end
 ##
 #REPL
