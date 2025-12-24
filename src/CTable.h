@@ -233,7 +233,7 @@ struct CTable {
 
 struct Operators {
     std::vector<std::wstring> list = {
-        L"+",
+        L"+",       //CALC
         L"-",
         L"*",
         L"/",
@@ -248,7 +248,45 @@ struct Operators {
         L"abs",
         L"round",
         L"floor",
-        L"ceil"
+        L"ceil",
+        L"==",      //COMP 
+        L"===",
+        L"!==",
+        L"!=",
+        L">",
+        L"<",
+        L">=",
+        L"<=",
+        L"not",     //LOGIC
+        L"and",
+        L"or",
+        L"nand",
+        L"nor",
+        L"xor",
+        L"xnor",
+        L"dec",     //FORMAT
+        L"oct",
+        L"hex",
+        L"bin",
+        L"left",
+        L"right",
+        L"default",
+        L"sin",     //TRIGON
+        L"cos",
+        L"tan",
+        L"ctg",
+        L"asin",
+        L"acos",
+        L"atan",
+        L"actg",
+        L"sec",
+        L"csc",
+        L"asec",
+        L"acsc",
+        L"asc",
+        L"desc",    //SORT
+        L"strict",  //EQUAL, UNIQUE, IN, RIN, INALL, RINALL, INTERS, NOTINTERS, KVINTERS, KVNOTINTERS
+        L"dynamic",
     };
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

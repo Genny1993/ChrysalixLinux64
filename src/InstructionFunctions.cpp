@@ -621,14 +621,7 @@ void logic(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 	}
 	else {
 		std::wstring type = getValue(&i->parameters[0], &m->heap, m).toSTR().getWStr();
-		if (type != std::wstring_view(L"NOT")
-			&& type != std::wstring_view(L"AND")
-			&& type != std::wstring_view(L"OR")
-			&& type != std::wstring_view(L"NAND")
-			&& type != std::wstring_view(L"NOR")
-			&& type != std::wstring_view(L"XOR")
-			&& type != std::wstring_view(L"XNOR")
-			&& type != std::wstring_view(L"not")
+		if (type != std::wstring_view(L"not")
 			&& type != std::wstring_view(L"and")
 			&& type != std::wstring_view(L"or")
 			&& type != std::wstring_view(L"nand")
@@ -638,7 +631,7 @@ void logic(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 			throw std::wstring{ type + LangLib::getTrans(L": Логическая операция неизвестна\n") };
 		}
 		if (i->parameters.size() == 3) {
-			if (type == std::wstring_view(L"NOT") || type == std::wstring_view(L"not")) {
+			if (type == std::wstring_view(L"not")) {
 				setValue(&i->parameters[1], &m->heap, m) = !getValue(&i->parameters[2], &m->heap, m).toBLN().getBool();
 			}
 			else {
@@ -646,22 +639,22 @@ void logic(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 			}
 		}
 		else if (i->parameters.size() == 4) {
-			if (type == std::wstring_view(L"AND") || type == std::wstring_view(L"and")) {
+			if (type == std::wstring_view(L"and")) {
 				setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m).toBLN().getBool() && getValue(&i->parameters[3], &m->heap, m).toBLN().getBool();
 			}
-			else if (type == std::wstring_view(L"OR") || type == std::wstring_view(L"or")) {
+			else if (type == std::wstring_view(L"or")) {
 				setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m).toBLN().getBool() || getValue(&i->parameters[3], &m->heap, m).toBLN().getBool();
 			}
-			else if (type == std::wstring_view(L"NAND") || type == std::wstring_view(L"nand")) {
+			else if (type == std::wstring_view(L"nand")) {
 				setValue(&i->parameters[1], &m->heap, m) = !(getValue(&i->parameters[2], &m->heap, m).toBLN().getBool() && getValue(&i->parameters[3], &m->heap, m).toBLN().getBool());
 			}
-			else if (type == std::wstring_view(L"NOR") || type == std::wstring_view(L"nor")) {
+			else if (type == std::wstring_view(L"nor")) {
 				setValue(&i->parameters[1], &m->heap, m) = !(getValue(&i->parameters[2], &m->heap, m).toBLN().getBool() || getValue(&i->parameters[3], &m->heap, m).toBLN().getBool());
 			}
-			else if (type == std::wstring_view(L"XOR") || type == std::wstring_view(L"xor")) {
+			else if (type == std::wstring_view(L"xor")) {
 				setValue(&i->parameters[1], &m->heap, m) = !(getValue(&i->parameters[2], &m->heap, m).toBLN().getBool()) != !(getValue(&i->parameters[3], &m->heap, m).toBLN().getBool());
 			}
-			else if (type == std::wstring_view(L"XNOR") || type == std::wstring_view(L"xnor")) {
+			else if (type == std::wstring_view(L"xnor")) {
 				setValue(&i->parameters[1], &m->heap, m) = getValue(&i->parameters[2], &m->heap, m).toBLN().getBool() == getValue(&i->parameters[3], &m->heap, m).toBLN().getBool();
 			}
 			else {
@@ -2182,7 +2175,7 @@ void ifi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate)
 			falsecond = i->parameters[2];
 		}
 		if(truecond.type != INST || falsecond.type != INST) {
-			throw std::wstring{ LangLib::getTrans(L"IF: Второй и третий параметр должны быть блоками инструкций\n") };
+			throw std::wstring{ LangLib::getTrans(L"if: Второй и третий параметр должны быть блоками инструкций\n") };
 		}
 
 		if(condition.toBLN().data.bln) {
@@ -2213,7 +2206,7 @@ void fori(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterate
 		Var body = i->parameters[4];
 
 		if(init.type != INST || increment.type != INST || postcycle.type != INST || body.type != INST) {
-			throw std::wstring{ L"FOR: " + LangLib::getTrans(L"Все параметры должны быть блоками инструкций\n") };
+			throw std::wstring{ L"for: " + LangLib::getTrans(L"Все параметры должны быть блоками инструкций\n") };
 		}
 
 		getValue(&init, &m->heap, m);
@@ -2359,7 +2352,7 @@ void dowhile(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		Var body = i->parameters[1];
 
 		if(body.type != INST) {
-			throw std::wstring{ L"DOWHILE: " + LangLib::getTrans(L"Все параметры должны быть блоками инструкций\n") };
+			throw std::wstring{ L"dowhile: " + LangLib::getTrans(L"Все параметры должны быть блоками инструкций\n") };
 		}
 
 		while(true) {
@@ -2409,7 +2402,7 @@ void switchi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 			if(swtch.eq(L"strict", getValue( &i->parameters[is], &m->heap, m)).data.bln) {
 				Var temp = i->parameters[is+1];
 				if(temp.type != INST) {
-					throw std::wstring{ L"SWITCH: " + LangLib::getTrans(L"Каждый нечетный параметр кроме первого должны быть блоком инструкций\n") };
+					throw std::wstring{ L"switch: " + LangLib::getTrans(L"Каждый нечетный параметр кроме первого должны быть блоком инструкций\n") };
 				}
 				getValue(&temp, &m->heap, m);
 				if(iterate){++m->instruct_number;} ++m->executed_count;
@@ -2418,7 +2411,7 @@ void switchi(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iter
 		}
 		Var tempdefault = i->parameters[i->parameters.size() - 1];
 		if(tempdefault.type != INST) {
-			throw std::wstring{ L"SWITCH: " + LangLib::getTrans(L"Последний параметр должен быть блоком инструкций\n") };
+			throw std::wstring{ L"switch: " + LangLib::getTrans(L"Последний параметр должен быть блоком инструкций\n") };
 		}
 		getValue( &tempdefault, &m->heap, m);
 		if(iterate){++m->instruct_number;} ++m->executed_count;

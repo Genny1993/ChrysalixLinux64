@@ -148,35 +148,69 @@ Var Parser::parseVar(const std::wstring& val, const int& instruction) {
         return Var(temp);
     }
     else if (temp.substr(0, 3) == std::wstring_view(L"ntg")) {
-        return Var(temp.erase(0, 3)).toNTG();
+        if(temp == L"ntg") {
+            return Var(temp);
+        } else {
+            return Var(temp.erase(0, 3)).toNTG();
+        }
     }
     else if (temp.substr(0, 4) == std::wstring_view(L"untg")) {
-        return Var(temp.erase(0, 4)).toUNTG();
+        if(temp == L"untg") {
+            return Var(temp);
+        } else {
+            return Var(temp.erase(0, 4)).toUNTG();
+        }
     }
     else if (temp.substr(0, 3) == std::wstring_view(L"dbl")) {
-        return Var(temp.erase(0, 3)).toDBL();
+        if(temp == L"dbl") {
+            return Var(temp);
+        } else {
+            return Var(temp.erase(0, 3)).toDBL();
+        }
     }
     else if (temp.substr(0, 3) == std::wstring_view(L"chr")) {
-        return Var(temp.erase(0, 3)).toCHR();
+        if(temp == L"chr") {
+            return Var(temp);
+        } else {
+            return Var(temp.erase(0, 3)).toCHR();
+        }
     }
     else if (temp.substr(0, 4) == std::wstring_view(L"uchr")) {
-        return Var(temp.erase(0, 4)).toUCHR();
+        if(temp == L"uchr") {
+            return Var(temp);
+        } else {
+            return Var(temp.erase(0, 4)).toUCHR();
+        }
     }
     else if (temp == std::wstring_view(L"arr")) {
-        std::vector<Var> v;
-        v.reserve(1000);
-        return Var(v);
+        if(temp == L"arr") {
+            return Var(temp);
+        } else {
+            std::vector<Var> v;
+            v.reserve(1000);
+            return Var(v);
+        }
     }
     else if (temp == std::wstring_view(L"map")) {
-        std::unordered_map<std::wstring, Var> map;
-        map.reserve(1000);
-        return Var(map);
+        if(temp == L"map") {
+            return Var(temp);
+        } else {
+            std::unordered_map<std::wstring, Var> map;
+            map.reserve(1000);
+            return Var(map);
+        }
     }
     else if (temp == std::wstring_view(L"true")) {
         return Var(true);
     }
     else if (temp == std::wstring_view(L"false")) {
         return Var(false);
+    }
+    else if (temp == std::wstring_view(L"bln")) {
+        return Var(temp);
+    }
+    else if (temp == std::wstring_view(L"str")) {
+        return Var(temp);
     }
     else if (temp == std::wstring_view(L"nil")) {
         return Var();
