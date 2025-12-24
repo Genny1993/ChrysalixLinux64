@@ -289,17 +289,35 @@ Var Parser::parseVar(const std::wstring& val, const int& instruction) {
         || temp[0] == L'6'
         || temp[0] == L'7'
         || temp[0] == L'8'
-        || temp[0] == L'9'
-        || temp[0] == L'+'
-        || temp[0] == L'-') {
-        Var numberdbl = Var(temp).toDBL();
-        Var numberntg = Var(temp).toNTG();
-        if (numberdbl == numberntg) {
-            return numberntg;
-        }
-        else {
-            return numberdbl;
-        }
+        || temp[0] == L'9') {
+            Var numberdbl = Var(temp).toDBL();
+            Var numberntg = Var(temp).toNTG();
+            if (numberdbl == numberntg) {
+                return numberntg;
+            }
+            else {
+                return numberdbl;
+            }
+    }
+    else if((temp[0] == '+' || temp[0] == '-')  &&
+            (temp[1] == L'0'
+            || temp[1] == L'1'
+            || temp[1] == L'2'
+            || temp[1] == L'3'
+            || temp[1] == L'4'
+            || temp[1] == L'5'
+            || temp[1] == L'6'
+            || temp[1] == L'7'
+            || temp[1] == L'8'
+            || temp[1] == L'9')) {
+            Var numberdbl = Var(temp).toDBL();
+            Var numberntg = Var(temp).toNTG();
+            if (numberdbl == numberntg) {
+                return numberntg;
+            }
+            else {
+                return numberdbl;
+            }
     }
     else {
         std::vector<std::wstring>::iterator it = std::find(op.list.begin(), op.list.end(), temp);

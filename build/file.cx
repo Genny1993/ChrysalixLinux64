@@ -1,5 +1,6 @@
-print (calc '*', $, 3, (calc '-', $, 6, 2)), '\n'
-	 var $second, ntg1
+vtoarr $arr, 1, 2, 3
+	>isset $arr[3]
+	>print
 >end
 ##
 #REPL
