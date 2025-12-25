@@ -1,7 +1,28 @@
-vtoarr $arr, 1, 2, 3
-	>isset $arr[3]
-	>print
->end
+plztrustme true
+print 'Введите букву: '
+	>input
+
+	>jswitch  'a', &char_a, 
+		 'b', &char_b,
+		 'c', &char_c,
+		 &default
+
+	label &char_a
+		print 'Вы ввели букву a\n'
+	jump &endjswitch
+
+	label &char_b
+		print 'Вы ввели букву b\n'
+	jump &endjswitch
+
+	label &char_c
+		print 'Вы ввели букву c\n'
+	jump &endjswitch
+
+	label &default
+		print 'Вы ввели какую-то другую букву\n'
+	label &endjswitch
+	end 0
 ##
 #REPL
 plzdontcrash true

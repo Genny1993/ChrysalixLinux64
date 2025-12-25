@@ -2647,7 +2647,8 @@ void arrow(Machine* m, Instruction* i, bool prevalidate, bool prego, bool iterat
 		if(iterate){++m->instruct_number;}
 	}
 	else {
-		m->heap[L"$"] = getValue(&i->parameters[0], &m->heap, m);
+		Var zero_reg = L"$";
+		setValue(&zero_reg, &m->heap, m) = getValue(&i->parameters[0], &m->heap, m);
 		if(iterate){++m->instruct_number;} ++m->executed_count;
 	}
 }

@@ -287,6 +287,8 @@ struct Operators {
         L"desc",    //SORT
         L"strict",  //EQUAL, UNIQUE, IN, RIN, INALL, RINALL, INTERS, NOTINTERS, KVINTERS, KVNOTINTERS
         L"dynamic",
+        L"const",   //ISCONST
+        L"sconst"
     };
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
